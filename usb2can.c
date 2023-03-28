@@ -695,12 +695,13 @@ void printusage()
 {
   printf("usb2can opens a the frist USB2CAN device that it finds and binds to a socket (default address is 2303).\n");
   printf("All messages received will be presented as Hex in the format:\n");
-  printf("  IIIIIIII LL DDDDDDDDDDDDDDDD[CR][NL]\n");
+  printf("  IIIIIIII LL DDDDDDDDDDDDDDDD[CR][LF]\n");
   printf("\n");
   printf("Where: \n");
   printf("  I = Message ID: 8 chars representing a 32-bit unsigned with leading zeros.\n");
   printf("  L = Data Length code: 2 chars representing an 8-bit unsigned with leading zeros. Valid range 0 to 8.\n");
   printf("  D = Data: 0 to 16 chars (depending on Data Length Code) representing a octets with leading zeros.\n");
+  printf("  [CR][LF] = Carridge Return Line Feed. \n");
   printf("\n");
   printf("Use the same format for transmission.\n");
   printf("\n");
@@ -714,7 +715,6 @@ void printusage()
   printf("                         1m\n");
   printf("  ? = print this message. \n");
   printf("  p[nnnn] = a \"p\" followed by a number - use this as the port number. \n");
-  printf("  [CR][NL] = Carridge Return New Line. \n");
   printf("\n");
 }
 
