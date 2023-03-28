@@ -35,7 +35,7 @@ Where:
   [LF] = Line Feed
 ```
 
-#Improvements To Be Made
+# Improvements To Be Made
 1. Change protocol to be more similar to SocketCAN.
 2. Add support for multiple devices.
 3. Add support for CAN-FD frames.
