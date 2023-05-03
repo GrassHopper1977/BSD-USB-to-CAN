@@ -22,6 +22,7 @@
 #include <netdb.h>
 #include <signal.h>
 #include <sys/time.h>
+#include "usb2can.h"
 
 //#define DEBUG_INFO_CAN_IN
 #define DEBUG_INFO_CAN_OUT
@@ -46,6 +47,31 @@
 #define MAX_EVENTS      (32)
 
 #define TIMER_FD (1234)
+
+// Device Specific Constants
+enum usb2can_breq {
+  USB2CAN_BREQ_HOST_FORMAT = 0,
+  USB2CAN_BREQ_BITTIMING,
+  USB2CAN_BREQ_MODE,
+  USB2CAN_BREQ_BERR,
+  USB2CAN_BREQ_BT_CONST,
+  USB2CAN_BREQ_DEVICE_CONFIG,
+  USB2CAN_BREQ_TIMESTAMP,
+  USB2CAN_BREQ_IDENTIFY,
+  USB2CAN_BREQ_GET_USER_ID,
+  USB2CAN_BREQ_SET_USER_ID,
+  USB2CAN_BREQ_DATA_BITTIMING,
+  USB2CAN_BREQ_BT_CONST_EXT,
+  USB2CAN_BREQ_SET_TERMINATION,
+  USB2CAN_BREQ_GET_TERMINATION,
+  USB2CAN_BREQ_GET_STATE,
+};
+
+enum usb2can_mode {
+  USB2CAN_MODE_RESET = 0,	// Reset a channel, tunrs it off
+  USB2CAN_MODE_START,		// Start a channel
+};
+
 
 
 #define BITRATE_DATA_LEN	(20)
@@ -167,7 +193,7 @@ unsigned char bitrates[16][BITRATE_DATA_LEN] = {
 
 
 
-int sendStringToAll(char * txt);
+int sendCANToAll(struct can_frame * frame);
 
 void sigint_handler(int sig) {
   printf("\nSignal received (%i).\n", sig);
@@ -221,26 +247,32 @@ int read_packet(struct libusb_device_handle *devh) {
     fflush(stdout);
 #endif
 
-    uint32_t identifier = (data[7] << 24) + (data[6] << 16) + (data[5] << 8) + data[4];
-    uint8_t data_length_code = data[8];
+    struct can_frame frame;
 
-    char* txt = calloc(1, 8 + 1 + 2 + 1 + (data_length_code * 2) + 3);
-    int ltxt = sprintf(txt, "%08x %02x ", identifier, data_length_code);
+    frame.can_id = (data[7] << 24) + (data[6] << 16) + (data[5] << 8) + data[4];
+    frame.len = data[8];
 
-    for(int i = 0; i < data_length_code; i++) {
+    for(int i = 0; i < frame.len; i++) {
+      frame.data[i] = data[12 + i];
+    }
+
+#ifdef DEBUG_INFO_SOCK_OUT
+    char* txt = calloc(1, 8 + 1 + 2 + 1 + (frame.len * 2) + 3);
+    int ltxt = sprintf(txt, "%08x %02x ", frame.can_id, frame.len);
+
+    for(int i = 0; i < frame.len; i++) {
       ltxt += sprintf(&(txt[ltxt]), "%02x", data[12 + i]);
     }
     ltxt += sprintf(&(txt[ltxt]), "\r\n");
 
-#ifdef DEBUG_INFO_SOCK_OUT
     printf("CAN ");
     print_time_now();
     printf(" Event Raised: %s\n", txt);
     fflush(stdout);
+    free(txt);
 #endif
 
-    sendStringToAll(txt);
-    free(txt);
+    sendCANToAll(&frame);
   }
 
   return ret;
@@ -289,7 +321,7 @@ int set_bitrate(struct libusb_device_handle *devh) {
   printf("Setting bitrate...\n");
 #endif
   uint8_t bmReqType = 0x41;       // the request type (direction of transfer)
-  uint8_t bReq = 0x01;            // the request field for this packet
+  uint8_t bReq = USB2CAN_BREQ_BITTIMING;            // the request field for this packet
   uint16_t wVal = 0x0000;         // the value field for this packet
   uint16_t wIndex = 0x0000;       // the index field for this packet
   uint16_t wLen = BITRATE_DATA_LEN;   // length of this setup packet 
@@ -304,10 +336,10 @@ int set_bitrate(struct libusb_device_handle *devh) {
 // Not quite sure what this is yet
 int port_setup0(struct libusb_device_handle *devh) {
 #ifdef DEBUG_INFO_SETUP
-  printf("Setting up the port 0\n");
+  printf("Setting up the port 0 (USB2CAN_BREQ_SET_USER_ID)\n");
 #endif
   uint8_t bmReqType = 0x00;       // the request type (direction of transfer)
-  uint8_t bReq = 0x09;            // the request field for this packet
+  uint8_t bReq = USB2CAN_BREQ_SET_USER_ID;            // the request field for this packet
   uint16_t wVal = 0x0001;         // the value field for this packet
   uint16_t wIndex = 0x0000;       // the index field for this packet
   uint16_t wLen = 0;      // length of this setup packet 
@@ -323,10 +355,10 @@ int port_setup0(struct libusb_device_handle *devh) {
 // Not sure what this message means yet.
 int port_setup1(struct libusb_device_handle *devh) {
 #ifdef DEBUG_INFO_SETUP
-  printf("Setting up the port 1\n");
+  printf("Setting up the port 1 (USB2CAN_BREQ_HOST_FORMAT)\n");
 #endif
   uint8_t bmReqType = 0x41;       // the request type (direction of transfer)
-  uint8_t bReq = 0x00;            // the request field for this packet
+  uint8_t bReq = USB2CAN_BREQ_HOST_FORMAT;            // the request field for this packet
   uint16_t wVal = 0x0001;         // the value field for this packet
   uint16_t wIndex = 0x0000;       // the index field for this packet
   // the data buffer for the in/output data
@@ -345,10 +377,10 @@ int port_setup1(struct libusb_device_handle *devh) {
 // Not yet sure what this one does.
 int port_setup2(struct libusb_device_handle *devh) {
 #ifdef DEBUG_INFO_SETUP
-  printf("Setting up the port 2\n");
+  printf("Setting up the port 2 (USB2CAN_BREQ_DEVICE_CONFIG)\n");
 #endif
   uint8_t bmReqType = 0xC1;       // the request type (direction of transfer)
-  uint8_t bReq = 0x05;            // the request field for this packet
+  uint8_t bReq = USB2CAN_BREQ_DEVICE_CONFIG;            // the request field for this packet
   uint16_t wVal = 0x0001;         // the value field for this packet
   uint16_t wIndex = 0x0000;       // the index field for this packet
   // the data buffer for the in/output data
@@ -378,10 +410,10 @@ int port_setup2(struct libusb_device_handle *devh) {
 // Not yet sure what this one does.
 int port_setup3(struct libusb_device_handle *devh) {
 #ifdef DEBUG_INFO_SETUP
-  printf("Setting up the port 3\n");
+  printf("Setting up the port 3 (USB2CAN_BREQ_BT_CONST)\n");
 #endif
   uint8_t bmReqType = 0xC1;       // the request type (direction of transfer)
-  uint8_t bReq = 0x04;            // the request field for this packet
+  uint8_t bReq = USB2CAN_BREQ_BT_CONST;            // the request field for this packet
   uint16_t wVal = 0x0000;         // the value field for this packet
   uint16_t wIndex = 0x0000;       // the index field for this packet
   // the data buffer for the in/output data
@@ -417,16 +449,16 @@ int port_setup3(struct libusb_device_handle *devh) {
 
 int port_open(struct libusb_device_handle *devh) {
 #ifdef DEBUG_INFO_SETUP
-  printf("Opening the port\n");
+  printf("Opening the port (USB2CAN_BREQ_MODE)\n");
 #endif
   uint8_t bmReqType = 0x41;       // the request type (direction of transfer)
-  uint8_t bReq = 0x02;            // the request field for this packet
+  uint8_t bReq = USB2CAN_BREQ_MODE;            // the request field for this packet
   uint16_t wVal = 0x0000;         // the value field for this packet
   uint16_t wIndex = 0x0000;       // the index field for this packet
   
   // the data buffer for the in/output data
   unsigned char data[] = {
-    0x01, 0x00, 0x00, 0x00,
+    0x01, 0x00, 0x00, 0x00,	// CAN_MODE_START
     0x00, 0x00, 0x00, 0x00 
   };
   uint16_t wLen = sizeof(data);   // length of this setup packet 
@@ -440,15 +472,15 @@ int port_open(struct libusb_device_handle *devh) {
 
 int port_close(struct libusb_device_handle *devh) {
 #ifdef DEBUG_INFO_SETUP
-  printf("Closing the port\n");
+  printf("Closing the port (USB2CAN_BREQ_MODE)\n");
 #endif
   uint8_t bmReqType = 0x41;       // the request type (direction of transfer)
-  uint8_t bReq = 0x02;            // the request field for this packet
+  uint8_t bReq = USB2CAN_BREQ_MODE;            // the request field for this packet
   uint16_t wVal = 0x0000;         // the value field for this packet
   uint16_t wIndex = 0x0000;       // the index field for this packet
   // the data buffer for the in/output data
   unsigned char data[] = {
-    0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00,	// CAN_MODE_RESET
     0x00, 0x00, 0x00, 0x00
   };
   uint16_t wLen = sizeof(data);   // length of this setup packet 
@@ -566,21 +598,12 @@ int sockSend(int fd, const void *msg, size_t len) {
   return res;
 }
 
-int sendString(int fd, char* text) {
-  int res = 0;
-  res = sockSend(fd, text, strlen(text));
-  if(res < 0) {
-    fprintf(stderr, "Error sending reading. res = %i\n", res);
-  }
-  return res;
-}
-
-int sendStringToAll(char * txt) {
+int sendCANToAll(struct can_frame * frame) {
   int i;
   int cnt = 0;
   for(i = 0; i < NCLIENTS; i++) {
     if((clients[i].fd > 0) && (clients[i].typ == CLIENT_TYPE_SOCK)) {
-      int ret = sendString(clients[i].fd, txt);
+      int ret = sockSend(clients[i].fd, frame, sizeof(frame));
       if(ret > 0) {
         cnt++;
       }
@@ -600,6 +623,7 @@ int processing_loop(int kq, int sockFd, struct libusb_device_handle *devh, libus
     .tv_sec = 0,
     .tv_nsec = 0
   };
+  struct can_frame* frame;
 
   print_time_now();
 #ifdef DEBUG_INFO_SETUP
@@ -630,7 +654,7 @@ int processing_loop(int kq, int sockFd, struct libusb_device_handle *devh, libus
           EV_SET(&evSet, fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
           assert(-1 != kevent(kq, &evSet, 1, NULL, 0, NULL));
 
-          sendString(fd, "Welcome!\n");
+          // sendString(fd, "Welcome!\n");
         } else {
           fprintf(stderr, "Connection refused!");
           close(fd);
@@ -648,39 +672,34 @@ int processing_loop(int kq, int sockFd, struct libusb_device_handle *devh, libus
 #endif
             conn_close(fd);
           } else {
-#ifdef DEBUG_INFO_SOCK_IN
-            printf("Socket data! Bytes waiting: %li\n", evList[i].data);
-            printf("evList[%i].flags = 0x%04x, .fflags = 0x%04x\n", i, evList[i].flags, evList[i].fflags);
-#endif
-            char* dataIn = calloc(1, evList[i].data + 1);
-            dataIn[evList[i].data] = 0;
-            int ret = read(fd, dataIn, evList[i].data);
-#ifdef DEBUG_INFO_SOCK_IN
-            printf("%.*s", ret, dataIn);
-#endif
-            if(ret > 12) {
-              uint32_t id = strtoul(dataIn, NULL, 16);
-              printf("Identifier: %08x\n", id);
-              uint8_t dlc = (uint8_t)strtoul(&(dataIn[9]), NULL, 16);
-              printf("       dlc: %02x\n", dlc);
-              uint32_t max_len = 12 + (dlc * 2);
-              printf("   max_len: %u\n", max_len);
-              printf("       ret: %u\n", ret);
-              uint8_t data[8];
-              char conv[3];
-              if(ret >= max_len) {
-                uint32_t rd = 12;
-                for(int i=0; i < dlc; i++) {
-                  conv[0] = dataIn[rd++];
-                  conv[1] = dataIn[rd++];
-                  conv[2] = '\0';
-                  data[i] = (uint8_t)strtoul(conv, NULL, 16);
-                  printf("   data[%u]: %02x\n", i, data[i]);
-                } 
-                send_packet(devh, id, dlc, data);            
+// #ifdef DEBUG_INFO_SOCK_IN
+//             printf("Socket data! Bytes waiting: %li\n", evList[i].data);
+//             printf("evList[%i].flags = 0x%04x, .fflags = 0x%04x\n", i, evList[i].flags, evList[i].fflags);
+// #endif
+            frame = calloc(1, sizeof(struct can_frame));
+            int ret = recv(fd, frame, sizeof(struct can_frame), 0);
+            if(ret != sizeof(struct can_frame)) {
+              printf("Read %u bytes, expected %lu bytes!\n", ret, sizeof(struct can_frame));
+            } else {
+              printf("ID: ");
+              if(frame->can_id & CAN_ERR_FLAG) {
+                printf("%08x ERR", frame->can_id);
+              } else if(frame->can_id & CAN_EFF_FLAG) {
+                printf("%08x", frame->can_id & CAN_EFF_MASK);
+              } else {
+                printf("     %03x", frame->can_id & CAN_SFF_MASK);
               }
+              printf(" len: %u ", frame->len);
+              printf(" data: ");
+              for(int n = 0; n < frame->len; n++) {
+                printf("%02x ", frame->data[n]);
+              }
+              printf("\n");
+              send_packet(devh, frame->can_id, frame->len, frame->data);
+              free(frame);
+              frame = NULL;
             }
-            free(dataIn);
+
           }
           break;
         }

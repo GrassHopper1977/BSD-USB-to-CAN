@@ -1,0 +1,1 @@
+cc -g -O2 -Wall -mabi=purecap -cheri-bounds=subobject-safe -lusb -lssl -o testtx testtx.c
