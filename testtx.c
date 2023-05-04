@@ -518,14 +518,14 @@ int read_packet(struct usb2can_can* can) {
   memset(&data, 0, sizeof(data));
   int len = 0;
   int ret = libusb_bulk_transfer(can->devh, ENDPOINT_IN, (uint8_t*) &data, sizeof(data), &len, 1);
-  if(len != sizeof(data)) {
-    printf("ERROR CAN IN       ");
-    print_time_now();
-    print_host_frame(&data);
-    printf(" Size mismatch! sizeof(data) = %lu, len = %u, ret = %x \n", sizeof(data), len, ret);
-    fflush(stdout);
-  }
   if(ret == 0) {
+    if(len != sizeof(data)) {
+      printf("ERROR CAN IN       ");
+      print_time_now();
+      print_host_frame(&data);
+      printf(" Size mismatch! sizeof(data) = %lu, len = %u, ret = %x \n", sizeof(data), len, ret);
+      fflush(stdout);
+    }
 #ifdef DEBUG_INFO_CAN_IN
     printf("      CAN IN       ");
     print_time_now();
@@ -596,14 +596,14 @@ int read_packet(struct usb2can_can* can) {
 #endif
       sendCANToAll(&frame);
     }
-  } else {
+  } else if(ret != LIBUSB_ERROR_TIMEOUT) {
     printf("CAN FRAME IN ");
     print_time_now();
     printf(" ");
     switch(ret) {
-    case LIBUSB_ERROR_TIMEOUT:
-      printf("LIBUSB_ERROR_TIMEOUT");
-      break;
+    // case LIBUSB_ERROR_TIMEOUT:
+    //   printf("LIBUSB_ERROR_TIMEOUT");
+    //   break;
     case LIBUSB_ERROR_PIPE:
       printf("LIBUSB_ERROR_PIPE");
       break;
@@ -1286,7 +1286,7 @@ int main(int argc, char *argv[]) {
     int r = libusb_get_device_descriptor(dev, &desc);
     if (r < 0) printf("ERROR: failed to get device descriptor (r = %d)\n", r);
 
-    printf("%2ld Vendor ID: %i, Product ID: %i, Manufacturer: %i, Product: %i, Serial: %i\n", i+1, desc.idVendor, desc.idProduct, desc.iManufacturer, desc.iProduct, desc.iSerialNumber);
+    printf("%2ld Vendor ID: %i (0x%04x), Product ID: %i (0x%04x), Manufacturer: %i, Product: %i, Serial: %i\n", i+1, desc.idVendor, desc.idVendor, desc.idProduct, desc.idProduct, desc.iManufacturer, desc.iProduct, desc.iSerialNumber);
   }
 
   libusb_free_device_list(list, 1);
@@ -1514,7 +1514,7 @@ int main(int argc, char *argv[]) {
   frame.data[7] = 0xef;
   int i = 0;
   uint64_t next = millis() + 100; // Times out after 100ms
-  while(i < 1000) {
+  while(i < 270) {
     uint64_t now = millis();
     int max = 0;
     while((0 == read_packet(can)) && (max < USB2CAN_MAX_RX_REQ)) {
@@ -1522,6 +1522,7 @@ int main(int argc, char *argv[]) {
     }
     handleRetries(can);
     if(now >= next) {
+      printf("%3u. ", i);
       // Try to send a message.
       // printf("CAN FRAME OUT %3u. ", i + 1);
       // print_time_now();
@@ -1530,12 +1531,12 @@ int main(int argc, char *argv[]) {
       int success = send_packet(can, &frame);
       if(success == LIBUSB_ERROR_BUSY) {
         // Tx Stack is full so wait before trying again.
-        next = millis() + 1000; // Wait before trying again
+        next = millis() + 250; //1000; // Wait before trying again
       } else {
         // On Tx Stack so will be sent eventually.
         frame.data[0]++;
         i++;
-        next = millis() + 250; // Wait before sending next message
+        next = millis() + 20; //250; // Wait before sending next message
       }
 
       usleep(2000);
