@@ -1,0 +1,1153 @@
+Creating our server here...
+Listening on 2303
+Setting up libusb for CAN socket...
+LIBUSB_API_VERSION = 01000102
+LibUSB version = 1.0.0.2016  https://www.freebsd.org
+Trying libusb_init...
+4 USB devices found.
+
+USB Devices found:
+ 1 Vendor ID: 0 (0x0000), Product ID: 0 (0x0000), Manufacturer: 1, Product: 2, Serial: 0
+ 2 Vendor ID: 1507 (0x05e3), Product ID: 1544 (0x0608), Manufacturer: 0, Product: 1, Serial: 0
+ 3 Vendor ID: 1507 (0x05e3), Product ID: 1544 (0x0608), Manufacturer: 0, Product: 1, Serial: 0
+ 4 Vendor ID: 7504 (0x1d50), Product ID: 24687 (0x606f), Manufacturer: 1, Product: 2, Serial: 3
+Attempting to open the USB2CAN device with 1d50:606f now...
+Device opened.
+Checking if kernel driver is active...
+Claiming interface...
+Getting descriptor...
+Endpoints found: 129 (0x81), 2 (0x02),
+Creating our CAN context...
+CAN context created!
+Setting up for comms...
+Set the User ID (USB2CAN_BREQ_SET_USER_ID)
+Set the host format to Little Endian (as candleLight devices are always Little Endian) (USB2CAN_BREQ_HOST_FORMAT)
+Getting device config info (USB2CAN_BREQ_DEVICE_CONFIG)
+Device Config:
+   reserved1: 0x00
+   reserved2: 0x00
+   reserved3: 0x00
+     i count: 0 (1 interfaces)
+  sw_version: 2
+  hw_version: 1
+Getting the port's bit timing info (USB2CAN_BREQ_BT_CONST)
+BT Const Information:
+    feature: 000000f3 (USB2CAN_FEATURE_LISTEN_ONLY, USB2CAN_FEATURE_LOOP_BACK, USB2CAN_FEATURE_HW_TIMESTAMP, USB2CAN_FEATURE_IDENTIFY, USB2CAN_FEATURE_USER_ID, USB2CAN_FEATURE_PAD_PKTS_TO_MAX_PKT_SIZE, )
+   fclk_can: 48000000
+  tseg1_min: 1
+  tseg1_max: 16
+  tseg2_min: 1
+  tseg2_max: 8
+    sjw_max: 4
+    brp_min: 1
+    brp_max: 1024
+    brp_inc: 1
+Setting bitrate...
+Opening port...
+Opening the port (USB2CAN_BREQ_MODE)
+USB to CAN device is connected!
+Creating Event Queue...
+Starting main program loop...
+  0.      Tx Queue      1683290426.712601 secs ID:      001 len: 8  data: 00 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.712984 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  00 00 34 56 de ad be ef
+  1.      Tx Queue      1683290426.734601 secs ID:      001 len: 8  data: 01 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.734905 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  01 01 34 56 de ad be ef
+       CAN IN      1683290426.735032 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  01 01 34 56 de ad be ef - Context released!
+  2.      Tx Queue      1683290426.756599 secs ID:      001 len: 8  data: 02 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.756900 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  02 01 34 56 de ad be ef
+  3.      Tx Queue      1683290426.778601 secs ID:      001 len: 8  data: 03 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.778903 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  03 02 34 56 de ad be ef
+       CAN IN      1683290426.779157 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  03 02 34 56 de ad be ef - Context released!
+  4.      Tx Queue      1683290426.800725 secs ID:      001 len: 8  data: 04 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.801027 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  04 02 34 56 de ad be ef
+       CAN IN      1683290426.801282 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  04 02 34 56 de ad be ef - Context released!
+  5.      Tx Queue      1683290426.822600 secs ID:      001 len: 8  data: 05 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.822901 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  05 02 34 56 de ad be ef
+       CAN IN      1683290426.823027 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  05 02 34 56 de ad be ef - Context released!
+  6.      Tx Queue      1683290426.844599 secs ID:      001 len: 8  data: 06 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.844900 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  06 02 34 56 de ad be ef
+  7.      Tx Queue      1683290426.866598 secs ID:      001 len: 8  data: 07 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.866900 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  07 03 34 56 de ad be ef
+       CAN IN      1683290426.867025 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  07 03 34 56 de ad be ef - Context released!
+  8.      Tx Queue      1683290426.888724 secs ID:      001 len: 8  data: 08 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.889022 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  08 03 34 56 de ad be ef
+       CAN IN      1683290426.889165 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  08 03 34 56 de ad be ef - Context released!
+  9.      Tx Queue      1683290426.910727 secs ID:      001 len: 8  data: 09 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.911020 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  09 03 34 56 de ad be ef
+       CAN IN      1683290426.911146 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  09 03 34 56 de ad be ef - Context released!
+ 10.      Tx Queue      1683290426.932725 secs ID:      001 len: 8  data: 0a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.933023 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0a 03 34 56 de ad be ef
+ 11.      Tx Queue      1683290426.954725 secs ID:      001 len: 8  data: 0b 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.955023 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0b 04 34 56 de ad be ef
+       CAN IN      1683290426.955148 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0b 04 34 56 de ad be ef - Context released!
+ 12.      Tx Queue      1683290426.976724 secs ID:      001 len: 8  data: 0c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.977022 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0c 04 34 56 de ad be ef
+ 13.      Tx Queue      1683290426.998728 secs ID:      001 len: 8  data: 0d 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290426.999026 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0d 05 34 56 de ad be ef
+       CAN IN      1683290426.999279 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0d 05 34 56 de ad be ef - Context released!
+ 14.      Tx Queue      1683290427.020726 secs ID:      001 len: 8  data: 0e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.021019 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0e 05 34 56 de ad be ef
+       CAN IN      1683290427.021274 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0e 05 34 56 de ad be ef - Context released!
+ 15.      Tx Queue      1683290427.042726 secs ID:      001 len: 8  data: 0f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.043019 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0f 05 34 56 de ad be ef
+       CAN IN      1683290427.043142 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0f 05 34 56 de ad be ef - Context released!
+ 16.      Tx Queue      1683290427.064727 secs ID:      001 len: 8  data: 10 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.065020 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  10 05 34 56 de ad be ef
+ 17.      Tx Queue      1683290427.086725 secs ID:      001 len: 8  data: 11 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.087019 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  11 06 34 56 de ad be ef
+       CAN IN      1683290427.087143 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  11 06 34 56 de ad be ef - Context released!
+ 18.      Tx Queue      1683290427.108724 secs ID:      001 len: 8  data: 12 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.109018 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  12 06 34 56 de ad be ef
+       CAN IN      1683290427.109163 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  12 06 34 56 de ad be ef - Context released!
+ 19.      Tx Queue      1683290427.130724 secs ID:      001 len: 8  data: 13 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.131017 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  13 06 34 56 de ad be ef
+       CAN IN      1683290427.131142 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  13 06 34 56 de ad be ef - Context released!
+ 20.      Tx Queue      1683290427.152723 secs ID:      001 len: 8  data: 14 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.153016 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  14 06 34 56 de ad be ef
+ 21.      Tx Queue      1683290427.174723 secs ID:      001 len: 8  data: 15 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.175012 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  15 07 34 56 de ad be ef
+       CAN IN      1683290427.175137 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  15 07 34 56 de ad be ef - Context released!
+ 22.      Tx Queue      1683290427.196725 secs ID:      001 len: 8  data: 16 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.197015 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  16 07 34 56 de ad be ef
+ 23.      Tx Queue      1683290427.218725 secs ID:      001 len: 8  data: 17 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.219015 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  17 08 34 56 de ad be ef
+       CAN IN      1683290427.219269 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  17 08 34 56 de ad be ef - Context released!
+ 24.      Tx Queue      1683290427.240724 secs ID:      001 len: 8  data: 18 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.241015 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  18 08 34 56 de ad be ef
+       CAN IN      1683290427.241267 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  18 08 34 56 de ad be ef - Context released!
+ 25.      Tx Queue      1683290427.262723 secs ID:      001 len: 8  data: 19 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.263013 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  19 08 34 56 de ad be ef
+       CAN IN      1683290427.263139 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  19 08 34 56 de ad be ef - Context released!
+ 26.      Tx Queue      1683290427.284722 secs ID:      001 len: 8  data: 1a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.285012 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1a 08 34 56 de ad be ef
+ 27.      Tx Queue      1683290427.306723 secs ID:      001 len: 8  data: 1b 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.307008 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1b 09 34 56 de ad be ef
+       CAN IN      1683290427.307133 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1b 09 34 56 de ad be ef - Context released!
+ 28.      Tx Queue      1683290427.328726 secs ID:      001 len: 8  data: 1c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.329008 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1c 09 34 56 de ad be ef
+       CAN IN      1683290427.329133 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1c 09 34 56 de ad be ef - Context released!
+ 29.      Tx Queue      1683290427.350724 secs ID:      001 len: 8  data: 1d 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.351011 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1d 09 34 56 de ad be ef
+       CAN IN      1683290427.351157 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1d 09 34 56 de ad be ef - Context released!
+ 30.      Tx Queue      1683290427.372727 secs ID:      001 len: 8  data: 1e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.373010 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1e 09 34 56 de ad be ef
+ 31.      Tx Queue      1683290427.394725 secs ID:      001 len: 8  data: 1f 12 34 56 de ad be ef  - BUSY!
+ 31.      Tx Queue      1683290427.646725 secs ID:      001 len: 8  data: 1f 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290427.714726 secs ID:      001 len: 8  data: 00 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.714998 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  00 00 34 56 de ad be ef
+       CAN IN      1683290427.715124 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  00 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290427.758600 secs ID:      001 len: 8  data: 02 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.758871 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  02 00 34 56 de ad be ef
+       CAN IN      1683290427.759022 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  02 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290427.846725 secs ID:      001 len: 8  data: 06 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.847123 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  06 00 34 56 de ad be ef
+       CAN IN      1683290427.847249 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  06 00 34 56 de ad be ef - Context released!
+ 31.      Tx Queue      1683290427.898724 secs ID:      001 len: 8  data: 1f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.899121 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1f 00 34 56 de ad be ef
+       CAN IN      1683290427.899270 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1f 00 34 56 de ad be ef - Context released!
+ 32.      Tx Queue      1683290427.920724 secs ID:      001 len: 8  data: 20 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.921120 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  20 00 34 56 de ad be ef
+       CAN IN      1683290427.921246 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  20 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290427.934724 secs ID:      001 len: 8  data: 0a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.935116 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0a 00 34 56 de ad be ef
+ 33.      Tx Queue      1683290427.942727 secs ID:      001 len: 8  data: 21 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.943119 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  21 01 34 56 de ad be ef
+       CAN IN      1683290427.943246 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  21 01 34 56 de ad be ef - Context released!
+ 34.      Tx Queue      1683290427.964725 secs ID:      001 len: 8  data: 22 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.965119 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  22 01 34 56 de ad be ef
+     Tx Queue      1683290427.978729 secs ID:      001 len: 8  data: 0c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.979116 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0c 02 34 56 de ad be ef
+       CAN IN      1683290427.979245 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0c 02 34 56 de ad be ef - Context released!
+ 35.      Tx Queue      1683290427.987725 secs ID:      001 len: 8  data: 23 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290427.988118 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  23 02 34 56 de ad be ef
+ 36.      Tx Queue      1683290428.011725 secs ID:      001 len: 8  data: 24 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.012117 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  24 03 34 56 de ad be ef
+       CAN IN      1683290428.012244 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  24 03 34 56 de ad be ef - Context released!
+ 37.      Tx Queue      1683290428.033729 secs ID:      001 len: 8  data: 25 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.034117 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  25 03 34 56 de ad be ef
+ 38.      Tx Queue      1683290428.056724 secs ID:      001 len: 8  data: 26 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.057112 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  26 04 34 56 de ad be ef
+       CAN IN      1683290428.057239 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  26 04 34 56 de ad be ef - Context released!
+     Tx Queue      1683290428.065724 secs ID:      001 len: 8  data: 10 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.066112 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  10 04 34 56 de ad be ef
+ 39.      Tx Queue      1683290428.080723 secs ID:      001 len: 8  data: 27 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.081112 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  27 05 34 56 de ad be ef
+       CAN IN      1683290428.081257 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  27 05 34 56 de ad be ef - Context released!
+ 40.      Tx Queue      1683290428.103725 secs ID:      001 len: 8  data: 28 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.104115 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  28 05 34 56 de ad be ef
+ 41.      Tx Queue      1683290428.125725 secs ID:      001 len: 8  data: 29 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290428.153600 secs ID:      001 len: 8  data: 14 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.153985 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  14 06 34 56 de ad be ef
+       CAN IN      1683290428.154110 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  14 06 34 56 de ad be ef - Context released!
+     Tx Queue      1683290428.198726 secs ID:      001 len: 8  data: 16 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.199111 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  16 06 34 56 de ad be ef
+       CAN IN      1683290428.199238 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  16 06 34 56 de ad be ef - Context released!
+     Tx Queue      1683290428.285599 secs ID:      001 len: 8  data: 1a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.285981 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1a 06 34 56 de ad be ef
+       CAN IN      1683290428.286107 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1a 06 34 56 de ad be ef - Context released!
+     Tx Queue      1683290428.374600 secs ID:      001 len: 8  data: 1e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.374982 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1e 06 34 56 de ad be ef
+ 41.      Tx Queue      1683290428.378725 secs ID:      001 len: 8  data: 29 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.379106 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  29 07 34 56 de ad be ef
+       CAN IN      1683290428.379364 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  29 07 34 56 de ad be ef - Context released!
+ 42.      Tx Queue      1683290428.400725 secs ID:      001 len: 8  data: 2a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.401102 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2a 07 34 56 de ad be ef
+       CAN IN      1683290428.401360 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2a 07 34 56 de ad be ef - Context released!
+ 43.      Tx Queue      1683290428.422725 secs ID:      001 len: 8  data: 2b 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.423101 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2b 07 34 56 de ad be ef
+       CAN IN      1683290428.423228 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2b 07 34 56 de ad be ef - Context released!
+ 44.      Tx Queue      1683290428.444614 secs ID:      001 len: 8  data: 2c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.444979 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2c 07 34 56 de ad be ef
+ 45.      Tx Queue      1683290428.466614 secs ID:      001 len: 8  data: 2d 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.466979 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2d 08 34 56 de ad be ef
+       CAN IN      1683290428.467105 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2d 08 34 56 de ad be ef - Context released!
+ 46.      Tx Queue      1683290428.488738 secs ID:      001 len: 8  data: 2e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.489103 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2e 08 34 56 de ad be ef
+       CAN IN      1683290428.489252 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2e 08 34 56 de ad be ef - Context released!
+ 47.      Tx Queue      1683290428.510737 secs ID:      001 len: 8  data: 2f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.511103 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2f 08 34 56 de ad be ef
+       CAN IN      1683290428.511229 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2f 08 34 56 de ad be ef - Context released!
+ 48.      Tx Queue      1683290428.532738 secs ID:      001 len: 8  data: 30 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.533102 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  30 08 34 56 de ad be ef
+ 49.      Tx Queue      1683290428.554612 secs ID:      001 len: 8  data: 31 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.554976 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  31 09 34 56 de ad be ef
+       CAN IN      1683290428.555102 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  31 09 34 56 de ad be ef - Context released!
+ 50.      Tx Queue      1683290428.576610 secs ID:      001 len: 8  data: 32 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.576976 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  32 09 34 56 de ad be ef
+ 51.      Tx Queue      1683290428.598610 secs ID:      001 len: 8  data: 33 12 34 56 de ad be ef  - BUSY!
+CAN FRAME IN 1683290428.833695 secs LIBUSB_ERROR_PIPE - ERROR!
+ 51.      Tx Queue      1683290428.850601 secs ID:      001 len: 8  data: 33 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290428.936600 secs ID:      001 len: 8  data: 0a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.936966 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0a 00 34 56 de ad be ef
+       CAN IN      1683290428.937091 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0a 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290428.966725 secs ID:      001 len: 8  data: 22 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.967085 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  22 00 34 56 de ad be ef
+     Tx Queue      1683290428.988602 secs ID:      001 len: 8  data: 23 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290428.988964 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  23 01 34 56 de ad be ef
+       CAN IN      1683290428.989219 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  23 01 34 56 de ad be ef - Context released!
+     Tx Queue      1683290429.035607 secs ID:      001 len: 8  data: 25 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.035966 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  25 01 34 56 de ad be ef
+     Tx Queue      1683290429.067600 secs ID:      001 len: 8  data: 10 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.067961 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  10 02 34 56 de ad be ef
+       CAN IN      1683290429.068087 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  10 02 34 56 de ad be ef - Context released!
+     Tx Queue      1683290429.104600 secs ID:      001 len: 8  data: 28 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.104957 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  28 02 34 56 de ad be ef
+ 51.      Tx Queue      1683290429.104963 secs ID:      001 len: 8  data: 33 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.105085 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  33 03 34 56 de ad be ef
+       CAN IN      1683290429.105338 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  33 03 34 56 de ad be ef - Context released!
+ 52.      Tx Queue      1683290429.127602 secs ID:      001 len: 8  data: 34 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.127959 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  34 03 34 56 de ad be ef
+ 53.      Tx Queue      1683290429.150602 secs ID:      001 len: 8  data: 35 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.150959 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  35 04 34 56 de ad be ef
+       CAN IN      1683290429.151102 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  35 04 34 56 de ad be ef - Context released!
+ 54.      Tx Queue      1683290429.173601 secs ID:      001 len: 8  data: 36 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.173958 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  36 04 34 56 de ad be ef
+ 55.      Tx Queue      1683290429.196601 secs ID:      001 len: 8  data: 37 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.196954 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  37 05 34 56 de ad be ef
+       CAN IN      1683290429.197079 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  37 05 34 56 de ad be ef - Context released!
+ 56.      Tx Queue      1683290429.219600 secs ID:      001 len: 8  data: 38 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.219953 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  38 05 34 56 de ad be ef
+       CAN IN      1683290429.220079 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  38 05 34 56 de ad be ef - Context released!
+ 57.      Tx Queue      1683290429.242727 secs ID:      001 len: 8  data: 39 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.243081 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  39 05 34 56 de ad be ef
+       CAN IN      1683290429.243207 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  39 05 34 56 de ad be ef - Context released!
+ 58.      Tx Queue      1683290429.264601 secs ID:      001 len: 8  data: 3a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.264956 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3a 05 34 56 de ad be ef
+ 59.      Tx Queue      1683290429.287601 secs ID:      001 len: 8  data: 3b 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290429.375725 secs ID:      001 len: 8  data: 1e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.376077 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1e 06 34 56 de ad be ef
+       CAN IN      1683290429.376203 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  1e 06 34 56 de ad be ef - Context released!
+     Tx Queue      1683290429.446724 secs ID:      001 len: 8  data: 2c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.447075 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2c 06 34 56 de ad be ef
+CAN FRAME IN 1683290429.451549 secs LIBUSB_ERROR_PIPE - ERROR!
+     Tx Queue      1683290429.534726 secs ID:      001 len: 8  data: 30 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.535073 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  30 07 34 56 de ad be ef
+       CAN IN      1683290429.535199 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  30 07 34 56 de ad be ef - Context released!
+ 59.      Tx Queue      1683290429.539726 secs ID:      001 len: 8  data: 3b 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.540072 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3b 07 34 56 de ad be ef
+       CAN IN      1683290429.540327 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3b 07 34 56 de ad be ef - Context released!
+ 60.      Tx Queue      1683290429.563725 secs ID:      001 len: 8  data: 3c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.564071 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3c 07 34 56 de ad be ef
+       CAN IN      1683290429.564197 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3c 07 34 56 de ad be ef - Context released!
+     Tx Queue      1683290429.578724 secs ID:      001 len: 8  data: 32 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.579071 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  32 07 34 56 de ad be ef
+       CAN IN      1683290429.579215 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  32 07 34 56 de ad be ef - Context released!
+ 61.      Tx Queue      1683290429.586725 secs ID:      001 len: 8  data: 3d 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.587071 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3d 07 34 56 de ad be ef
+       CAN IN      1683290429.587197 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3d 07 34 56 de ad be ef - Context released!
+ 62.      Tx Queue      1683290429.608725 secs ID:      001 len: 8  data: 3e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.609070 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3e 07 34 56 de ad be ef
+       CAN IN      1683290429.609196 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3e 07 34 56 de ad be ef - Context released!
+ 63.      Tx Queue      1683290429.630725 secs ID:      001 len: 8  data: 3f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.631066 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3f 07 34 56 de ad be ef
+       CAN IN      1683290429.631192 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3f 07 34 56 de ad be ef - Context released!
+ 64.      Tx Queue      1683290429.652725 secs ID:      001 len: 8  data: 40 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.653069 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  40 07 34 56 de ad be ef
+ 65.      Tx Queue      1683290429.674726 secs ID:      001 len: 8  data: 41 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.675068 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  41 08 34 56 de ad be ef
+       CAN IN      1683290429.675194 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  41 08 34 56 de ad be ef - Context released!
+ 66.      Tx Queue      1683290429.696725 secs ID:      001 len: 8  data: 42 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.697067 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  42 08 34 56 de ad be ef
+ 67.      Tx Queue      1683290429.718724 secs ID:      001 len: 8  data: 43 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.719067 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  43 09 34 56 de ad be ef
+       CAN IN      1683290429.719324 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  43 09 34 56 de ad be ef - Context released!
+ 68.      Tx Queue      1683290429.740723 secs ID:      001 len: 8  data: 44 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.741066 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  44 09 34 56 de ad be ef
+       CAN IN      1683290429.741322 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  44 09 34 56 de ad be ef - Context released!
+ 69.      Tx Queue      1683290429.762723 secs ID:      001 len: 8  data: 45 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.763062 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  45 09 34 56 de ad be ef
+       CAN IN      1683290429.763188 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  45 09 34 56 de ad be ef - Context released!
+ 70.      Tx Queue      1683290429.784726 secs ID:      001 len: 8  data: 46 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.785065 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  46 09 34 56 de ad be ef
+ 71.      Tx Queue      1683290429.806725 secs ID:      001 len: 8  data: 47 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290429.968724 secs ID:      001 len: 8  data: 22 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290429.969060 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  22 00 34 56 de ad be ef
+       CAN IN      1683290429.969315 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  22 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290430.036604 secs ID:      001 len: 8  data: 25 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.036933 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  25 00 34 56 de ad be ef
+ 71.      Tx Queue      1683290430.058601 secs ID:      001 len: 8  data: 47 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.058931 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  47 01 34 56 de ad be ef
+       CAN IN      1683290430.059057 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  47 01 34 56 de ad be ef - Context released!
+ 72.      Tx Queue      1683290430.080605 secs ID:      001 len: 8  data: 48 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.080931 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  48 01 34 56 de ad be ef
+       CAN IN      1683290430.081188 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  48 01 34 56 de ad be ef - Context released!
+ 73.      Tx Queue      1683290430.102724 secs ID:      001 len: 8  data: 49 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.103055 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  49 01 34 56 de ad be ef
+       CAN IN      1683290430.103182 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  49 01 34 56 de ad be ef - Context released!
+     Tx Queue      1683290430.105724 secs ID:      001 len: 8  data: 28 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.106055 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  28 01 34 56 de ad be ef
+ 74.      Tx Queue      1683290430.124723 secs ID:      001 len: 8  data: 4a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.125055 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4a 02 34 56 de ad be ef
+       CAN IN      1683290430.125182 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4a 02 34 56 de ad be ef - Context released!
+     Tx Queue      1683290430.129724 secs ID:      001 len: 8  data: 34 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.130051 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  34 02 34 56 de ad be ef
+       CAN IN      1683290430.130178 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  34 02 34 56 de ad be ef - Context released!
+ 75.      Tx Queue      1683290430.146726 secs ID:      001 len: 8  data: 4b 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.147054 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4b 02 34 56 de ad be ef
+       CAN IN      1683290430.147181 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4b 02 34 56 de ad be ef - Context released!
+ 76.      Tx Queue      1683290430.168725 secs ID:      001 len: 8  data: 4c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.169054 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4c 02 34 56 de ad be ef
+       CAN IN      1683290430.169180 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4c 02 34 56 de ad be ef - Context released!
+     Tx Queue      1683290430.174725 secs ID:      001 len: 8  data: 36 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.175053 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  36 02 34 56 de ad be ef
+       CAN IN      1683290430.175180 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  36 02 34 56 de ad be ef - Context released!
+ 77.      Tx Queue      1683290430.190730 secs ID:      001 len: 8  data: 4d 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.191063 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4d 02 34 56 de ad be ef
+       CAN IN      1683290430.191311 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4d 02 34 56 de ad be ef - Context released!
+ 78.      Tx Queue      1683290430.212600 secs ID:      001 len: 8  data: 4e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.212928 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4e 02 34 56 de ad be ef
+       CAN IN      1683290430.213053 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4e 02 34 56 de ad be ef - Context released!
+ 79.      Tx Queue      1683290430.234724 secs ID:      001 len: 8  data: 4f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.235049 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4f 02 34 56 de ad be ef
+ 80.      Tx Queue      1683290430.256599 secs ID:      001 len: 8  data: 50 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.256923 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  50 03 34 56 de ad be ef
+       CAN IN      1683290430.257048 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  50 03 34 56 de ad be ef - Context released!
+     Tx Queue      1683290430.266602 secs ID:      001 len: 8  data: 3a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.266926 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3a 03 34 56 de ad be ef
+ 81.      Tx Queue      1683290430.278601 secs ID:      001 len: 8  data: 51 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.278926 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  51 04 34 56 de ad be ef
+       CAN IN      1683290430.279182 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  51 04 34 56 de ad be ef - Context released!
+ 82.      Tx Queue      1683290430.300601 secs ID:      001 len: 8  data: 52 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.300926 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  52 04 34 56 de ad be ef
+       CAN IN      1683290430.301051 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  52 04 34 56 de ad be ef - Context released!
+ 83.      Tx Queue      1683290430.322600 secs ID:      001 len: 8  data: 53 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.322925 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  53 04 34 56 de ad be ef
+       CAN IN      1683290430.323050 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  53 04 34 56 de ad be ef - Context released!
+ 84.      Tx Queue      1683290430.344726 secs ID:      001 len: 8  data: 54 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.345045 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  54 04 34 56 de ad be ef
+ 85.      Tx Queue      1683290430.366601 secs ID:      001 len: 8  data: 55 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.366920 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  55 05 34 56 de ad be ef
+       CAN IN      1683290430.367045 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  55 05 34 56 de ad be ef - Context released!
+ 86.      Tx Queue      1683290430.388598 secs ID:      001 len: 8  data: 56 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.388925 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  56 05 34 56 de ad be ef
+       CAN IN      1683290430.389053 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  56 05 34 56 de ad be ef - Context released!
+ 87.      Tx Queue      1683290430.410602 secs ID:      001 len: 8  data: 57 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.410922 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  57 05 34 56 de ad be ef
+       CAN IN      1683290430.411062 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  57 05 34 56 de ad be ef - Context released!
+ 88.      Tx Queue      1683290430.432601 secs ID:      001 len: 8  data: 58 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.432921 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  58 05 34 56 de ad be ef
+     Tx Queue      1683290430.448601 secs ID:      001 len: 8  data: 2c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.448921 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2c 06 34 56 de ad be ef
+       CAN IN      1683290430.449177 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  2c 06 34 56 de ad be ef - Context released!
+ 89.      Tx Queue      1683290430.454725 secs ID:      001 len: 8  data: 59 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.455046 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  59 06 34 56 de ad be ef
+ 90.      Tx Queue      1683290430.476600 secs ID:      001 len: 8  data: 5a 12 34 56 de ad be ef  - BUSY!
+CAN FRAME IN 1683290430.569635 secs LIBUSB_ERROR_PIPE - ERROR!
+     Tx Queue      1683290430.654723 secs ID:      001 len: 8  data: 40 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.655035 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  40 07 34 56 de ad be ef
+       CAN IN      1683290430.655160 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  40 07 34 56 de ad be ef - Context released!
+     Tx Queue      1683290430.698724 secs ID:      001 len: 8  data: 42 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.699037 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  42 07 34 56 de ad be ef
+       CAN IN      1683290430.699179 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  42 07 34 56 de ad be ef - Context released!
+ 90.      Tx Queue      1683290430.728599 secs ID:      001 len: 8  data: 5a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.728907 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5a 07 34 56 de ad be ef
+       CAN IN      1683290430.729033 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5a 07 34 56 de ad be ef - Context released!
+ 91.      Tx Queue      1683290430.750601 secs ID:      001 len: 8  data: 5b 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.750910 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5b 07 34 56 de ad be ef
+       CAN IN      1683290430.751036 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5b 07 34 56 de ad be ef - Context released!
+ 92.      Tx Queue      1683290430.772600 secs ID:      001 len: 8  data: 5c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.772909 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5c 07 34 56 de ad be ef
+       CAN IN      1683290430.773035 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5c 07 34 56 de ad be ef - Context released!
+     Tx Queue      1683290430.786600 secs ID:      001 len: 8  data: 46 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.786909 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  46 07 34 56 de ad be ef
+ 93.      Tx Queue      1683290430.794599 secs ID:      001 len: 8  data: 5d 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.794908 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5d 08 34 56 de ad be ef
+       CAN IN      1683290430.795034 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5d 08 34 56 de ad be ef - Context released!
+ 94.      Tx Queue      1683290430.816724 secs ID:      001 len: 8  data: 5e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.817033 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5e 08 34 56 de ad be ef
+ 95.      Tx Queue      1683290430.838598 secs ID:      001 len: 8  data: 5f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.838907 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5f 09 34 56 de ad be ef
+       CAN IN      1683290430.839033 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5f 09 34 56 de ad be ef - Context released!
+ 96.      Tx Queue      1683290430.860598 secs ID:      001 len: 8  data: 60 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.860904 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  60 09 34 56 de ad be ef
+       CAN IN      1683290430.861159 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  60 09 34 56 de ad be ef - Context released!
+ 97.      Tx Queue      1683290430.883603 secs ID:      001 len: 8  data: 61 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.883907 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  61 09 34 56 de ad be ef
+       CAN IN      1683290430.884032 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  61 09 34 56 de ad be ef - Context released!
+ 98.      Tx Queue      1683290430.906600 secs ID:      001 len: 8  data: 62 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290430.906905 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  62 09 34 56 de ad be ef
+ 99.      Tx Queue      1683290430.931600 secs ID:      001 len: 8  data: 63 12 34 56 de ad be ef  - BUSY!
+CAN FRAME IN 1683290431.025621 secs LIBUSB_ERROR_PIPE - ERROR!
+     Tx Queue      1683290431.037730 secs ID:      001 len: 8  data: 25 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.038032 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  25 00 34 56 de ad be ef
+       CAN IN      1683290431.038155 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  25 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290431.106724 secs ID:      001 len: 8  data: 28 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.107028 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  28 00 34 56 de ad be ef
+ 99.      Tx Queue      1683290431.183725 secs ID:      001 len: 8  data: 63 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.184024 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  63 01 34 56 de ad be ef
+       CAN IN      1683290431.184149 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  63 01 34 56 de ad be ef - Context released!
+100.      Tx Queue      1683290431.206725 secs ID:      001 len: 8  data: 64 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.207024 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  64 01 34 56 de ad be ef
+101.      Tx Queue      1683290431.228725 secs ID:      001 len: 8  data: 65 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290431.235724 secs ID:      001 len: 8  data: 4f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.236022 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4f 02 34 56 de ad be ef
+       CAN IN      1683290431.236147 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  4f 02 34 56 de ad be ef - Context released!
+     Tx Queue      1683290431.267724 secs ID:      001 len: 8  data: 3a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.268022 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3a 02 34 56 de ad be ef
+     Tx Queue      1683290431.346724 secs ID:      001 len: 8  data: 54 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.347019 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  54 03 34 56 de ad be ef
+       CAN IN      1683290431.347142 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  54 03 34 56 de ad be ef - Context released!
+     Tx Queue      1683290431.434600 secs ID:      001 len: 8  data: 58 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.434892 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  58 03 34 56 de ad be ef
+     Tx Queue      1683290431.455726 secs ID:      001 len: 8  data: 59 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.456016 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  59 04 34 56 de ad be ef
+       CAN IN      1683290431.456141 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  59 04 34 56 de ad be ef - Context released!
+101.      Tx Queue      1683290431.480601 secs ID:      001 len: 8  data: 65 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.480887 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  65 04 34 56 de ad be ef
+       CAN IN      1683290431.481010 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  65 04 34 56 de ad be ef - Context released!
+102.      Tx Queue      1683290431.503726 secs ID:      001 len: 8  data: 66 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.504012 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  66 04 34 56 de ad be ef
+       CAN IN      1683290431.504136 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  66 04 34 56 de ad be ef - Context released!
+103.      Tx Queue      1683290431.526727 secs ID:      001 len: 8  data: 67 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.527010 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  67 04 34 56 de ad be ef
+104.      Tx Queue      1683290431.548726 secs ID:      001 len: 8  data: 68 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.549010 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  68 05 34 56 de ad be ef
+       CAN IN      1683290431.549134 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  68 05 34 56 de ad be ef - Context released!
+105.      Tx Queue      1683290431.572725 secs ID:      001 len: 8  data: 69 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.573009 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  69 05 34 56 de ad be ef
+106.      Tx Queue      1683290431.594600 secs ID:      001 len: 8  data: 6a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.594883 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6a 06 34 56 de ad be ef
+       CAN IN      1683290431.595009 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6a 06 34 56 de ad be ef - Context released!
+107.      Tx Queue      1683290431.616600 secs ID:      001 len: 8  data: 6b 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.616882 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6b 06 34 56 de ad be ef
+108.      Tx Queue      1683290431.639707 secs ID:      001 len: 8  data: 6c 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290431.788601 secs ID:      001 len: 8  data: 46 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.788878 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  46 07 34 56 de ad be ef
+       CAN IN      1683290431.789135 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  46 07 34 56 de ad be ef - Context released!
+     Tx Queue      1683290431.818725 secs ID:      001 len: 8  data: 5e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.819001 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5e 07 34 56 de ad be ef
+       CAN IN      1683290431.819146 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  5e 07 34 56 de ad be ef - Context released!
+108.      Tx Queue      1683290431.892602 secs ID:      001 len: 8  data: 6c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.892874 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6c 07 34 56 de ad be ef
+       CAN IN      1683290431.893007 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6c 07 34 56 de ad be ef - Context released!
+     Tx Queue      1683290431.908602 secs ID:      001 len: 8  data: 62 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.908874 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  62 07 34 56 de ad be ef
+       CAN IN      1683290431.909000 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  62 07 34 56 de ad be ef - Context released!
+109.      Tx Queue      1683290431.914602 secs ID:      001 len: 8  data: 6d 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.914874 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6d 07 34 56 de ad be ef
+       CAN IN      1683290431.914999 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6d 07 34 56 de ad be ef - Context released!
+110.      Tx Queue      1683290431.936601 secs ID:      001 len: 8  data: 6e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.936873 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6e 07 34 56 de ad be ef
+111.      Tx Queue      1683290431.958725 secs ID:      001 len: 8  data: 6f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.958998 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6f 08 34 56 de ad be ef
+       CAN IN      1683290431.959252 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6f 08 34 56 de ad be ef - Context released!
+112.      Tx Queue      1683290431.980600 secs ID:      001 len: 8  data: 70 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290431.980872 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  70 08 34 56 de ad be ef
+       CAN IN      1683290431.981127 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  70 08 34 56 de ad be ef - Context released!
+113.      Tx Queue      1683290432.002602 secs ID:      001 len: 8  data: 71 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.003000 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  71 08 34 56 de ad be ef
+       CAN IN      1683290432.003125 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  71 08 34 56 de ad be ef - Context released!
+CAN FRAME IN 1683290432.023597 secs LIBUSB_ERROR_PIPE - ERROR!
+114.      Tx Queue      1683290432.023602 secs ID:      001 len: 8  data: 72 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.023891 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  72 08 34 56 de ad be ef
+115.      Tx Queue      1683290432.046600 secs ID:      001 len: 8  data: 73 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.046872 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  73 09 34 56 de ad be ef
+       CAN IN      1683290432.046994 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  73 09 34 56 de ad be ef - Context released!
+116.      Tx Queue      1683290432.068724 secs ID:      001 len: 8  data: 74 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.069120 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  74 09 34 56 de ad be ef
+       CAN IN      1683290432.069268 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  74 09 34 56 de ad be ef - Context released!
+117.      Tx Queue      1683290432.090726 secs ID:      001 len: 8  data: 75 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.091121 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  75 09 34 56 de ad be ef
+       CAN IN      1683290432.091263 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  75 09 34 56 de ad be ef - Context released!
+     Tx Queue      1683290432.108723 secs ID:      001 len: 8  data: 28 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.109119 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  28 00 34 56 de ad be ef
+       CAN IN      1683290432.109246 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  28 00 34 56 de ad be ef - Context released!
+118.      Tx Queue      1683290432.114725 secs ID:      001 len: 8  data: 76 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.115119 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  76 00 34 56 de ad be ef
+       CAN IN      1683290432.115245 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  76 00 34 56 de ad be ef - Context released!
+119.      Tx Queue      1683290432.136723 secs ID:      001 len: 8  data: 77 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.137118 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  77 00 34 56 de ad be ef
+120.      Tx Queue      1683290432.158603 secs ID:      001 len: 8  data: 78 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.158997 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  78 09 34 56 de ad be ef
+       CAN IN      1683290432.159251 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  78 09 34 56 de ad be ef - Context released!
+121.      Tx Queue      1683290432.180602 secs ID:      001 len: 8  data: 79 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.180994 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  79 09 34 56 de ad be ef
+       CAN IN      1683290432.181249 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  79 09 34 56 de ad be ef - Context released!
+122.      Tx Queue      1683290432.202727 secs ID:      001 len: 8  data: 7a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.203119 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7a 09 34 56 de ad be ef
+       CAN IN      1683290432.203245 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7a 09 34 56 de ad be ef - Context released!
+     Tx Queue      1683290432.207601 secs ID:      001 len: 8  data: 64 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.207994 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  64 01 34 56 de ad be ef
+123.      Tx Queue      1683290432.224601 secs ID:      001 len: 8  data: 7b 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.224995 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7b 09 34 56 de ad be ef
+       CAN IN      1683290432.225119 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7b 09 34 56 de ad be ef - Context released!
+124.      Tx Queue      1683290432.246599 secs ID:      001 len: 8  data: 7c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.246993 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7c 09 34 56 de ad be ef
+     Tx Queue      1683290432.268600 secs ID:      001 len: 8  data: 3a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.268989 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3a 02 34 56 de ad be ef
+125.      Tx Queue      1683290432.268995 secs ID:      001 len: 8  data: 7d 12 34 56 de ad be ef  - BUSY!
+       CAN IN      1683290432.269244 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  3a 02 34 56 de ad be ef - Context released!
+     Tx Queue      1683290432.436725 secs ID:      001 len: 8  data: 58 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.437112 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  58 02 34 56 de ad be ef
+125.      Tx Queue      1683290432.520724 secs ID:      001 len: 8  data: 7d 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.521110 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7d 03 34 56 de ad be ef
+       CAN IN      1683290432.521235 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7d 03 34 56 de ad be ef - Context released!
+     Tx Queue      1683290432.527724 secs ID:      001 len: 8  data: 67 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.528106 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  67 03 34 56 de ad be ef
+126.      Tx Queue      1683290432.542726 secs ID:      001 len: 8  data: 7e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.543109 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7e 04 34 56 de ad be ef
+       CAN IN      1683290432.543235 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7e 04 34 56 de ad be ef - Context released!
+127.      Tx Queue      1683290432.564726 secs ID:      001 len: 8  data: 7f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.565108 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7f 04 34 56 de ad be ef
+     Tx Queue      1683290432.574726 secs ID:      001 len: 8  data: 69 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.575108 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  69 05 34 56 de ad be ef
+       CAN IN      1683290432.575234 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  69 05 34 56 de ad be ef - Context released!
+128.      Tx Queue      1683290432.586600 secs ID:      001 len: 8  data: 80 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.586982 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  80 05 34 56 de ad be ef
+129.      Tx Queue      1683290432.608600 secs ID:      001 len: 8  data: 81 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290432.618643 secs ID:      001 len: 8  data: 6b 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.618983 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6b 06 34 56 de ad be ef
+       CAN IN      1683290432.619236 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6b 06 34 56 de ad be ef - Context released!
+129.      Tx Queue      1683290432.860733 secs ID:      001 len: 8  data: 81 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.861100 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  81 06 34 56 de ad be ef
+       CAN IN      1683290432.861358 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  81 06 34 56 de ad be ef - Context released!
+130.      Tx Queue      1683290432.882733 secs ID:      001 len: 8  data: 82 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.883099 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  82 06 34 56 de ad be ef
+       CAN IN      1683290432.883224 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  82 06 34 56 de ad be ef - Context released!
+131.      Tx Queue      1683290432.904733 secs ID:      001 len: 8  data: 83 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.905099 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  83 06 34 56 de ad be ef
+132.      Tx Queue      1683290432.926732 secs ID:      001 len: 8  data: 84 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290432.938731 secs ID:      001 len: 8  data: 6e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290432.939097 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6e 07 34 56 de ad be ef
+       CAN IN      1683290432.939351 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  6e 07 34 56 de ad be ef - Context released!
+     Tx Queue      1683290433.024729 secs ID:      001 len: 8  data: 72 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.025095 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  72 07 34 56 de ad be ef
+     Tx Queue      1683290433.138602 secs ID:      001 len: 8  data: 77 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.138967 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  77 00 34 56 de ad be ef
+       CAN IN      1683290433.139219 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  77 00 34 56 de ad be ef - Context released!
+132.      Tx Queue      1683290433.178723 secs ID:      001 len: 8  data: 84 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.179088 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  84 00 34 56 de ad be ef
+       CAN IN      1683290433.179234 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  84 00 34 56 de ad be ef - Context released!
+133.      Tx Queue      1683290433.200600 secs ID:      001 len: 8  data: 85 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.200961 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  85 00 34 56 de ad be ef
+       CAN IN      1683290433.201084 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  85 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290433.208597 secs ID:      001 len: 8  data: 64 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.208959 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  64 00 34 56 de ad be ef
+134.      Tx Queue      1683290433.222600 secs ID:      001 len: 8  data: 86 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.222962 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  86 01 34 56 de ad be ef
+       CAN IN      1683290433.223087 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  86 01 34 56 de ad be ef - Context released!
+135.      Tx Queue      1683290433.244599 secs ID:      001 len: 8  data: 87 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.244961 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  87 01 34 56 de ad be ef
+     Tx Queue      1683290433.248599 secs ID:      001 len: 8  data: 7c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.248961 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7c 08 34 56 de ad be ef
+       CAN IN      1683290433.249086 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7c 08 34 56 de ad be ef - Context released!
+136.      Tx Queue      1683290433.267599 secs ID:      001 len: 8  data: 88 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.267960 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  88 08 34 56 de ad be ef
+137.      Tx Queue      1683290433.290724 secs ID:      001 len: 8  data: 89 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.291081 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  89 09 34 56 de ad be ef
+138.      Tx Queue      1683290433.313722 secs ID:      001 len: 8  data: 8a 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290433.438723 secs ID:      001 len: 8  data: 58 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.439081 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  58 02 34 56 de ad be ef
+       CAN IN      1683290433.439206 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  58 02 34 56 de ad be ef - Context released!
+     Tx Queue      1683290433.528602 secs ID:      001 len: 8  data: 67 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.528956 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  67 02 34 56 de ad be ef
+       CAN IN      1683290433.529080 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  67 02 34 56 de ad be ef - Context released!
+     Tx Queue      1683290433.565725 secs ID:      001 len: 8  data: 7f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.566078 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7f 02 34 56 de ad be ef
+138.      Tx Queue      1683290433.566084 secs ID:      001 len: 8  data: 8a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.566206 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8a 03 34 56 de ad be ef
+       CAN IN      1683290433.566459 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8a 03 34 56 de ad be ef - Context released!
+     Tx Queue      1683290433.588725 secs ID:      001 len: 8  data: 80 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.589074 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  80 03 34 56 de ad be ef
+139.      Tx Queue      1683290433.589080 secs ID:      001 len: 8  data: 8b 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.589202 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8b 04 34 56 de ad be ef
+       CAN IN      1683290433.589331 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  80 03 34 56 de ad be ef - Context released!
+       CAN IN      1683290433.589455 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8b 04 34 56 de ad be ef - Context released!
+140.      Tx Queue      1683290433.612728 secs ID:      001 len: 8  data: 8c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.613077 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8c 03 34 56 de ad be ef
+141.      Tx Queue      1683290433.634601 secs ID:      001 len: 8  data: 8d 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.634951 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8d 04 34 56 de ad be ef
+       CAN IN      1683290433.635077 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8d 04 34 56 de ad be ef - Context released!
+142.      Tx Queue      1683290433.656600 secs ID:      001 len: 8  data: 8e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.656950 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8e 04 34 56 de ad be ef
+143.      Tx Queue      1683290433.678601 secs ID:      001 len: 8  data: 8f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.678950 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8f 05 34 56 de ad be ef
+       CAN IN      1683290433.679075 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8f 05 34 56 de ad be ef - Context released!
+144.      Tx Queue      1683290433.703601 secs ID:      001 len: 8  data: 90 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.703945 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  90 05 34 56 de ad be ef
+145.      Tx Queue      1683290433.725602 secs ID:      001 len: 8  data: 91 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290433.906601 secs ID:      001 len: 8  data: 83 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.906943 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  83 06 34 56 de ad be ef
+       CAN IN      1683290433.907069 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  83 06 34 56 de ad be ef - Context released!
+145.      Tx Queue      1683290433.978603 secs ID:      001 len: 8  data: 91 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290433.978941 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  91 06 34 56 de ad be ef
+146.      Tx Queue      1683290434.001602 secs ID:      001 len: 8  data: 92 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290434.026600 secs ID:      001 len: 8  data: 72 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.026939 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  72 07 34 56 de ad be ef
+       CAN IN      1683290434.027065 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  72 07 34 56 de ad be ef - Context released!
+     Tx Queue      1683290434.210727 secs ID:      001 len: 8  data: 64 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.211058 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  64 00 34 56 de ad be ef
+       CAN IN      1683290434.211312 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  64 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290434.246601 secs ID:      001 len: 8  data: 87 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.246933 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  87 00 34 56 de ad be ef
+       CAN IN      1683290434.247059 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  87 00 34 56 de ad be ef - Context released!
+146.      Tx Queue      1683290434.254602 secs ID:      001 len: 8  data: 92 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.254932 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  92 00 34 56 de ad be ef
+     Tx Queue      1683290434.268601 secs ID:      001 len: 8  data: 88 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.268932 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  88 01 34 56 de ad be ef
+       CAN IN      1683290434.269190 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  88 01 34 56 de ad be ef - Context released!
+147.      Tx Queue      1683290434.276601 secs ID:      001 len: 8  data: 93 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.276932 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  93 01 34 56 de ad be ef
+     Tx Queue      1683290434.292600 secs ID:      001 len: 8  data: 89 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.292931 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  89 07 34 56 de ad be ef
+       CAN IN      1683290434.293057 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  89 07 34 56 de ad be ef - Context released!
+148.      Tx Queue      1683290434.298600 secs ID:      001 len: 8  data: 94 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.298931 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  94 07 34 56 de ad be ef
+       CAN IN      1683290434.299057 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  94 07 34 56 de ad be ef - Context released!
+149.      Tx Queue      1683290434.320724 secs ID:      001 len: 8  data: 95 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.321055 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  95 07 34 56 de ad be ef
+       CAN IN      1683290434.321204 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  95 07 34 56 de ad be ef - Context released!
+150.      Tx Queue      1683290434.342724 secs ID:      001 len: 8  data: 96 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.343055 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  96 07 34 56 de ad be ef
+151.      Tx Queue      1683290434.364723 secs ID:      001 len: 8  data: 97 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.365051 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  97 08 34 56 de ad be ef
+       CAN IN      1683290434.365178 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  97 08 34 56 de ad be ef - Context released!
+152.      Tx Queue      1683290434.386725 secs ID:      001 len: 8  data: 98 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.387054 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  98 08 34 56 de ad be ef
+153.      Tx Queue      1683290434.408725 secs ID:      001 len: 8  data: 99 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.409053 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  99 09 34 56 de ad be ef
+       CAN IN      1683290434.409307 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  99 09 34 56 de ad be ef - Context released!
+154.      Tx Queue      1683290434.430726 secs ID:      001 len: 8  data: 9a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.431052 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9a 09 34 56 de ad be ef
+       CAN IN      1683290434.431307 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9a 09 34 56 de ad be ef - Context released!
+155.      Tx Queue      1683290434.452724 secs ID:      001 len: 8  data: 9b 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.453052 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9b 09 34 56 de ad be ef
+       CAN IN      1683290434.453178 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9b 09 34 56 de ad be ef - Context released!
+156.      Tx Queue      1683290434.474736 secs ID:      001 len: 8  data: 9c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.475051 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9c 09 34 56 de ad be ef
+157.      Tx Queue      1683290434.496723 secs ID:      001 len: 8  data: 9d 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290434.566726 secs ID:      001 len: 8  data: 7f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.567050 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7f 02 34 56 de ad be ef
+       CAN IN      1683290434.567174 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  7f 02 34 56 de ad be ef - Context released!
+     Tx Queue      1683290434.614724 secs ID:      001 len: 8  data: 8c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.615044 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8c 02 34 56 de ad be ef
+     Tx Queue      1683290434.658728 secs ID:      001 len: 8  data: 8e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.659047 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8e 03 34 56 de ad be ef
+       CAN IN      1683290434.659301 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8e 03 34 56 de ad be ef - Context released!
+     Tx Queue      1683290434.704725 secs ID:      001 len: 8  data: 90 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.705046 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  90 03 34 56 de ad be ef
+157.      Tx Queue      1683290434.748600 secs ID:      001 len: 8  data: 9d 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.748919 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9d 04 34 56 de ad be ef
+       CAN IN      1683290434.749173 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9d 04 34 56 de ad be ef - Context released!
+158.      Tx Queue      1683290434.770601 secs ID:      001 len: 8  data: 9e 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.770918 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9e 04 34 56 de ad be ef
+       CAN IN      1683290434.771172 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9e 04 34 56 de ad be ef - Context released!
+159.      Tx Queue      1683290434.792726 secs ID:      001 len: 8  data: 9f 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.793042 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9f 04 34 56 de ad be ef
+       CAN IN      1683290434.793167 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9f 04 34 56 de ad be ef - Context released!
+160.      Tx Queue      1683290434.814600 secs ID:      001 len: 8  data: a0 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.814917 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a0 04 34 56 de ad be ef
+161.      Tx Queue      1683290434.836599 secs ID:      001 len: 8  data: a1 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.836916 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a1 05 34 56 de ad be ef
+       CAN IN      1683290434.837041 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a1 05 34 56 de ad be ef - Context released!
+162.      Tx Queue      1683290434.858724 secs ID:      001 len: 8  data: a2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.859037 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a2 05 34 56 de ad be ef
+163.      Tx Queue      1683290434.881724 secs ID:      001 len: 8  data: a3 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290434.980712 secs ID:      001 len: 8  data: 91 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290434.981037 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  91 06 34 56 de ad be ef
+       CAN IN      1683290434.981162 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  91 06 34 56 de ad be ef - Context released!
+163.      Tx Queue      1683290435.134728 secs ID:      001 len: 8  data: a3 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.135034 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a3 06 34 56 de ad be ef
+164.      Tx Queue      1683290435.156603 secs ID:      001 len: 8  data: a4 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290435.256602 secs ID:      001 len: 8  data: 92 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.256904 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  92 00 34 56 de ad be ef
+       CAN IN      1683290435.257032 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  92 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290435.278601 secs ID:      001 len: 8  data: 93 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.278903 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  93 00 34 56 de ad be ef
+       CAN IN      1683290435.279046 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  93 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290435.344723 secs ID:      001 len: 8  data: 96 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.345026 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  96 00 34 56 de ad be ef
+       CAN IN      1683290435.345151 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  96 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290435.388725 secs ID:      001 len: 8  data: 98 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.389025 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  98 00 34 56 de ad be ef
+       CAN IN      1683290435.389150 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  98 00 34 56 de ad be ef - Context released!
+164.      Tx Queue      1683290435.408600 secs ID:      001 len: 8  data: a4 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.408897 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a4 00 34 56 de ad be ef
+       CAN IN      1683290435.409151 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a4 00 34 56 de ad be ef - Context released!
+165.      Tx Queue      1683290435.430726 secs ID:      001 len: 8  data: a5 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.431024 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a5 00 34 56 de ad be ef
+       CAN IN      1683290435.431276 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a5 00 34 56 de ad be ef - Context released!
+166.      Tx Queue      1683290435.452600 secs ID:      001 len: 8  data: a6 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.452896 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a6 00 34 56 de ad be ef
+       CAN IN      1683290435.453021 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a6 00 34 56 de ad be ef - Context released!
+167.      Tx Queue      1683290435.474605 secs ID:      001 len: 8  data: a7 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.474895 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a7 00 34 56 de ad be ef
+     Tx Queue      1683290435.476601 secs ID:      001 len: 8  data: 9c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.476895 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9c 01 34 56 de ad be ef
+       CAN IN      1683290435.477021 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  9c 01 34 56 de ad be ef - Context released!
+168.      Tx Queue      1683290435.496597 secs ID:      001 len: 8  data: a8 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.496891 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a8 01 34 56 de ad be ef
+169.      Tx Queue      1683290435.518599 secs ID:      001 len: 8  data: a9 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.518894 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a9 07 34 56 de ad be ef
+       CAN IN      1683290435.519148 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a9 07 34 56 de ad be ef - Context released!
+170.      Tx Queue      1683290435.540724 secs ID:      001 len: 8  data: aa 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.541018 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  aa 07 34 56 de ad be ef
+       CAN IN      1683290435.541273 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  aa 07 34 56 de ad be ef - Context released!
+171.      Tx Queue      1683290435.562599 secs ID:      001 len: 8  data: ab 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.562892 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ab 07 34 56 de ad be ef
+       CAN IN      1683290435.563018 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ab 07 34 56 de ad be ef - Context released!
+172.      Tx Queue      1683290435.584607 secs ID:      001 len: 8  data: ac 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.584891 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ac 07 34 56 de ad be ef
+173.      Tx Queue      1683290435.606723 secs ID:      001 len: 8  data: ad 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.607018 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ad 08 34 56 de ad be ef
+       CAN IN      1683290435.607144 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ad 08 34 56 de ad be ef - Context released!
+     Tx Queue      1683290435.616725 secs ID:      001 len: 8  data: 8c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.617015 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8c 02 34 56 de ad be ef
+174.      Tx Queue      1683290435.628726 secs ID:      001 len: 8  data: ae 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.629017 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ae 08 34 56 de ad be ef
+       CAN IN      1683290435.629273 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ae 08 34 56 de ad be ef - Context released!
+175.      Tx Queue      1683290435.650601 secs ID:      001 len: 8  data: af 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.650891 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  af 08 34 56 de ad be ef
+       CAN IN      1683290435.651147 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  af 08 34 56 de ad be ef - Context released!
+176.      Tx Queue      1683290435.672600 secs ID:      001 len: 8  data: b0 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.672891 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b0 08 34 56 de ad be ef
+       CAN IN      1683290435.673017 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b0 08 34 56 de ad be ef - Context released!
+177.      Tx Queue      1683290435.694600 secs ID:      001 len: 8  data: b1 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.694890 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b1 08 34 56 de ad be ef
+     Tx Queue      1683290435.706724 secs ID:      001 len: 8  data: 90 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.707014 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  90 03 34 56 de ad be ef
+       CAN IN      1683290435.707141 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  90 03 34 56 de ad be ef - Context released!
+178.      Tx Queue      1683290435.716600 secs ID:      001 len: 8  data: b2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.716886 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b2 03 34 56 de ad be ef
+179.      Tx Queue      1683290435.738726 secs ID:      001 len: 8  data: b3 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.739010 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b3 09 34 56 de ad be ef
+       CAN IN      1683290435.739265 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b3 09 34 56 de ad be ef - Context released!
+180.      Tx Queue      1683290435.760602 secs ID:      001 len: 8  data: b4 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.760884 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b4 09 34 56 de ad be ef
+       CAN IN      1683290435.761142 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b4 09 34 56 de ad be ef - Context released!
+181.      Tx Queue      1683290435.782601 secs ID:      001 len: 8  data: b5 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.782884 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b5 09 34 56 de ad be ef
+       CAN IN      1683290435.783010 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b5 09 34 56 de ad be ef - Context released!
+CAN FRAME IN 1683290435.787485 secs LIBUSB_ERROR_PIPE - ERROR!
+182.      Tx Queue      1683290435.804600 secs ID:      001 len: 8  data: b6 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.804883 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b6 09 34 56 de ad be ef
+     Tx Queue      1683290435.816725 secs ID:      001 len: 8  data: a0 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.817008 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a0 04 34 56 de ad be ef
+       CAN IN      1683290435.817134 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a0 04 34 56 de ad be ef - Context released!
+183.      Tx Queue      1683290435.826725 secs ID:      001 len: 8  data: b7 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.827007 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b7 04 34 56 de ad be ef
+184.      Tx Queue      1683290435.848725 secs ID:      001 len: 8  data: b8 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290435.860599 secs ID:      001 len: 8  data: a2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290435.860881 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a2 05 34 56 de ad be ef
+184.      Tx Queue      1683290436.100729 secs ID:      001 len: 8  data: b8 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290436.136601 secs ID:      001 len: 8  data: a3 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.136874 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a3 06 34 56 de ad be ef
+CAN FRAME IN 1683290436.237473 secs LIBUSB_ERROR_PIPE - ERROR!
+184.      Tx Queue      1683290436.352724 secs ID:      001 len: 8  data: b8 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290436.476728 secs ID:      001 len: 8  data: a7 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.477115 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a7 00 34 56 de ad be ef
+       CAN IN      1683290436.477238 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a7 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290436.498724 secs ID:      001 len: 8  data: a8 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.499115 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a8 00 34 56 de ad be ef
+       CAN IN      1683290436.499256 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a8 00 34 56 de ad be ef - Context released!
+CAN FRAME IN 1683290436.565711 secs LIBUSB_ERROR_PIPE - ERROR!
+     Tx Queue      1683290436.586723 secs ID:      001 len: 8  data: ac 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.587112 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ac 00 34 56 de ad be ef
+       CAN IN      1683290436.587238 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ac 00 34 56 de ad be ef - Context released!
+184.      Tx Queue      1683290436.605725 secs ID:      001 len: 8  data: b8 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.606114 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b8 00 34 56 de ad be ef
+     Tx Queue      1683290436.618725 secs ID:      001 len: 8  data: 8c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.619114 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8c 01 34 56 de ad be ef
+       CAN IN      1683290436.619370 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  8c 01 34 56 de ad be ef - Context released!
+185.      Tx Queue      1683290436.628723 secs ID:      001 len: 8  data: b9 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.629112 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b9 01 34 56 de ad be ef
+186.      Tx Queue      1683290436.653723 secs ID:      001 len: 8  data: ba 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.654108 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ba 02 34 56 de ad be ef
+       CAN IN      1683290436.654234 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ba 02 34 56 de ad be ef - Context released!
+187.      Tx Queue      1683290436.675725 secs ID:      001 len: 8  data: bb 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.676111 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  bb 02 34 56 de ad be ef
+     Tx Queue      1683290436.696725 secs ID:      001 len: 8  data: b1 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.697110 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b1 07 34 56 de ad be ef
+       CAN IN      1683290436.697237 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b1 07 34 56 de ad be ef - Context released!
+188.      Tx Queue      1683290436.702725 secs ID:      001 len: 8  data: bc 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.703110 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  bc 07 34 56 de ad be ef
+     Tx Queue      1683290436.717724 secs ID:      001 len: 8  data: b2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.718110 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b2 03 34 56 de ad be ef
+       CAN IN      1683290436.718236 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b2 03 34 56 de ad be ef - Context released!
+189.      Tx Queue      1683290436.724724 secs ID:      001 len: 8  data: bd 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.725109 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  bd 03 34 56 de ad be ef
+190.      Tx Queue      1683290436.746724 secs ID:      001 len: 8  data: be 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.747109 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  be 08 34 56 de ad be ef
+       CAN IN      1683290436.747235 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  be 08 34 56 de ad be ef - Context released!
+CAN FRAME IN 1683290436.754707 secs LIBUSB_ERROR_PIPE - ERROR!
+191.      Tx Queue      1683290436.768723 secs ID:      001 len: 8  data: bf 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.769104 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  bf 08 34 56 de ad be ef
+       CAN IN      1683290436.769231 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  bf 08 34 56 de ad be ef - Context released!
+192.      Tx Queue      1683290436.792726 secs ID:      001 len: 8  data: c0 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.793107 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c0 08 34 56 de ad be ef
+       CAN IN      1683290436.793234 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c0 08 34 56 de ad be ef - Context released!
+     Tx Queue      1683290436.806725 secs ID:      001 len: 8  data: b6 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.807107 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b6 08 34 56 de ad be ef
+193.      Tx Queue      1683290436.815725 secs ID:      001 len: 8  data: c1 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.816107 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c1 09 34 56 de ad be ef
+       CAN IN      1683290436.816233 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c1 09 34 56 de ad be ef - Context released!
+     Tx Queue      1683290436.827724 secs ID:      001 len: 8  data: b7 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.828106 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b7 04 34 56 de ad be ef
+194.      Tx Queue      1683290436.838724 secs ID:      001 len: 8  data: c2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.839106 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c2 09 34 56 de ad be ef
+       CAN IN      1683290436.839232 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c2 09 34 56 de ad be ef - Context released!
+     Tx Queue      1683290436.862723 secs ID:      001 len: 8  data: a2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.863105 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a2 05 34 56 de ad be ef
+195.      Tx Queue      1683290436.863111 secs ID:      001 len: 8  data: c3 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.863234 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c3 09 34 56 de ad be ef
+       CAN IN      1683290436.863361 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c3 09 34 56 de ad be ef - Context released!
+196.      Tx Queue      1683290436.886723 secs ID:      001 len: 8  data: c4 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290436.887104 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c4 09 34 56 de ad be ef
+197.      Tx Queue      1683290436.908600 secs ID:      001 len: 8  data: c5 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290437.138609 secs ID:      001 len: 8  data: a3 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.138975 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a3 06 34 56 de ad be ef
+       CAN IN      1683290437.139096 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a3 06 34 56 de ad be ef - Context released!
+197.      Tx Queue      1683290437.160605 secs ID:      001 len: 8  data: c5 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.160970 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c5 06 34 56 de ad be ef
+       CAN IN      1683290437.161228 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c5 06 34 56 de ad be ef - Context released!
+198.      Tx Queue      1683290437.182604 secs ID:      001 len: 8  data: c6 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.182969 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c6 06 34 56 de ad be ef
+       CAN IN      1683290437.183095 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c6 06 34 56 de ad be ef - Context released!
+199.      Tx Queue      1683290437.204604 secs ID:      001 len: 8  data: c7 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.204969 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c7 06 34 56 de ad be ef
+200.      Tx Queue      1683290437.226728 secs ID:      001 len: 8  data: c8 12 34 56 de ad be ef  - BUSY!
+200.      Tx Queue      1683290437.478725 secs ID:      001 len: 8  data: c8 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290437.606724 secs ID:      001 len: 8  data: b8 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.607082 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b8 00 34 56 de ad be ef
+       CAN IN      1683290437.607207 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b8 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290437.630727 secs ID:      001 len: 8  data: b9 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.631085 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b9 00 34 56 de ad be ef
+       CAN IN      1683290437.631337 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b9 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290437.676723 secs ID:      001 len: 8  data: bb 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.677081 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  bb 00 34 56 de ad be ef
+       CAN IN      1683290437.677207 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  bb 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290437.704723 secs ID:      001 len: 8  data: bc 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.705077 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  bc 00 34 56 de ad be ef
+     Tx Queue      1683290437.726723 secs ID:      001 len: 8  data: bd 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.727076 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  bd 01 34 56 de ad be ef
+       CAN IN      1683290437.727202 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  bd 01 34 56 de ad be ef - Context released!
+200.      Tx Queue      1683290437.732725 secs ID:      001 len: 8  data: c8 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.733080 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c8 01 34 56 de ad be ef
+201.      Tx Queue      1683290437.754725 secs ID:      001 len: 8  data: c9 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.755079 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c9 02 34 56 de ad be ef
+       CAN IN      1683290437.755205 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c9 02 34 56 de ad be ef - Context released!
+202.      Tx Queue      1683290437.776725 secs ID:      001 len: 8  data: ca 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.777078 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ca 02 34 56 de ad be ef
+203.      Tx Queue      1683290437.798725 secs ID:      001 len: 8  data: cb 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.799081 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  cb 03 34 56 de ad be ef
+       CAN IN      1683290437.799333 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  cb 03 34 56 de ad be ef - Context released!
+     Tx Queue      1683290437.808724 secs ID:      001 len: 8  data: b6 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.809078 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b6 03 34 56 de ad be ef
+       CAN IN      1683290437.809203 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b6 03 34 56 de ad be ef - Context released!
+204.      Tx Queue      1683290437.820724 secs ID:      001 len: 8  data: cc 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.821077 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  cc 03 34 56 de ad be ef
+       CAN IN      1683290437.821225 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  cc 03 34 56 de ad be ef - Context released!
+     Tx Queue      1683290437.829723 secs ID:      001 len: 8  data: b7 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.830073 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b7 03 34 56 de ad be ef
+       CAN IN      1683290437.830200 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  b7 03 34 56 de ad be ef - Context released!
+205.      Tx Queue      1683290437.842728 secs ID:      001 len: 8  data: cd 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.843077 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  cd 03 34 56 de ad be ef
+       CAN IN      1683290437.843201 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  cd 03 34 56 de ad be ef - Context released!
+     Tx Queue      1683290437.864725 secs ID:      001 len: 8  data: a2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.865075 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a2 03 34 56 de ad be ef
+206.      Tx Queue      1683290437.865081 secs ID:      001 len: 8  data: ce 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.865203 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ce 04 34 56 de ad be ef
+       CAN IN      1683290437.865456 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ce 04 34 56 de ad be ef - Context released!
+     Tx Queue      1683290437.888727 secs ID:      001 len: 8  data: c4 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.889074 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c4 04 34 56 de ad be ef
+207.      Tx Queue      1683290437.889080 secs ID:      001 len: 8  data: cf 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.889202 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  cf 05 34 56 de ad be ef
+       CAN IN      1683290437.889454 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c4 04 34 56 de ad be ef - Context released!
+       CAN IN      1683290437.889712 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  cf 05 34 56 de ad be ef - Context released!
+208.      Tx Queue      1683290437.912723 secs ID:      001 len: 8  data: d0 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.913073 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d0 04 34 56 de ad be ef
+209.      Tx Queue      1683290437.934723 secs ID:      001 len: 8  data: d1 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.935072 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d1 05 34 56 de ad be ef
+       CAN IN      1683290437.935198 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d1 05 34 56 de ad be ef - Context released!
+210.      Tx Queue      1683290437.956722 secs ID:      001 len: 8  data: d2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.957072 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d2 05 34 56 de ad be ef
+211.      Tx Queue      1683290437.978724 secs ID:      001 len: 8  data: d3 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290437.979071 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d3 07 34 56 de ad be ef
+       CAN IN      1683290437.979324 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d3 07 34 56 de ad be ef - Context released!
+212.      Tx Queue      1683290438.002727 secs ID:      001 len: 8  data: d4 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.003072 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d4 07 34 56 de ad be ef
+213.      Tx Queue      1683290438.024725 secs ID:      001 len: 8  data: d5 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.025071 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d5 08 34 56 de ad be ef
+       CAN IN      1683290438.025197 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d5 08 34 56 de ad be ef - Context released!
+214.      Tx Queue      1683290438.046603 secs ID:      001 len: 8  data: d6 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.046948 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d6 08 34 56 de ad be ef
+215.      Tx Queue      1683290438.068725 secs ID:      001 len: 8  data: d7 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.069066 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d7 09 34 56 de ad be ef
+       CAN IN      1683290438.069322 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d7 09 34 56 de ad be ef - Context released!
+216.      Tx Queue      1683290438.090602 secs ID:      001 len: 8  data: d8 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.090944 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d8 09 34 56 de ad be ef
+       CAN IN      1683290438.091199 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d8 09 34 56 de ad be ef - Context released!
+217.      Tx Queue      1683290438.112600 secs ID:      001 len: 8  data: d9 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.112944 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d9 09 34 56 de ad be ef
+       CAN IN      1683290438.113069 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d9 09 34 56 de ad be ef - Context released!
+218.      Tx Queue      1683290438.134600 secs ID:      001 len: 8  data: da 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.134943 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  da 09 34 56 de ad be ef
+219.      Tx Queue      1683290438.156601 secs ID:      001 len: 8  data: db 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290438.206599 secs ID:      001 len: 8  data: c7 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.206937 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c7 06 34 56 de ad be ef
+       CAN IN      1683290438.207063 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c7 06 34 56 de ad be ef - Context released!
+CAN FRAME IN 1683290438.227663 secs LIBUSB_ERROR_PIPE - ERROR!
+219.      Tx Queue      1683290438.408725 secs ID:      001 len: 8  data: db 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.409060 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  db 06 34 56 de ad be ef
+       CAN IN      1683290438.409187 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  db 06 34 56 de ad be ef - Context released!
+220.      Tx Queue      1683290438.430724 secs ID:      001 len: 8  data: dc 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.431059 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  dc 06 34 56 de ad be ef
+       CAN IN      1683290438.431186 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  dc 06 34 56 de ad be ef - Context released!
+221.      Tx Queue      1683290438.452599 secs ID:      001 len: 8  data: dd 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.452930 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  dd 06 34 56 de ad be ef
+222.      Tx Queue      1683290438.474609 secs ID:      001 len: 8  data: de 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290438.706724 secs ID:      001 len: 8  data: bc 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.707053 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  bc 00 34 56 de ad be ef
+       CAN IN      1683290438.707175 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  bc 00 34 56 de ad be ef - Context released!
+222.      Tx Queue      1683290438.726603 secs ID:      001 len: 8  data: de 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.726926 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  de 00 34 56 de ad be ef
+     Tx Queue      1683290438.734601 secs ID:      001 len: 8  data: c8 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.734927 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c8 01 34 56 de ad be ef
+       CAN IN      1683290438.735051 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  c8 01 34 56 de ad be ef - Context released!
+223.      Tx Queue      1683290438.748601 secs ID:      001 len: 8  data: df 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.748925 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  df 01 34 56 de ad be ef
+224.      Tx Queue      1683290438.770600 secs ID:      001 len: 8  data: e0 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290438.778599 secs ID:      001 len: 8  data: ca 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.778925 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ca 02 34 56 de ad be ef
+       CAN IN      1683290438.779049 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ca 02 34 56 de ad be ef - Context released!
+     Tx Queue      1683290438.866600 secs ID:      001 len: 8  data: a2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.866922 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a2 02 34 56 de ad be ef
+     Tx Queue      1683290438.914599 secs ID:      001 len: 8  data: d0 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.914920 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d0 03 34 56 de ad be ef
+       CAN IN      1683290438.915046 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d0 03 34 56 de ad be ef - Context released!
+     Tx Queue      1683290438.958725 secs ID:      001 len: 8  data: d2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290438.959041 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d2 03 34 56 de ad be ef
+       CAN IN      1683290438.959192 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d2 03 34 56 de ad be ef - Context released!
+     Tx Queue      1683290439.004601 secs ID:      001 len: 8  data: d4 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.004918 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d4 03 34 56 de ad be ef
+       CAN IN      1683290439.005043 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d4 03 34 56 de ad be ef - Context released!
+224.      Tx Queue      1683290439.024725 secs ID:      001 len: 8  data: e0 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.025042 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e0 03 34 56 de ad be ef
+     Tx Queue      1683290439.047726 secs ID:      001 len: 8  data: d6 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.048043 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d6 04 34 56 de ad be ef
+225.      Tx Queue      1683290439.048050 secs ID:      001 len: 8  data: e1 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.048167 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e1 05 34 56 de ad be ef
+       CAN IN      1683290439.048293 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  d6 04 34 56 de ad be ef - Context released!
+       CAN IN      1683290439.048420 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e1 05 34 56 de ad be ef - Context released!
+226.      Tx Queue      1683290439.070723 secs ID:      001 len: 8  data: e2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.071041 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e2 04 34 56 de ad be ef
+227.      Tx Queue      1683290439.093725 secs ID:      001 len: 8  data: e3 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.094037 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e3 05 34 56 de ad be ef
+228.      Tx Queue      1683290439.116725 secs ID:      001 len: 8  data: e4 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.117039 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e4 07 34 56 de ad be ef
+       CAN IN      1683290439.117164 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e4 07 34 56 de ad be ef - Context released!
+     Tx Queue      1683290439.135601 secs ID:      001 len: 8  data: da 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.135914 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  da 07 34 56 de ad be ef
+229.      Tx Queue      1683290439.140726 secs ID:      001 len: 8  data: e5 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.141038 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e5 08 34 56 de ad be ef
+       CAN IN      1683290439.141182 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e5 08 34 56 de ad be ef - Context released!
+230.      Tx Queue      1683290439.162725 secs ID:      001 len: 8  data: e6 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.163038 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e6 08 34 56 de ad be ef
+231.      Tx Queue      1683290439.184599 secs ID:      001 len: 8  data: e7 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.184912 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e7 09 34 56 de ad be ef
+       CAN IN      1683290439.185037 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e7 09 34 56 de ad be ef - Context released!
+232.      Tx Queue      1683290439.206601 secs ID:      001 len: 8  data: e8 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.206908 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e8 09 34 56 de ad be ef
+233.      Tx Queue      1683290439.228600 secs ID:      001 len: 8  data: e9 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290439.454725 secs ID:      001 len: 8  data: dd 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.455027 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  dd 06 34 56 de ad be ef
+       CAN IN      1683290439.455148 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  dd 06 34 56 de ad be ef - Context released!
+233.      Tx Queue      1683290439.480601 secs ID:      001 len: 8  data: e9 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.480904 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e9 06 34 56 de ad be ef
+       CAN IN      1683290439.481029 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e9 06 34 56 de ad be ef - Context released!
+234.      Tx Queue      1683290439.504725 secs ID:      001 len: 8  data: ea 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.505028 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ea 06 34 56 de ad be ef
+       CAN IN      1683290439.505153 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ea 06 34 56 de ad be ef - Context released!
+235.      Tx Queue      1683290439.526600 secs ID:      001 len: 8  data: eb 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.526902 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  eb 06 34 56 de ad be ef
+236.      Tx Queue      1683290439.548724 secs ID:      001 len: 8  data: ec 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290439.728599 secs ID:      001 len: 8  data: de 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.728894 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  de 00 34 56 de ad be ef
+       CAN IN      1683290439.729018 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  de 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290439.750601 secs ID:      001 len: 8  data: df 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.750896 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  df 00 34 56 de ad be ef
+       CAN IN      1683290439.751150 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  df 00 34 56 de ad be ef - Context released!
+236.      Tx Queue      1683290439.800728 secs ID:      001 len: 8  data: ec 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.801024 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ec 00 34 56 de ad be ef
+       CAN IN      1683290439.801165 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ec 00 34 56 de ad be ef - Context released!
+237.      Tx Queue      1683290439.823598 secs ID:      001 len: 8  data: ed 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.823891 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ed 00 34 56 de ad be ef
+238.      Tx Queue      1683290439.846597 secs ID:      001 len: 8  data: ee 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.846886 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ee 01 34 56 de ad be ef
+       CAN IN      1683290439.847013 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ee 01 34 56 de ad be ef - Context released!
+     Tx Queue      1683290439.867599 secs ID:      001 len: 8  data: a2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.867889 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a2 01 34 56 de ad be ef
+239.      Tx Queue      1683290439.870600 secs ID:      001 len: 8  data: ef 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290439.870890 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ef 02 34 56 de ad be ef
+240.      Tx Queue      1683290439.892600 secs ID:      001 len: 8  data: f0 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290440.025726 secs ID:      001 len: 8  data: e0 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.026010 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e0 03 34 56 de ad be ef
+     Tx Queue      1683290440.071726 secs ID:      001 len: 8  data: e2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.072011 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e2 04 34 56 de ad be ef
+       CAN IN      1683290440.072133 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e2 04 34 56 de ad be ef - Context released!
+     Tx Queue      1683290440.095727 secs ID:      001 len: 8  data: e3 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.096007 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e3 04 34 56 de ad be ef
+     Tx Queue      1683290440.137725 secs ID:      001 len: 8  data: da 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.138007 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  da 05 34 56 de ad be ef
+       CAN IN      1683290440.138131 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  da 05 34 56 de ad be ef - Context released!
+240.      Tx Queue      1683290440.145601 secs ID:      001 len: 8  data: f0 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.145880 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f0 05 34 56 de ad be ef
+     Tx Queue      1683290440.163725 secs ID:      001 len: 8  data: e6 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.164005 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e6 07 34 56 de ad be ef
+       CAN IN      1683290440.164130 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e6 07 34 56 de ad be ef - Context released!
+241.      Tx Queue      1683290440.167600 secs ID:      001 len: 8  data: f1 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.167879 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f1 07 34 56 de ad be ef
+242.      Tx Queue      1683290440.191724 secs ID:      001 len: 8  data: f2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.192004 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f2 08 34 56 de ad be ef
+       CAN IN      1683290440.192129 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f2 08 34 56 de ad be ef - Context released!
+     Tx Queue      1683290440.207599 secs ID:      001 len: 8  data: e8 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.207878 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e8 08 34 56 de ad be ef
+243.      Tx Queue      1683290440.213724 secs ID:      001 len: 8  data: f3 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.214003 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f3 09 34 56 de ad be ef
+       CAN IN      1683290440.214128 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f3 09 34 56 de ad be ef - Context released!
+244.      Tx Queue      1683290440.235711 secs ID:      001 len: 8  data: f4 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.236006 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f4 09 34 56 de ad be ef
+245.      Tx Queue      1683290440.257725 secs ID:      001 len: 8  data: f5 12 34 56 de ad be ef  - BUSY!
+245.      Tx Queue      1683290440.510602 secs ID:      001 len: 8  data: f5 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290440.528600 secs ID:      001 len: 8  data: eb 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.528998 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  eb 06 34 56 de ad be ef
+       CAN IN      1683290440.529253 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  eb 06 34 56 de ad be ef - Context released!
+245.      Tx Queue      1683290440.762725 secs ID:      001 len: 8  data: f5 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.763117 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f5 06 34 56 de ad be ef
+246.      Tx Queue      1683290440.785726 secs ID:      001 len: 8  data: f6 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290440.824723 secs ID:      001 len: 8  data: ed 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.825111 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ed 00 34 56 de ad be ef
+       CAN IN      1683290440.825238 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ed 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290440.868597 secs ID:      001 len: 8  data: a2 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.868981 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a2 00 34 56 de ad be ef
+       CAN IN      1683290440.869133 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  a2 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290440.872602 secs ID:      001 len: 8  data: ef 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290440.872988 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ef 00 34 56 de ad be ef
+       CAN IN      1683290440.873113 secs IN (20): echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ef 00 34 56 de ad be ef - Context released!
+     Tx Queue      1683290441.026601 secs ID:      001 len: 8  data: e0 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.026984 secs          echo_id: 00000000, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e0 00 34 56 de ad be ef
+246.      Tx Queue      1683290441.038603 secs ID:      001 len: 8  data: f6 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.038985 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f6 01 34 56 de ad be ef
+       CAN IN      1683290441.039239 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f6 01 34 56 de ad be ef - Context released!
+247.      Tx Queue      1683290441.060724 secs ID:      001 len: 8  data: f7 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.061107 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f7 01 34 56 de ad be ef
+       CAN IN      1683290441.061362 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f7 01 34 56 de ad be ef - Context released!
+248.      Tx Queue      1683290441.082599 secs ID:      001 len: 8  data: f8 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.082981 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f8 01 34 56 de ad be ef
+       CAN IN      1683290441.083106 secs IN (20): echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f8 01 34 56 de ad be ef - Context released!
+     Tx Queue      1683290441.096599 secs ID:      001 len: 8  data: e3 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.096977 secs          echo_id: 00000001, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e3 01 34 56 de ad be ef
+249.      Tx Queue      1683290441.104599 secs ID:      001 len: 8  data: f9 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.104977 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f9 02 34 56 de ad be ef
+       CAN IN      1683290441.105102 secs IN (20): echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f9 02 34 56 de ad be ef - Context released!
+250.      Tx Queue      1683290441.126615 secs ID:      001 len: 8  data: fa 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.126980 secs          echo_id: 00000002, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  fa 02 34 56 de ad be ef
+     Tx Queue      1683290441.146613 secs ID:      001 len: 8  data: f0 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.146979 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f0 03 34 56 de ad be ef
+       CAN IN      1683290441.147105 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f0 03 34 56 de ad be ef - Context released!
+251.      Tx Queue      1683290441.148613 secs ID:      001 len: 8  data: fb 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.148979 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  fb 03 34 56 de ad be ef
+       CAN IN      1683290441.149127 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  fb 03 34 56 de ad be ef - Context released!
+     Tx Queue      1683290441.168613 secs ID:      001 len: 8  data: f1 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.168979 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f1 03 34 56 de ad be ef
+       CAN IN      1683290441.169235 secs IN (20): echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f1 03 34 56 de ad be ef - Context released!
+252.      Tx Queue      1683290441.172613 secs ID:      001 len: 8  data: fc 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.172978 secs          echo_id: 00000003, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  fc 03 34 56 de ad be ef
+253.      Tx Queue      1683290441.194737 secs ID:      001 len: 8  data: fd 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.195103 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  fd 04 34 56 de ad be ef
+       CAN IN      1683290441.195228 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  fd 04 34 56 de ad be ef - Context released!
+     Tx Queue      1683290441.208612 secs ID:      001 len: 8  data: e8 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.208978 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e8 04 34 56 de ad be ef
+       CAN IN      1683290441.209125 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  e8 04 34 56 de ad be ef - Context released!
+254.      Tx Queue      1683290441.216611 secs ID:      001 len: 8  data: fe 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.216977 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  fe 04 34 56 de ad be ef
+       CAN IN      1683290441.217102 secs IN (20): echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  fe 04 34 56 de ad be ef - Context released!
+     Tx Queue      1683290441.236610 secs ID:      001 len: 8  data: f4 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.236977 secs          echo_id: 00000004, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f4 04 34 56 de ad be ef
+255.      Tx Queue      1683290441.238611 secs ID:      001 len: 8  data: ff 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.238977 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ff 05 34 56 de ad be ef
+       CAN IN      1683290441.239231 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  ff 05 34 56 de ad be ef - Context released!
+256.      Tx Queue      1683290441.260610 secs ID:      001 len: 8  data: 00 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.260976 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  00 05 34 56 de ad be ef
+       CAN IN      1683290441.261230 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  00 05 34 56 de ad be ef - Context released!
+257.      Tx Queue      1683290441.282610 secs ID:      001 len: 8  data: 01 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.282975 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  01 05 34 56 de ad be ef
+       CAN IN      1683290441.283101 secs IN (20): echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  01 05 34 56 de ad be ef - Context released!
+258.      Tx Queue      1683290441.304734 secs ID:      001 len: 8  data: 02 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.305100 secs          echo_id: 00000005, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  02 05 34 56 de ad be ef
+259.      Tx Queue      1683290441.326608 secs ID:      001 len: 8  data: 03 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.326974 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  03 07 34 56 de ad be ef
+       CAN IN      1683290441.327099 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  03 07 34 56 de ad be ef - Context released!
+260.      Tx Queue      1683290441.348607 secs ID:      001 len: 8  data: 04 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.348973 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  04 07 34 56 de ad be ef
+       CAN IN      1683290441.349116 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  04 07 34 56 de ad be ef - Context released!
+261.      Tx Queue      1683290441.370732 secs ID:      001 len: 8  data: 05 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.371097 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  05 07 34 56 de ad be ef
+       CAN IN      1683290441.371245 secs IN (20): echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  05 07 34 56 de ad be ef - Context released!
+262.      Tx Queue      1683290441.392731 secs ID:      001 len: 8  data: 06 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.393097 secs          echo_id: 00000007, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  06 07 34 56 de ad be ef
+263.      Tx Queue      1683290441.414731 secs ID:      001 len: 8  data: 07 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.415096 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  07 08 34 56 de ad be ef
+       CAN IN      1683290441.415222 secs IN (20): echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  07 08 34 56 de ad be ef - Context released!
+264.      Tx Queue      1683290441.436605 secs ID:      001 len: 8  data: 08 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.436971 secs          echo_id: 00000008, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  08 08 34 56 de ad be ef
+265.      Tx Queue      1683290441.458604 secs ID:      001 len: 8  data: 09 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.458970 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  09 09 34 56 de ad be ef
+       CAN IN      1683290441.459225 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  09 09 34 56 de ad be ef - Context released!
+266.      Tx Queue      1683290441.480731 secs ID:      001 len: 8  data: 0a 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.481094 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0a 09 34 56 de ad be ef
+       CAN IN      1683290441.481349 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0a 09 34 56 de ad be ef - Context released!
+267.      Tx Queue      1683290441.502731 secs ID:      001 len: 8  data: 0b 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.503094 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0b 09 34 56 de ad be ef
+       CAN IN      1683290441.503220 secs IN (20): echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0b 09 34 56 de ad be ef - Context released!
+268.      Tx Queue      1683290441.524603 secs ID:      001 len: 8  data: 0c 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.524969 secs          echo_id: 00000009, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0c 09 34 56 de ad be ef
+269.      Tx Queue      1683290441.546602 secs ID:      001 len: 8  data: 0d 12 34 56 de ad be ef  - BUSY!
+     Tx Queue      1683290441.764600 secs ID:      001 len: 8  data: f5 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.764961 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f5 06 34 56 de ad be ef
+       CAN IN      1683290441.765086 secs IN (20): echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  f5 06 34 56 de ad be ef - Context released!
+269.      Tx Queue      1683290441.798599 secs ID:      001 len: 8  data: 0d 12 34 56 de ad be ef  - SUCCESS
+      CAN OUT      1683290441.798956 secs          echo_id: 00000006, can_id: 00000001, can_dlc:  8, channel:  0, flags: 00, reserved: 00, data:  0d 06 34 56 de ad be ef
+Closing the port (USB2CAN_BREQ_MODE)
+Device closed.
+Trying libusb_exit...

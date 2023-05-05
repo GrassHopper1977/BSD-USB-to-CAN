@@ -1539,7 +1539,7 @@ int main(int argc, char *argv[]) {
         next = millis() + 20; //250; // Wait before sending next message
       }
 
-      usleep(2000);
+      // usleep(2000); // TEST CODE!
     }
   }
 
