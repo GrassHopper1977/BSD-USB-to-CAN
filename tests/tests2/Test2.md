@@ -36,3 +36,6 @@ We created a MS Excel Spreadsheet (test2.xlsx - attached) to analyse our results
 
 ## Test Variation 1
 We also repeated the test without the PCAN units sending test messages, meaning that there was nothing on the bus apart from the messages that we are sending. We still have the same issue so message echoes not coming back. It may be better to assuem that the messages got sent after a period of time instead of retransmitting.
+
+## Test Variation 2
+We commented out the retransmission on line 413 of testtx.c, rebuild teh code and repeated Test Variation 1. This time it sent exactly 270 message and we could see them appearing on the CAN using the PCAN device connected to PCAN-View running on Windows.
