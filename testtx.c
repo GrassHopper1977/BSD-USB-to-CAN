@@ -24,6 +24,8 @@
 #include <signal.h>
 #include <sys/time.h>
 #include "usb2can.h"
+#include <stdarg.h>
+#include <inttypes.h>
 
 // #define DEBUG_INFO_CAN_IN
 #define DEBUG_INFO_CAN_OUT
@@ -79,8 +81,8 @@ enum usb2can_breq {
 };
 
 enum usb2can_mode {
-  USB2CAN_MODE_RESET = 0,	// Reset a channel, tunrs it off
-  USB2CAN_MODE_START,		// Start a channel
+  USB2CAN_MODE_RESET = 0, // Reset a channel, tunrs it off
+  USB2CAN_MODE_START,   // Start a channel
 };
 
 // We only send a maximum of USB2CAN_MAX_TX_REQ per channel at any one time.
@@ -164,115 +166,115 @@ struct host_frame {
 #define HOST_FRAME_FLAG_ESI       (0x08)
 
 
-#define BITRATE_DATA_LEN	(20)
+#define BITRATE_DATA_LEN  (20)
 int8_t bitrate = 12;
 unsigned char bitrates[16][BITRATE_DATA_LEN] = {
-  {	// 20k
+  { // 20k
     0x06, 0x00, 0x00, 0x00, // Prop seg
     0x07, 0x00, 0x00, 0x00, // Phase Seg 1
     0x02, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x96, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 33.33k
+  { // 33.33k
     0x03, 0x00, 0x00, 0x00, // Prop seg
     0x03, 0x00, 0x00, 0x00, // Phase Seg 1
     0x01, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0xB4, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 40k
+  { // 40k
     0x06, 0x00, 0x00, 0x00, // Prop seg
     0x07, 0x00, 0x00, 0x00, // Phase Seg 1
     0x02, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x4B, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 50k
+  { // 50k
     0x06, 0x00, 0x00, 0x00, // Prop seg
     0x07, 0x00, 0x00, 0x00, // Phase Seg 1
     0x02, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x3C, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 66.66k
+  { // 66.66k
     0x03, 0x00, 0x00, 0x00, // Prop seg
     0x03, 0x00, 0x00, 0x00, // Phase Seg 1
     0x01, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x5A, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 80k
+  { // 80k
     0x03, 0x00, 0x00, 0x00, // Prop seg
     0x03, 0x00, 0x00, 0x00, // Phase Seg 1
     0x01, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x4B, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 83.33k
+  { // 83.33k
     0x03, 0x00, 0x00, 0x00, // Prop seg
     0x03, 0x00, 0x00, 0x00, // Phase Seg 1
     0x01, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x48, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 100k
+  { // 100k
     0x06, 0x00, 0x00, 0x00, // Prop seg
     0x07, 0x00, 0x00, 0x00, // Phase Seg 1
     0x02, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x1E, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 125k
+  { // 125k
     0x06, 0x00, 0x00, 0x00, // Prop seg
     0x07, 0x00, 0x00, 0x00, // Phase Seg 1
     0x02, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x18, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 200k
+  { // 200k
     0x06, 0x00, 0x00, 0x00, // Prop seg
     0x07, 0x00, 0x00, 0x00, // Phase Seg 1
     0x02, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x0f, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 250k
+  { // 250k
     0x06, 0x00, 0x00, 0x00, // Prop seg
     0x07, 0x00, 0x00, 0x00, // Phase Seg 1
     0x01, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x0C, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 400k
+  { // 400k
     0x03, 0x00, 0x00, 0x00, // Prop seg
     0x03, 0x00, 0x00, 0x00, // Phase Seg 1
     0x01, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x0F, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 500k (default)
+  { // 500k (default)
     0x06, 0x00, 0x00, 0x00, // Prop seg
     0x07, 0x00, 0x00, 0x00, // Phase Seg 1
     0x02, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x06, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 666k
+  { // 666k
     0x03, 0x00, 0x00, 0x00, // Prop seg
     0x03, 0x00, 0x00, 0x00, // Phase Seg 1
     0x02, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x08, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 800k
+  { // 800k
     0x07, 0x00, 0x00, 0x00, // Prop seg
     0x08, 0x00, 0x00, 0x00, // Phase Seg 1
     0x04, 0x00, 0x00, 0x00, // Seg 2
     0x01, 0x00, 0x00, 0x00, // SJW
     0x03, 0x00, 0x00, 0x00  // BRP
   },
-  {	// 1m
+  { // 1m
     0x05, 0x00, 0x00, 0x00, // Prop seg
     0x06, 0x00, 0x00, 0x00, // Phase Seg 1
     0x04, 0x00, 0x00, 0x00, // Seg 2
@@ -348,6 +350,39 @@ void print_time_now() {
   printf("%ld.%06ld secs", now.tv_sec, now.tv_usec);
 }
 
+
+#define LOG_MIN_FILE_LEN  9
+#define LOG_MAX_FILE_LEN  LOG_MIN_FILE_LEN
+#define LOG_MIN_SOURCE_LEN  8
+#define LOG_MAX_SOURCE_LEN  LOG_MIN_SOURCE_LEN
+#define LOG_MIN_TYPE_LEN  5
+#define LOG_MAX_TYPE_LEN  LOG_MIN_TYPE_LEN
+void LOGI(const char* source, const char* type, const char *format, ...) {
+  struct timeval now;
+  va_list args;
+  va_start(args, format);
+
+  gettimeofday(&now, NULL);
+  // fprintf(stdout, "%-10ld.%06ld,   INFO: %*.*s, %*.*s, %*.*s, ", now.tv_sec, now.tv_usec, LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
+  fprintf(stdout, "%16.16" PRIu64 ",  INFO: %*.*s, %*.*s, %*.*s, ", nanos(), LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
+  vfprintf(stdout, format, args);
+  // printf("\n");
+  va_end(args);
+}
+
+void LOGE(const char* source, const char* type, const char *format, ...) {
+  struct timeval now;
+  va_list args;
+  va_start(args, format);
+
+  gettimeofday(&now, NULL);
+  // fprintf(stderr, "%-10ld.%06ld,  ERROR: %*.*s, %*.*s, %*.*s, ", now.tv_sec, now.tv_usec, LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
+  fprintf(stderr, "%16.16" PRIu64 ", ERROR: %*.*s, %*.*s, %*.*s, ", nanos(), LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
+  vfprintf(stderr, format, args);
+  // printf("\n");
+  va_end(args);
+}
+
 #ifdef __CHERI_PURE_CAPABILITY__
 void printf_caps_info(char * d, void *c) {
   printf("%s = %#p\n", d, c);
@@ -367,23 +402,41 @@ void printf_caps_info(char * d, void *c) {
 }
 #endif
 
-void print_can_frame(struct can_frame *frame) {
-  printf("ID: ");
-  if(frame->can_id & CAN_ERR_FLAG) {
-    printf("%08x ERR", frame->can_id);
-  } else if(frame->can_id & CAN_EFF_FLAG) {
-    printf("%08x", frame->can_id & CAN_EFF_MASK);
+void print_can_frame(const char* source, const char* type, struct can_frame *frame, uint8_t err, const char *format, ...) {
+  FILE * fd = stdout;
+
+  if(err || (frame->can_id & CAN_ERR_FLAG)) {
+    LOGE(source, type, "ID: ");
+    fd = stderr;
   } else {
-    printf("     %03x", frame->can_id & CAN_SFF_MASK);
+    LOGI(source, type, "ID: ");
   }
-  printf(" len: %u ", frame->len);
-  printf(" data: ");
-  for(int n = 0; n < frame->len; n++) {
-    printf("%02x ", frame->data[n]);
+
+  if((frame->can_id & CAN_EFF_FLAG) || (frame->can_id & CAN_ERR_FLAG)) {
+    fprintf(fd, "%08x", frame->can_id & CAN_EFF_MASK);
+  } else {
+    fprintf(fd, "     %03x", frame->can_id & CAN_SFF_MASK);
   }
+  fprintf(fd, ", len: %2u", frame->len);
+  fprintf(fd, ", Data: ");
+  for(int n = 0; n < CAN_MAX_DLC; n++) {
+    fprintf(fd, "%02x, ", frame->data[n]);
+  }
+
+  va_list args;
+  va_start(args, format);
+
+  vfprintf(fd, format, args);
+  va_end(args);
+
+  if(frame->can_id & CAN_ERR_FLAG) {
+    fprintf(fd, ", ERROR FRAME");
+  }
+
+  fprintf(fd, "\n");
 }
 
-#define TX_TIMEOUT_LENGTH_MS  (1000) // When we Tx we should see the message come back to us within this time threshold.
+#define TX_TIMEOUT_LENGTH_MS  (100) // When we Tx we should see the message come back to us within this time threshold.
 // Checks to see if there is space to Tx.
 // If we have space then we return a pointer to to the struct usb2can_tx_context, else we return NULL.
 struct usb2can_tx_context* get_tx_context(struct usb2can_can* can, struct can_frame* frame) {
@@ -411,7 +464,7 @@ void handleRetries(struct usb2can_can* can) {
     if((can->tx_context[i].echo_id < USB2CAN_MAX_TX_REQ) && (now > can->tx_context[i].timestamp)) {
       memcpy(&frame, can->tx_context[i].frame, sizeof(struct can_frame));
       release_tx_context(can, can->tx_context[i].echo_id);
-      send_packet(can, &frame);
+      //send_packet(can, &frame);
     }
   }
 }
@@ -422,16 +475,18 @@ int release_tx_context(struct usb2can_can* can, uint32_t tx_echo_id) {
   if(tx_echo_id == 0xFFFFFFFF) {
     return 0;
   } else if(tx_echo_id >= USB2CAN_MAX_TX_REQ){
-    printf("ERROR CONTEXT      ");
-    print_time_now();
-    printf("         ");
-    printf(" echo_id: %08x (%u) is invalid! TOO LARGE - ERROR!.\n", tx_echo_id, tx_echo_id);
-    return -1;
+    // print_host_frame("CAN", "IN", &data, 1, "echo_id: %08x (%u) is invalid! TOO LARGE - ERROR!.\n", tx_echo_id, tx_echo_id);
+    // printf("ERROR CONTEXT      ");
+    // print_time_now();
+    // printf("         ");
+    // printf(" echo_id: %08x (%u) is invalid! TOO LARGE - ERROR!.\n", tx_echo_id, tx_echo_id);
+    return -2;
   } else if(tx_echo_id != can->tx_context[tx_echo_id].echo_id){
-    printf("ERROR CONTEXT      ");
-    print_time_now();
-    printf("         ");
-    printf(" echo_id %08x (%u) is invalid! MISMATCH with %08x (%u). - ERROR!.\n", tx_echo_id, tx_echo_id, can->tx_context[tx_echo_id].echo_id, can->tx_context[tx_echo_id].echo_id);
+    // print_host_frame("CAN", "IN", &data, 1, "echo_id %08x (%u) is invalid! MISMATCH with %08x (%u). - ERROR!.\n", tx_echo_id, tx_echo_id, can->tx_context[tx_echo_id].echo_id, can->tx_context[tx_echo_id].echo_id);
+    // printf("ERROR CONTEXT      ");
+    // print_time_now();
+    // printf("         ");
+    // printf(" echo_id %08x (%u) is invalid! MISMATCH with %08x (%u). - ERROR!.\n", tx_echo_id, tx_echo_id, can->tx_context[tx_echo_id].echo_id, can->tx_context[tx_echo_id].echo_id);
     return -1;
   } else if(tx_echo_id < USB2CAN_MAX_TX_REQ) {
     // printf("1");
@@ -451,9 +506,11 @@ int release_tx_context(struct usb2can_can* can, uint32_t tx_echo_id) {
     // printf(" echo_id: %08x (%u) %08x (%u) released.\n", tx_echo_id, tx_echo_id, can->tx_context[tx_echo_id].echo_id, can->tx_context[tx_echo_id].echo_id);
     return 1;
   }
-  printf("ERROR CONTEXT      ");
-  print_time_now();
-  printf(" ERROR! Unreachable code reached! - ERROR!\n");
+  // print_host_frame("CAN", "IN", &data, 1, "ERROR! Unreachable code reached! - ERROR!\n");
+  LOGE("CAN", "IN", "Unreachable code reached!, Line: %i\n", __LINE__);
+  // printf("ERROR CONTEXT      ");
+  // print_time_now();
+  // printf(" ERROR! Unreachable code reached! - ERROR!\n");
 
   return 0;
 }
@@ -474,33 +531,57 @@ struct usb2can_can* init_usb2can_can(struct libusb_device_handle* devh) {
   return can;
 }
 
-void print_host_frame(struct host_frame *data) {
-  printf(" echo_id: %08x,", data->echo_id);
-  printf(" can_id: %08x,", data->can_id);
-  printf(" can_dlc: %2u,", data->can_dlc);
-  printf(" channel: %2u,", data->channel);
-  printf(" flags: %02x", data->flags);
+void print_host_frame(const char* source, const char* type, struct host_frame *data, uint8_t err, const char *format, ...) {
+  FILE * fd = stdout;
+
+  if(err) {
+    LOGE(source, type, "ID: ");
+    fd = stderr;
+  } else {
+    LOGI(source, type, "ID: ");
+  }
+
+  if((data->can_id & CAN_EFF_FLAG) || (data->can_id & CAN_ERR_FLAG)) {
+    fprintf(fd, "%08x", data->can_id & CAN_EFF_MASK);
+  } else {
+    fprintf(fd, "     %03x", data->can_id & CAN_SFF_MASK);
+  }
+  
+  fprintf(fd, ", DLC: %2u,", data->can_dlc);
+
+  fprintf(fd, " Data: ");
+  for(int i = 0; i < CAN_MAX_DLC; i++) {
+    fprintf(fd, "%02x, ", data->data[i]);
+  }
+
+  fprintf(fd, "echo_id: %08x, ", data->echo_id);
+  fprintf(fd, "channel: %2u, ", data->channel);
+  fprintf(fd, "flags: %02x", data->flags);
   if(data->flags > 0) {
-    printf(" (");
+    fprintf(fd, " (");
     if(data->flags & HOST_FRAME_FLAG_OVERFLOW) {
-      printf("HOST_FRAME_FLAG_OVERFLOW ");
+      fprintf(fd, "HOST_FRAME_FLAG_OVERFLOW ");
     }
     if(data->flags & HOST_FRAME_FLAG_FD) {
-      printf("HOST_FRAME_FLAG_FD ");
+      fprintf(fd, "HOST_FRAME_FLAG_FD ");
     }
     if(data->flags & HOST_FRAME_FLAG_BRS) {
-      printf("HOST_FRAME_FLAG_BRS ");
+      fprintf(fd, "HOST_FRAME_FLAG_BRS ");
     }
     if(data->flags & HOST_FRAME_FLAG_ESI) {
-      printf("HOST_FRAME_FLAG_ESI ");
+      fprintf(fd, "HOST_FRAME_FLAG_ESI ");
     }
-    printf(")");
+    fprintf(fd, ")");
   }
-  printf(", reserved: %02x,", data->reserved);
-  printf(" data: ");
-  for(int i = 0; i < CAN_MAX_DLC; i++) {
-    printf(" %02x", data->data[i]);
-  }
+  fprintf(fd, ", reserved: %02x, ", data->reserved);
+
+  va_list args;
+  va_start(args, format);
+
+  vfprintf(fd, format, args);
+  va_end(args);
+
+  fprintf(fd, "\n");
 }
 
 void print_host_frame_raw(struct host_frame *data) {
@@ -520,56 +601,37 @@ int read_packet(struct usb2can_can* can) {
   int ret = libusb_bulk_transfer(can->devh, ENDPOINT_IN, (uint8_t*) &data, sizeof(data), &len, 1);
   if(ret == 0) {
     if(len != sizeof(data)) {
-      printf("ERROR CAN IN       ");
-      print_time_now();
-      print_host_frame(&data);
-      printf(" Size mismatch! sizeof(data) = %lu, len = %u, ret = %x \n", sizeof(data), len, ret);
+      LOGE("CAN", "IN", "Size mismatch! sizeof(data) = %lu, len = %u, ret = %x \n", sizeof(data), len, ret);
+      print_host_frame_raw(&data);
       fflush(stdout);
     }
-#ifdef DEBUG_INFO_CAN_IN
-    printf("      CAN IN       ");
-    print_time_now();
-    printf(" IN (%2d):", len);
-    print_host_frame(&data);
-    printf("\n");
-    fflush(stdout);
-#endif
-
 
     if(data.can_id & CAN_ERR_FLAG) {
-      printf("   ERROR FLAG      ");
-      print_time_now();
-      printf("         ");
-      print_host_frame(&data);
-      printf(" ");
-      printf("\n");
+      print_host_frame("CAN", "IN", &data, 1, "");
       print_host_frame_raw(&data);
     } else if((data.channel >= USB2CAN_MAX_CHANNELS) || (data.can_dlc > CAN_MAX_DLC)) {
-      printf("ERROR  FORMAT      ");
-      print_time_now();
-      printf("         ");
-      print_host_frame(&data);
-      printf(" ");
-      printf(" - len = %u, sizeof(data) = %lu - ERROR!!", len, sizeof(data));
-      printf("\n");
+      print_host_frame("CAN", "IN", &data, 1, "");
       print_host_frame_raw(&data);
     } else {
       int tmp1 = release_tx_context(can, le32toh(data.echo_id));
       if(tmp1 > 0) {
-        printf("       CAN IN      ");
-        print_time_now();
-        printf(" IN (%2d):", len);
-        print_host_frame(&data);
-        printf(" - Context released!");
-        printf("\n");
+        print_host_frame("CAN", "IN", &data, 0, "Context Released");
+      } else if(tmp1 == 0) {
+        print_host_frame("CAN", "IN", &data, 0, "");
+      } else if(tmp1 == -2) {
+        print_host_frame("CAN", "IN", &data, 1, "echo_id: %08x (%u) is invalid! TOO LARGE - ERROR!.\n", data.echo_id, data.echo_id);
+
+        print_host_frame_raw(&data);
+        fflush(stdout);
+      } else if(tmp1 == -1) {
+        // print_host_frame("CAN", "IN", &data, 1, "Context Error");
+        print_host_frame("CAN", "IN", &data, 1, "echo_id %08x (%u) is invalid! MISMATCH with %08x (%u). - ERROR!.\n", data.echo_id, data.echo_id, can->tx_context[data.echo_id].echo_id, can->tx_context[data.echo_id].echo_id);
+
+        print_host_frame_raw(&data);
         fflush(stdout);
       } else if(tmp1 < 0) {
-        printf("ERROR  CAN IN      ");
-        print_time_now();
-        printf(" IN (%2d):", len);
-        print_host_frame(&data);
-        printf(" ");
-        printf("\n");
+        print_host_frame("CAN", "IN", &data, 1, "Context Error");
+
         print_host_frame_raw(&data);
         fflush(stdout);
       }
@@ -587,59 +649,43 @@ int read_packet(struct usb2can_can* can) {
         frame.data[i] = data.data[i];
       }
 
-#ifdef DEBUG_INFO_SOCK_OUT
-      printf("CAN FRAME IN ");
-      print_time_now();
-      print_can_frame(&frame);
-      printf("\n");
-      fflush(stdout);
-#endif
       sendCANToAll(&frame);
     }
   } else if(ret != LIBUSB_ERROR_TIMEOUT) {
-    printf("CAN FRAME IN ");
-    print_time_now();
-    printf(" ");
     switch(ret) {
     // case LIBUSB_ERROR_TIMEOUT:
-    //   printf("LIBUSB_ERROR_TIMEOUT");
+    //   print_host_frame("CAN", "IN", &data, 1, "LIBUSB_ERROR_TIMEOUT");
     //   break;
     case LIBUSB_ERROR_PIPE:
-      printf("LIBUSB_ERROR_PIPE");
+      print_host_frame("CAN", "IN", &data, 1, "LIBUSB_ERROR_PIPE");
       break;
     case LIBUSB_ERROR_OVERFLOW:
-      printf("LIBUSB_ERROR_OVERFLOW");
+      print_host_frame("CAN", "IN", &data, 1, "LIBUSB_ERROR_OVERFLOW");
       break;
     case LIBUSB_ERROR_NO_DEVICE:
-      printf("LIBUSB_ERROR_NO_DEVICE");
+      print_host_frame("CAN", "IN", &data, 1, "LIBUSB_ERROR_NO_DEVICE");
       break;
     case LIBUSB_ERROR_BUSY:
-      printf("LIBUSB_ERROR_BUSY");
+      print_host_frame("CAN", "IN", &data, 1, "LIBUSB_ERROR_BUSY");
       break;
     case LIBUSB_ERROR_INVALID_PARAM:
-      printf("LIBUSB_ERROR_INVALID_PARAM");
+      print_host_frame("CAN", "IN", &data, 1, "LIBUSB_ERROR_INVALID_PARAM");
       break;
     default:
-      printf("UKNOWN (0x%08x)", ret);
+      print_host_frame("CAN", "IN", &data, 1, "UKNOWN (0x%08x)", ret);
       break;
     }
-    printf(" - ERROR!\n");
     fflush(stdout);
   }
 
   return ret;
 }
 
-
 int send_packet(struct usb2can_can* can, struct can_frame* frame) {
-  printf("     Tx Queue      ");
-  print_time_now();
-  printf(" ");
-  print_can_frame(frame);
 
   struct usb2can_tx_context* tx_context = get_tx_context(can, frame);
   if(tx_context == NULL) {
-    printf(" - BUSY!\n");
+    print_can_frame("Q", "OUT", frame, 1, "BUSY");
     return LIBUSB_ERROR_BUSY;
   }
 
@@ -662,38 +708,23 @@ int send_packet(struct usb2can_can* can, struct can_frame* frame) {
     }
   }
 
-  // TEST CODE!
-  data.data[1] = (uint8_t) tx_context->echo_id;
-  // TEST CODE!
-
   int len = 0;
   int ret = libusb_bulk_transfer(can->devh, ENDPOINT_OUT, (uint8_t*) &data, sizeof(data), &len, 1);
   if((len != sizeof(data)) && (ret != LIBUSB_ERROR_TIMEOUT)) {
-    printf(" Size mismatch! sizeof(data) = %lu, len = %u, ret = %x \n", sizeof(data), len, ret);
+    print_can_frame("Q", "OUT", frame, 1, "ERROR");
+    LOGE("CAN", "OUT", "Size mismatch! sizeof(data) = %lu, len = %u, ret = %x \n", sizeof(data), len, ret);
     print_host_frame_raw(&data);
     fflush(stdout);
   }
   if(ret == 0) {
-    printf(" - SUCCESS\n");
-#ifdef DEBUG_INFO_CAN_OUT
-    printf("      CAN OUT      ");
-    print_time_now();
-    printf("         ");
-    print_host_frame(&data);
-    printf("\n");
+    print_can_frame("Q", "OUT", frame, 0, "SUCCESS");
+    print_host_frame("CAN", "OUT", &data, 0, "Tx Queue");
     fflush(stdout);
-#endif
   } else if (ret == LIBUSB_ERROR_TIMEOUT) {
-    printf(" - TIMEOUT\n");
+    print_can_frame("Q", "OUT", frame, 1, "TIMEOUT");
   } else {
-    printf(" - ERROR!\n");
-    printf("ERROR CAN OUT      ");
-    print_time_now();
-    printf("         ");
-    print_host_frame(&data);
-    printf(" ");
-    printf("%s: %s\n", libusb_error_name(ret), libusb_strerror(ret));
-    printf("\n");
+    print_can_frame("Q", "OUT", frame, 1, "ERROR");
+    print_host_frame("CAN", "OUT", &data, 1, "%s: %s\n", libusb_error_name(ret), libusb_strerror(ret));
     print_host_frame_raw(&data);
     fflush(stdout);
   }
@@ -702,9 +733,7 @@ int send_packet(struct usb2can_can* can, struct can_frame* frame) {
 
 // These are the speed settings. We'd like to offer custom bitrates and sample points too.
 int set_bitrate(struct usb2can_can* can) {
-#ifdef DEBUG_INFO_SETUP
-  printf("Setting bitrate...\n");
-#endif
+  LOGI(__FUNCTION__, "INFO", "Setting bitrate...\n");
   uint8_t bmReqType = 0x41;       // the request type (direction of transfer)
   uint8_t bReq = USB2CAN_BREQ_BITTIMING;            // the request field for this packet
   uint16_t wVal = 0x0000;         // the value field for this packet
@@ -721,7 +750,7 @@ int set_bitrate(struct usb2can_can* can) {
 // Set User ID: candleLight allows optional support for reading/writing of a user defined value into the device's flash. It's isn't widely supported and probably isn't required most of the time.
 int port_set_user_id(struct usb2can_can* can) {
 #ifdef DEBUG_INFO_SETUP
-  printf("Set the User ID (USB2CAN_BREQ_SET_USER_ID)\n");
+  LOGI(__FUNCTION__, "INFO", "Set the User ID (USB2CAN_BREQ_SET_USER_ID)\n");
 #endif
   uint8_t bmReqType = 0x00;       // the request type (direction of transfer)
   uint8_t bReq = USB2CAN_BREQ_SET_USER_ID;            // the request field for this packet
@@ -740,7 +769,7 @@ int port_set_user_id(struct usb2can_can* can) {
 // Host format sets the endian. We write 0x0000beef to the device and it determines the endianess from that. However, candleLight may only support Little Endian so that why we always send it it Little Endian.
 int port_set_host_format(struct usb2can_can* can) {
 #ifdef DEBUG_INFO_SETUP
-  printf("Set the host format to Little Endian (as candleLight devices are always Little Endian) (USB2CAN_BREQ_HOST_FORMAT)\n");
+  LOGI(__FUNCTION__, "INFO", "Set the host format to Little Endian (as candleLight devices are always Little Endian) (USB2CAN_BREQ_HOST_FORMAT)\n");
 #endif
   uint8_t bmReqType = 0x41;       // the request type (direction of transfer)
   uint8_t bReq = USB2CAN_BREQ_HOST_FORMAT;            // the request field for this packet
@@ -762,7 +791,7 @@ int port_set_host_format(struct usb2can_can* can) {
 // Get device information from the USB 2 CAN device. Includes SW and HW versions.
 int port_get_device_config(struct usb2can_can* can) {
 #ifdef DEBUG_INFO_SETUP
-  printf("Getting device config info (USB2CAN_BREQ_DEVICE_CONFIG)\n");
+  LOGI(__FUNCTION__, "INFO", "Getting device config info (USB2CAN_BREQ_DEVICE_CONFIG)\n");
 #endif
   uint8_t bmReqType = 0xC1;       // the request type (direction of transfer)
   uint8_t bReq = USB2CAN_BREQ_DEVICE_CONFIG;            // the request field for this packet
@@ -781,15 +810,13 @@ int port_get_device_config(struct usb2can_can* can) {
     can->device_config.reserved3 = data.reserved3;
     can->device_config.sw_version = le32toh(data.sw_version);
     can->device_config.hw_version = le32toh(data.hw_version);
-#ifdef DEBUG_INFO_SETUP
-    printf("Device Config:\n");
-    printf("   reserved1: 0x%02x\n", can->device_config.reserved1);
-    printf("   reserved2: 0x%02x\n", can->device_config.reserved2);
-    printf("   reserved3: 0x%02x\n", can->device_config.reserved3);
-    printf("     i count: %u (%u interfaces)\n", can->device_config.icount, data.icount + 1);
-    printf("  sw_version: %u\n", can->device_config.sw_version);
-    printf("  hw_version: %u\n", can->device_config.hw_version);
-#endif
+    LOGI(__FUNCTION__, "INFO", "Device Config:\n");
+    LOGI(__FUNCTION__, "INFO", "   reserved1: 0x%02x\n", can->device_config.reserved1);
+    LOGI(__FUNCTION__, "INFO", "   reserved2: 0x%02x\n", can->device_config.reserved2);
+    LOGI(__FUNCTION__, "INFO", "   reserved3: 0x%02x\n", can->device_config.reserved3);
+    LOGI(__FUNCTION__, "INFO", "     i count: %u (%u interfaces)\n", can->device_config.icount, data.icount + 1);
+    LOGI(__FUNCTION__, "INFO", "  sw_version: %u\n", can->device_config.sw_version);
+    LOGI(__FUNCTION__, "INFO", "  hw_version: %u\n", can->device_config.hw_version);
   }
 
   return ret;
@@ -797,9 +824,7 @@ int port_get_device_config(struct usb2can_can* can) {
 
 // Get the Bit Timming settings.
 int port_get_bit_timing(struct usb2can_can* can) {
-#ifdef DEBUG_INFO_SETUP
-  printf("Getting the port's bit timing info (USB2CAN_BREQ_BT_CONST)\n");
-#endif
+  LOGI(__FUNCTION__, "INFO", "Getting the port's bit timing info (USB2CAN_BREQ_BT_CONST)\n");
   uint8_t bmReqType = 0xC1;       // the request type (direction of transfer)
   uint8_t bReq = USB2CAN_BREQ_BT_CONST;            // the request field for this packet
   uint16_t wVal = 0x0000;         // the value field for this packet
@@ -823,9 +848,9 @@ int port_get_bit_timing(struct usb2can_can* can) {
     can->bt_const.brp_max = le32toh(data.brp_max);
     can->bt_const.brp_inc = le32toh(data.brp_inc);
 #ifdef DEBUG_INFO_SETUP
-    printf("BT Const Information:\n");
+    LOGI(__FUNCTION__, "INFO", "BT Const Information:\n");
     int16_t feature = can->bt_const.feature;
-    printf("    feature: %08x (", feature);
+    LOGI(__FUNCTION__, "INFO", "    feature: %08x (", feature);
     if(feature & USB2CAN_FEATURE_LISTEN_ONLY) {
       printf("USB2CAN_FEATURE_LISTEN_ONLY, ");
     }
@@ -869,15 +894,15 @@ int port_get_bit_timing(struct usb2can_can* can) {
       printf("USB2CAN_FEATURE_GET_STATE, ");
     }
     printf(")\n");
-    printf("   fclk_can: %u\n", can->bt_const.fclk_can);
-    printf("  tseg1_min: %u\n", can->bt_const.tseg1_min);
-    printf("  tseg1_max: %u\n", can->bt_const.tseg1_max);
-    printf("  tseg2_min: %u\n", can->bt_const.tseg2_min);
-    printf("  tseg2_max: %u\n", can->bt_const.tseg2_max);
-    printf("    sjw_max: %u\n", can->bt_const.sjw_max);
-    printf("    brp_min: %u\n", can->bt_const.brp_min);
-    printf("    brp_max: %u\n", can->bt_const.brp_max);
-    printf("    brp_inc: %u\n", can->bt_const.brp_inc);
+    LOGI(__FUNCTION__, "INFO", "   fclk_can: %u\n", can->bt_const.fclk_can);
+    LOGI(__FUNCTION__, "INFO", "  tseg1_min: %u\n", can->bt_const.tseg1_min);
+    LOGI(__FUNCTION__, "INFO", "  tseg1_max: %u\n", can->bt_const.tseg1_max);
+    LOGI(__FUNCTION__, "INFO", "  tseg2_min: %u\n", can->bt_const.tseg2_min);
+    LOGI(__FUNCTION__, "INFO", "  tseg2_max: %u\n", can->bt_const.tseg2_max);
+    LOGI(__FUNCTION__, "INFO", "    sjw_max: %u\n", can->bt_const.sjw_max);
+    LOGI(__FUNCTION__, "INFO", "    brp_min: %u\n", can->bt_const.brp_min);
+    LOGI(__FUNCTION__, "INFO", "    brp_max: %u\n", can->bt_const.brp_max);
+    LOGI(__FUNCTION__, "INFO", "    brp_inc: %u\n", can->bt_const.brp_inc);
 #endif
   }
 
@@ -885,9 +910,7 @@ int port_get_bit_timing(struct usb2can_can* can) {
 }
 
 int port_open(struct libusb_device_handle *devh) {
-#ifdef DEBUG_INFO_SETUP
-  printf("Opening the port (USB2CAN_BREQ_MODE)\n");
-#endif
+  LOGI(__FUNCTION__, "INFO", "Opening the port (USB2CAN_BREQ_MODE)\n");
   uint8_t bmReqType = 0x41;       // the request type (direction of transfer)
   uint8_t bReq = USB2CAN_BREQ_MODE;            // the request field for this packet
   uint16_t wVal = 0x0000;         // the value field for this packet
@@ -895,7 +918,7 @@ int port_open(struct libusb_device_handle *devh) {
   
   // the data buffer for the in/output data
   unsigned char data[] = {
-    0x01, 0x00, 0x00, 0x00,	// CAN_MODE_START
+    0x01, 0x00, 0x00, 0x00, // CAN_MODE_START
     0x00, 0x00, 0x00, 0x00 
   };
   uint16_t wLen = sizeof(data);   // length of this setup packet 
@@ -908,16 +931,14 @@ int port_open(struct libusb_device_handle *devh) {
 }
 
 int port_close(struct libusb_device_handle *devh) {
-#ifdef DEBUG_INFO_SETUP
-  printf("Closing the port (USB2CAN_BREQ_MODE)\n");
-#endif
+  LOGI(__FUNCTION__, "INFO", "Closing the port (USB2CAN_BREQ_MODE)\n");
   uint8_t bmReqType = 0x41;       // the request type (direction of transfer)
   uint8_t bReq = USB2CAN_BREQ_MODE;            // the request field for this packet
   uint16_t wVal = 0x0000;         // the value field for this packet
   uint16_t wIndex = 0x0000;       // the index field for this packet
   // the data buffer for the in/output data
   unsigned char data[] = {
-    0x00, 0x00, 0x00, 0x00,	// CAN_MODE_RESET
+    0x00, 0x00, 0x00, 0x00, // CAN_MODE_RESET
     0x00, 0x00, 0x00, 0x00
   };
   uint16_t wLen = sizeof(data);   // length of this setup packet 
@@ -931,9 +952,9 @@ int port_close(struct libusb_device_handle *devh) {
 
 #define NCLIENTS (10)
 
-#define CLIENT_TYPE_NONE	(0)
-#define CLIENT_TYPE_SOCK	(1)
-#define CLIENT_TYPE_LIBUSB	(2)
+#define CLIENT_TYPE_NONE  (0)
+#define CLIENT_TYPE_SOCK  (1)
+#define CLIENT_TYPE_LIBUSB  (2)
 
 struct client_t {
   int fd;
@@ -1036,6 +1057,8 @@ int sockSend(int fd, const void *msg, size_t len) {
 }
 
 int sendCANToAll(struct can_frame * frame) {
+  print_can_frame("PIPE", "OUT", frame, 0, "");
+
   int i;
   int cnt = 0;
   for(i = 0; i < NCLIENTS; i++) {
@@ -1061,73 +1084,49 @@ int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context 
   };
   struct can_frame frame;
 
-  print_time_now();
-#ifdef DEBUG_INFO_SETUP
-  printf(" Entering Main Loop...\n");
-  printf("sockFd = %i\n", sockFd);
-#endif
+  LOGI(__FUNCTION__, "INFO", "Entering Main Loop...\n");
+  LOGI(__FUNCTION__, "INFO", "sockFd = %i\n", sockFd);
+
   while(1) {
-    //read_packet_old(devh);  // Our first read to kick it all off.
-    read_packet(can);
+    if(LIBUSB_ERROR_NO_DEVICE == read_packet(can)) {
+      break;
+    }
+    handleRetries(can);
+
     int nev = kevent(kq, NULL, 0, evList, MAX_EVENTS, &zero_ts);
     if(nev < 0) {
-      perror("ERROR: kevent error");
+      LOGE(__FUNCTION__, "INFO", "kevent error\n");
       exit(1);
     }
 
-    for(int i = 0; i < nev; i++)
-    {
+    for(int i = 0; i < nev; i++) {
       if(sockFd == (int)(evList[i].ident)) {
-#ifdef DEBUG_INFO_SOCK_IN
-        printf("Socket event!\n");
-#endif
+        LOGI(__FUNCTION__, "INFO", "Socket event!\n");
         fd = accept(evList[i].ident, (struct sockaddr *)&addr, & socklen);
         if(fd == -1) {
-          fprintf(stderr, "Unable to accept socket.\n");
+          LOGE(__FUNCTION__, "INFO", "kevent error\n");
         } else if(conn_add(fd, CLIENT_TYPE_SOCK) == 0) {
-#ifdef DEBUG_INFO_SOCK_IN
-          printf("Accepted socket %i.\n", fd);
-#endif
+        LOGI(__FUNCTION__, "INFO", "Accepted socket %i.\n", fd);
           EV_SET(&evSet, fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
           assert(-1 != kevent(kq, &evSet, 1, NULL, 0, NULL));
-
-          // sendString(fd, "Welcome!\n");
         } else {
-          fprintf(stderr, "Connection refused!");
+          LOGE(__FUNCTION__, "INFO", "Connection refused!\n");
           close(fd);
         }
       } else if(conn_index((int)(evList[i].ident)) > -1) {
         fd = (int)(evList[i].ident);
         switch(clients[conn_index(fd)].typ) {
         case CLIENT_TYPE_SOCK:
-#ifdef DEBUG_INFO_SOCK_IN
-          printf("Client socket event! fd = %i, index = %i\n", fd, conn_index(fd));
-#endif
+          LOGI(__FUNCTION__, "INFO", "Client socket event! fd = %i, index = %i\n", fd, conn_index(fd));
           if(evList[i].flags & EV_EOF) {
-#ifdef DEBUG_INFO_SOCK_IN
-            printf("Socket closed: %i\n", fd);
-#endif
+            LOGI(__FUNCTION__, "INFO", "Socket closed: %i\n", fd);
             conn_close(fd);
           } else {
             int ret = recv(fd, &frame, sizeof(struct can_frame), 0);
             if(ret != sizeof(struct can_frame)) {
-              printf("Read %u bytes, expected %lu bytes!\n", ret, sizeof(struct can_frame));
+              LOGE(__FUNCTION__, "INFO", "Read %u bytes, expected %lu bytes!\n", ret, sizeof(struct can_frame));
             } else {
-              printf("ID: ");
-              if(frame.can_id & CAN_ERR_FLAG) {
-                printf("%08x ERR", frame.can_id);
-              } else if(frame.can_id & CAN_EFF_FLAG) {
-                printf("%08x", frame.can_id & CAN_EFF_MASK);
-              } else {
-                printf("     %03x", frame.can_id & CAN_SFF_MASK);
-              }
-              printf(" len: %u ", frame.len);
-              printf(" data: ");
-              for(int n = 0; n < frame.len; n++) {
-                printf("%02x ", frame.data[n]);
-              }
-              printf("\n");
-              // send_packet_old(devh, frame.can_id, frame.len, frame.data);
+              print_can_frame("PIPE", "IN", &frame, 0, "");
               send_packet(can, &frame);
             }
 
@@ -1237,7 +1236,7 @@ int main(int argc, char *argv[]) {
   processArgs(argc, argv);
 
   // Create and bind our socket here.
-  printf("Creating our server here...\n");
+  LOGI(__FUNCTION__, "INFO", "Creating our server here...\n");
   struct sockaddr_in addr;
   memset(&addr, 0, sizeof(addr));
   addr.sin_len = sizeof(addr);
@@ -1255,20 +1254,20 @@ int main(int argc, char *argv[]) {
     return 1;
   }
   assert(listen(sock, 5) != -1);
-  printf("Listening on %i\n", port);
+  LOGI(__FUNCTION__, "INFO", "Listening on %i\n", port);
 
-  printf("Setting up libusb for CAN socket...\n");
+  LOGI(__FUNCTION__, "INFO", "Setting up libusb for CAN socket...\n");
   const struct libusb_version * ver = NULL;
-  printf("LIBUSB_API_VERSION = %08x\n", LIBUSB_API_VERSION);
+  LOGI(__FUNCTION__, "INFO", "LIBUSB_API_VERSION = %08x\n", LIBUSB_API_VERSION);
 
   ver = libusb_get_version();
-  printf("LibUSB version = %i.%i.%i.%i %s %s\n", ver->major, ver->minor, ver->micro, ver->nano, ver->rc, ver->describe);
+  LOGI(__FUNCTION__, "INFO", "LibUSB version = %i.%i.%i.%i %s %s\n", ver->major, ver->minor, ver->micro, ver->nano, ver->rc, ver->describe);
 
-  printf("Trying libusb_init...\n");
+  LOGI(__FUNCTION__, "INFO", "Trying libusb_init...\n");
   libusb_context *ctx;
   ret = libusb_init(&ctx);
   if (ret < 0) {
-    printf("ERROR: failed to initialize libusb (ret = %d)\n", ret);
+    LOGE(__FUNCTION__, "INFO", "ERROR: failed to initialize libusb (ret = %d)\n", ret);
     exit(1);
   }
 
@@ -1277,79 +1276,79 @@ int main(int argc, char *argv[]) {
 
   libusb_device **list;
   ssize_t cnt = libusb_get_device_list(NULL, &list);
-  if (cnt < 0) printf("ERROR: failed to get device list (cnt = %ld)\n", cnt);
-  printf("%ld USB devices found.\n\nUSB Devices found:\n", cnt);
+  if (cnt < 0) LOGI(__FUNCTION__, "INFO", "ERROR: failed to get device list (cnt = %ld)\n", cnt);
+  LOGI(__FUNCTION__, "INFO", "%ld USB devices found.\n", cnt);
+  LOGI(__FUNCTION__, "INFO", "USB Devices found:\n");
 
   for (ssize_t i = 0; i < cnt; i++) {
     libusb_device *dev = list[i];
     struct libusb_device_descriptor desc;
     int r = libusb_get_device_descriptor(dev, &desc);
-    if (r < 0) printf("ERROR: failed to get device descriptor (r = %d)\n", r);
+    if (r < 0) LOGI(__FUNCTION__, "ERROR", "failed to get device descriptor (r = %d)\n", r);
 
-    printf("%2ld Vendor ID: %i (0x%04x), Product ID: %i (0x%04x), Manufacturer: %i, Product: %i, Serial: %i\n", i+1, desc.idVendor, desc.idVendor, desc.idProduct, desc.idProduct, desc.iManufacturer, desc.iProduct, desc.iSerialNumber);
+    LOGI(__FUNCTION__, "INFO", "%2ld Vendor ID: %i (0x%04x), Product ID: %i (0x%04x), Manufacturer: %i, Product: %i, Serial: %i\n", i+1, desc.idVendor, desc.idVendor, desc.idProduct, desc.idProduct, desc.iManufacturer, desc.iProduct, desc.iSerialNumber);
   }
 
   libusb_free_device_list(list, 1);
 
   struct libusb_device_handle *devh = NULL;
-  printf("Attempting to open the USB2CAN device with %04x:%04x now...\n", USB_VENDOR_ID, USB_PRODUCT_ID);
+  LOGI(__FUNCTION__, "INFO", "Attempting to open the USB2CAN device with %04x:%04x now...\n", USB_VENDOR_ID, USB_PRODUCT_ID);
   devh = libusb_open_device_with_vid_pid(NULL, USB_VENDOR_ID, USB_PRODUCT_ID);
   if(devh == NULL) {
-    printf("ERROR: failed to open the device.\n");
+    LOGE(__FUNCTION__, "INFO", "failed to open the device.\n");
     exit(1);
   }
-  printf("Device opened.\n");
+  LOGI(__FUNCTION__, "INFO", "Device opened.\n");
 
   int interface = 0;
-  printf("Checking if kernel driver is active...\n");
+  LOGI(__FUNCTION__, "INFO", "Checking if kernel driver is active...\n");
   if(libusb_kernel_driver_active(devh, interface) == 1) {
-    printf("Detaching kernel driver...\n");
+    LOGI(__FUNCTION__, "INFO", "Detaching kernel driver...\n");
     int ret = libusb_detach_kernel_driver(devh, interface);
     if(ret < 0) {
-      fprintf(stderr, "%s: %s Unable to detach.\n", libusb_error_name(ret), libusb_strerror(ret));
+      LOGE(__FUNCTION__, "INFO", "%s: %s Unable to detach.\n", libusb_error_name(ret), libusb_strerror(ret));
     }
   }
 
-  printf("Claiming interface...\n");
+  LOGI(__FUNCTION__, "INFO", "Claiming interface...\n");
   ret = libusb_claim_interface(devh, interface);
   if(ret < 0) {
-    fprintf(stderr, "%s: %s Unable to claim interface %d.\n",
-    libusb_error_name(ret), libusb_strerror(ret), interface);
+    LOGE(__FUNCTION__, "INFO", "%s: %s Unable to claim interface %d.\n", libusb_error_name(ret), libusb_strerror(ret), interface);
   }
 
-  printf("Getting descriptor...\n");
+  LOGI(__FUNCTION__, "INFO", "Getting descriptor...\n");
   libusb_device* device = libusb_get_device(devh);
   struct libusb_config_descriptor* descriptor = NULL;
   if(libusb_get_active_config_descriptor(device, &descriptor) < 0)
   {
-    fprintf(stderr, "failed to get config descriptor");
+    LOGE(__FUNCTION__, "INFO", "failed to get config descriptor");
   }
   //check for correct endpoints
-  printf("Endpoints found:");
+  LOGI(__FUNCTION__, "INFO", "Endpoints found:");
   if(descriptor->bNumInterfaces > 0)
   {
     struct libusb_interface_descriptor iface = descriptor->interface[0].altsetting[0];
     for(int i=0; i<iface.bNumEndpoints; ++i) {
-      printf(" %d (0x%02x),", iface.endpoint[i].bEndpointAddress, iface.endpoint[i].bEndpointAddress);
+      LOGI(__FUNCTION__, "INFO", " %d (0x%02x),", iface.endpoint[i].bEndpointAddress, iface.endpoint[i].bEndpointAddress);
     }
   }
 
   printf("\n");
   libusb_free_config_descriptor(descriptor);
 
-  printf("Creating our CAN context...\n");
+  LOGI(__FUNCTION__, "INFO", "Creating our CAN context...\n");
   struct usb2can_can * can = init_usb2can_can(devh);
-  printf("CAN context created!\n");
+  LOGI(__FUNCTION__, "INFO", "CAN context created!\n");
 
-  printf("Setting up for comms...\n");
+  LOGI(__FUNCTION__, "INFO", "Setting up for comms...\n");
   ret = port_set_user_id(can);
   if(ret < 0) {
-    fprintf(stderr, "ERROR! Unable to set user ID.\n");
+    LOGE(__FUNCTION__, "INFO", "ERROR! Unable to set user ID.\n");
     exit(1);
   }
   ret = port_set_host_format(can);
   if(ret < 0) {
-    fprintf(stderr, "ERROR! Unable to set host format.\n");
+    LOGE(__FUNCTION__, "INFO", "ERROR! Unable to set host format.\n");
     exit(1);
   }
   ret = port_get_device_config(can);
@@ -1359,155 +1358,41 @@ int main(int argc, char *argv[]) {
   }
   ret = port_get_bit_timing(can);
   if(ret < 0) {
-    fprintf(stderr, "ERROR! Unable to get bit timing.\n");
+    LOGE(__FUNCTION__, "INFO", "ERROR! Unable to get bit timing.\n");
     exit(1);
   }
 
   ret = set_bitrate(can);
   if(ret < 0) {
-    fprintf(stderr, "ERROR! Unable to set bitrate.\n");
+    LOGE(__FUNCTION__, "INFO", "ERROR! Unable to set bitrate.\n");
     exit(1);
   }
 
-  printf("Opening port...\n");
+  LOGI(__FUNCTION__, "INFO", "Opening port...\n");
   ret = port_open(devh);
   if(ret < 0) {
-    fprintf(stderr, "ERROR! Unable to open port.\n");
+    LOGE(__FUNCTION__, "INFO", "ERROR! Unable to open port.\n");
     exit(1);
   }
-  printf("USB to CAN device is connected!\n");
+  LOGI(__FUNCTION__, "INFO", "USB to CAN device is connected!\n");
 
-
-
-  // printf("Testing CAN Context system...\n");
-  
-  // struct usb2can_tx_context* txc00;
-  // struct usb2can_tx_context* txc01;
-  // struct usb2can_tx_context* txc02;
-  // struct usb2can_tx_context* txc03;
-  // struct usb2can_tx_context* txc04;
-  // struct usb2can_tx_context* txc05;
-  // struct usb2can_tx_context* txc06;
-  // struct usb2can_tx_context* txc07;
-  // struct usb2can_tx_context* txc08;
-  // struct usb2can_tx_context* txc09;
-  // struct usb2can_tx_context* txc10;
-  
-
-  // printf("\nTest 1 \n");
-  // printf(" 1. Getting context 0: \n");
-  // txc00 = get_tx_context(can);
-  // printf(" 2.     Got context 0: %u\n", txc00->echo_id);
-  // printf(" 3. Freeing context 0: %u\n", txc00->echo_id);
-  // ret = release_tx_context(can, txc00->echo_id);
-  // printf(" 4.   Freed context 0: %u (%u)\n", txc00->echo_id, ret);
-  
-  // printf("\nTest 2 \n");
-  // printf(" 1. Getting context 0: \n");
-  // txc00 = get_tx_context(can);
-  // printf(" 2.     Got context 0: %u\n", txc00->echo_id);
-  // printf(" 3. Getting context 1: \n");
-  // txc01 = get_tx_context(can);
-  // printf(" 4.     Got context 1: %u\n", txc01->echo_id);
-  // printf(" 5. Getting context 2: \n");
-  // txc02 = get_tx_context(can);
-  // printf(" 6.     Got context 2: %u\n", txc02->echo_id);
-
-  // printf(" 7. Freeing context 0: %u\n", txc00->echo_id);
-  // ret = release_tx_context(can, txc00->echo_id);
-  // printf(" 8.   Freed context 0: %u (%u)\n", txc00->echo_id, ret);
-  // printf(" 7. Freeing context 1: %u\n", txc00->echo_id);
-  // ret = release_tx_context(can, txc01->echo_id);
-  // printf(" 8.   Freed context 1: %u (%u)\n", txc01->echo_id, ret);
-  // printf(" 7. Freeing context 2: %u\n", txc00->echo_id);
-  // ret = release_tx_context(can, txc02->echo_id);
-  // printf(" 8.   Freed context 2: %u (%u)\n", txc02->echo_id, ret);
-  
-  // printf("\nTest 3 \n");
-  // printf(" 1. Getting context 0: \n");
-  // txc00 = get_tx_context(can);
-  // printf(" 2.     Got context 0: %u\n", txc00->echo_id);
-
-  // printf(" 3. Getting context 1: \n");
-  // txc01 = get_tx_context(can);
-  // printf(" 4.     Got context 1: %u\n", txc01->echo_id);
-
-  // printf(" 5. Getting context 2: \n");
-  // txc02 = get_tx_context(can);
-  // printf(" 6.     Got context 2: %u\n", txc02->echo_id);
-
-  // printf(" 7. Getting context 3: \n");
-  // txc03 = get_tx_context(can);
-  // printf(" 8.     Got context 3: %u\n", txc03->echo_id);
-
-  // printf(" 9. Getting context 4: \n");
-  // txc04 = get_tx_context(can);
-  // printf("10.     Got context 4: %u\n", txc04->echo_id);
-
-  // printf("11. Getting context 5: \n");
-  // txc05 = get_tx_context(can);
-  // printf("12.     Got context 5: %u\n", txc05->echo_id);
-
-  // printf("13. Getting context 6: \n");
-  // txc06 = get_tx_context(can);
-  // printf("14.     Got context 6: %u\n", txc06->echo_id);
-
-  // printf("15. Getting context 7: \n");
-  // txc07 = get_tx_context(can);
-  // printf("16.     Got context 7: %u\n", txc07->echo_id);
-
-  // printf("17. Getting context 8: \n");
-  // txc08 = get_tx_context(can);
-  // printf("18.     Got context 8: %u\n", txc08->echo_id);
-
-  // printf("19. Getting context 9: \n");
-  // txc09 = get_tx_context(can);
-  // printf("20.     Got context 9: %u\n", txc09->echo_id);
-
-  // printf("21. Getting context 10: \n");
-  // txc10 = get_tx_context(can);
-  // if(txc10 == NULL) {
-  //   printf("22.     Got context 10. It is NULL.\n");
-  // } else {
-  //   printf("22. ERROR! Context 10 should be NULL!\n");
-  // }
-
-  // printf("25. Freeing context 1: %u\n", txc00->echo_id);
-  // ret = release_tx_context(can, txc01->echo_id);
-  // printf("26.   Freed context 1: %u (%u)\n", txc01->echo_id, ret);
-
-  // printf("27. Getting context 10: \n");
-  // txc10 = get_tx_context(can);
-  // printf("28.     Got context 10: %u - should be a 1\n", txc10->echo_id);
-
-  // printf("23. Freeing context 0: %u\n", txc00->echo_id);
-  // ret = release_tx_context(can, txc00->echo_id);
-  // printf("24.   Freed context 0: %u (%u)\n", txc00->echo_id, ret);
-
-  // printf("29. Freeing context 2: %u\n", txc00->echo_id);
-  // ret = release_tx_context(can, txc02->echo_id);
-  // printf("30.   Freed context 2: %u (%u)\n", txc02->echo_id, ret);
-  
-  // printf("Tests finished.\n");
-  // exit(0);
-
-  printf("Creating Event Queue...\n");
+  LOGI(__FUNCTION__, "INFO", "Creating Event Queue...\n");
   int kq = kqueue();
   struct kevent evSet;
 
   EV_SET(&evSet, sock, EVFILT_READ, EV_ADD, 0, 0, NULL);
   assert(-1 != kevent(kq, &evSet, 1, NULL, 0, NULL));
 
-  printf("Starting main program loop...\n");
-  //processing_loop(kq, sock, devh, ctx);
+  LOGI(__FUNCTION__, "INFO", "Starting main program loop...\n");
+  // processing_loop(kq, sock, can, ctx);
   struct can_frame frame;
   // frame.can_id = 0x81234567U;
   frame.can_id = 0x00000001U;
   frame.len = 8;
   frame.data[0] = 0;
-  frame.data[1] = 0x12;
-  frame.data[2] = 0x34;
-  frame.data[3] = 0x56;
+  frame.data[1] = 0;
+  frame.data[2] = 0x12;
+  frame.data[3] = 0x34;
   frame.data[4] = 0xde;
   frame.data[5] = 0xad;
   frame.data[6] = 0xbe;
@@ -1522,12 +1407,6 @@ int main(int argc, char *argv[]) {
     }
     handleRetries(can);
     if(now >= next) {
-      printf("%3u. ", i);
-      // Try to send a message.
-      // printf("CAN FRAME OUT %3u. ", i + 1);
-      // print_time_now();
-      // printf(" ");
-      // print_can_frame(&frame);
       int success = send_packet(can, &frame);
       if(success == LIBUSB_ERROR_BUSY) {
         // Tx Stack is full so wait before trying again.
@@ -1538,27 +1417,25 @@ int main(int argc, char *argv[]) {
         i++;
         next = millis() + 20; //250; // Wait before sending next message
       }
-
-      // usleep(2000); // TEST CODE!
     }
   }
 
   ret = port_close(devh);
   if(ret < 0) {
-    fprintf(stderr, "ERROR! Unable to close port.\n");
+    LOGE(__FUNCTION__, "INFO", "ERROR! Unable to close port.\n");
   }
 
   ret = libusb_attach_kernel_driver(devh, interface);
   if(ret < 0) {
-    fprintf(stderr, "%s: %s Unable to reattach existing driver.\n", libusb_error_name(ret), libusb_strerror(ret));
+    LOGE(__FUNCTION__, "INFO", "%s: %s Unable to reattach existing driver.\n", libusb_error_name(ret), libusb_strerror(ret));
   }
 
   if(devh != NULL) {
     libusb_close(devh);
-    printf("Device closed.\n");
+    LOGI(__FUNCTION__, "INFO", "Device closed.\n");
   }
 
-  printf("Trying libusb_exit...\n");
+  LOGI(__FUNCTION__, "INFO", "Trying libusb_exit...\n");
   libusb_exit(ctx);
   return ret;
 }
