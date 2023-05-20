@@ -33,3 +33,9 @@ test2.xlsx - The spreadsheet used to analyse teh results.
 We created a MS Excel Spreadsheet (test2.xlsx - attached) to analyse our results. 
 * Once the messages are written to the CAN Bus the average time before reading the messages back in is 0.16ms (maximum 0.26ms, minimum 0.12ms). This is very fast indeed, it is about as fast as you can transmit on a bus of 500kbps. I suspect that we won't be able to see much difference with any other kernel (or even OS).
 * The previous figure excludes the transmissions that we never had echoed back to us. 34.94% of our transmissions weren't echoed back to us so we'll need to see if we can fix that error. It's possible that we're not reading fast enough to capture them all.
+
+## Test Variation 1
+We also repeated the test without the PCAN units sending test messages, meaning that there was nothing on the bus apart from the messages that we are sending. We still have the same issue so message echoes not coming back. It may be better to assuem that the messages got sent after a period of time instead of retransmitting.
+
+## Test Variation 2
+We commented out the retransmission on line 413 of testtx.c, rebuild teh code and repeated Test Variation 1. This time it sent exactly 270 message and we could see them appearing on the CAN using the PCAN device connected to PCAN-View running on Windows.
