@@ -34,8 +34,14 @@
 #define DEBUG_INFO_SETUP
 
 
-#define USB_VENDOR_ID   0x1D50
-#define USB_PRODUCT_ID  0x606F
+#define USB_VENDOR_ID_GS_USB_1            0x1D50
+#define USB_PRODUCT_ID_GS_USB_1           0x606F
+#define USB_VENDOR_ID_CANDLELIGHT         0x1209
+#define USB_PRODUCT_ID_CANDLELIGHT        0x2323
+#define USB_VENDOR_ID_CES_CANEXT_FD       0x1cd2
+#define USB_PRODUCT_ID_CES_CANEXT_FD      0x606f
+#define USB_VENDOR_ID_ABE_CANDEBUGGER_FD  0x16d0
+#define USB_PRODUCT_ID_ABE_CANDEBUGGER_FD 0x10b8
 
 #define ENDPOINT_FLAG_IN        0x80
 #define ENDPOINT_IN     (0x01 | ENDPOINT_FLAG_IN)
@@ -1302,8 +1308,10 @@ int main(int argc, char *argv[]) {
     struct libusb_device_descriptor desc;
     int r = libusb_get_device_descriptor(dev, &desc);
     if (r < 0) LOGI(__FUNCTION__, "ERROR", "failed to get device descriptor (r = %d)\n", r);
-
-    if((USB_VENDOR_ID == desc.idVendor) && (USB_PRODUCT_ID == desc.idProduct)) {
+    if(((USB_VENDOR_ID_GS_USB_1 == desc.idVendor) && (USB_PRODUCT_ID_GS_USB_1 == desc.idProduct))
+      || ((USB_VENDOR_ID_CANDLELIGHT == desc.idVendor) && (USB_PRODUCT_ID_CANDLELIGHT == desc.idProduct))
+      || ((USB_VENDOR_ID_CES_CANEXT_FD == desc.idVendor) && (USB_PRODUCT_ID_CES_CANEXT_FD == desc.idProduct))
+      || ((USB_VENDOR_ID_ABE_CANDEBUGGER_FD == desc.idVendor) && (USB_PRODUCT_ID_ABE_CANDEBUGGER_FD == desc.idProduct))) {
       LOGI(__FUNCTION__, "INFO", "%2ld Vendor ID: %i (0x%04x), Product ID: %i (0x%04x), Manufacturer: %i, Product: %i, Serial: %i *** DEVICE %i ***\n", i+1, desc.idVendor, desc.idVendor, desc.idProduct, desc.idProduct, desc.iManufacturer, desc.iProduct, desc.iSerialNumber, devCnt);
       validdevices[devCnt] = dev;
       devCnt++;
@@ -1351,7 +1359,7 @@ int main(int argc, char *argv[]) {
   struct libusb_config_descriptor* descriptor = NULL;
   if(libusb_get_active_config_descriptor(device, &descriptor) < 0)
   {
-    LOGE(__FUNCTION__, "INFO", "failed to get config descriptor");
+    LOGE(__FUNCTION__, "INFO", "Failed to get config descriptor\n");
   }
   //check for correct endpoints
   LOGI(__FUNCTION__, "INFO", "Endpoints found:");

@@ -1292,8 +1292,8 @@ int main(int argc, char *argv[]) {
   libusb_free_device_list(list, 1);
 
   struct libusb_device_handle *devh = NULL;
-  LOGI(__FUNCTION__, "INFO", "Attempting to open the USB2CAN device with %04x:%04x now...\n", USB_VENDOR_ID, USB_PRODUCT_ID);
-  devh = libusb_open_device_with_vid_pid(NULL, USB_VENDOR_ID, USB_PRODUCT_ID);
+  LOGI(__FUNCTION__, "INFO", "Attempting to open the USB2CAN device with %04x:%04x now...\n", USB_VENDOR_ID_GS_USB_1, USB_PRODUCT_ID);
+  devh = libusb_open_device_with_vid_pid(NULL, USB_VENDOR_ID_GS_USB_1, USB_PRODUCT_ID);
   if(devh == NULL) {
     LOGE(__FUNCTION__, "INFO", "failed to open the device.\n");
     exit(1);
