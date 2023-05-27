@@ -1196,11 +1196,6 @@ void processArgs(int argc, char *argv[]) {
         port = port2;
       } else if(argv[i][0] == 'd') {
         int deviceNumber2 = atoi(&(argv[i][1]));
-        if(deviceNumber2 == 0) {
-          fprintf(stderr, "Incorrect arguments!\n\n");
-          printusage();
-          exit(1);
-        }
         deviceNumber = deviceNumber2;
       } else if(argv[i][0] == 's') {
         if(0 == strncmp(argv[i], "s20k", 4)) {
