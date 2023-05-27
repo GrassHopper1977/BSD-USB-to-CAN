@@ -1172,10 +1172,12 @@ void printusage() {
   printf("                         1m\n");
   printf("  ? = print this message. \n");
   printf("  p[nnnn] = a \"p\" followed by a number - use this as the port number. \n");
+  printf("  d[nnnn] = a \"d\" followed by a number - if there are multiple device connected then speficy which to use. \n");
   printf("\n");
 }
 
-int port = 2303;
+int port = 2303;  // The port that we're going to open.
+int deviceNumber = 0; // If there's multiple device connected then use this one.
 
 void processArgs(int argc, char *argv[]) {
   if(argc > 1) {
@@ -1192,6 +1194,14 @@ void processArgs(int argc, char *argv[]) {
           exit(1);
         }
         port = port2;
+      } else if(argv[i][0] == 'd') {
+        int deviceNumber2 = atoi(&(argv[i][1]));
+        if(deviceNumber2 == 0) {
+          fprintf(stderr, "Incorrect arguments!\n\n");
+          printusage();
+          exit(1);
+        }
+        deviceNumber = deviceNumber2;
       } else if(argv[i][0] == 's') {
         if(0 == strncmp(argv[i], "s20k", 4)) {
           bitrate = 0;
@@ -1289,25 +1299,41 @@ int main(int argc, char *argv[]) {
   LOGI(__FUNCTION__, "INFO", "%ld USB devices found.\n", cnt);
   LOGI(__FUNCTION__, "INFO", "USB Devices found:\n");
 
+  // This is where we build out list of device that we are looking for.
+  libusb_device* validdevices[cnt];
+  int devCnt = 0;
   for (ssize_t i = 0; i < cnt; i++) {
     libusb_device *dev = list[i];
     struct libusb_device_descriptor desc;
     int r = libusb_get_device_descriptor(dev, &desc);
     if (r < 0) LOGI(__FUNCTION__, "ERROR", "failed to get device descriptor (r = %d)\n", r);
 
-    LOGI(__FUNCTION__, "INFO", "%2ld Vendor ID: %i (0x%04x), Product ID: %i (0x%04x), Manufacturer: %i, Product: %i, Serial: %i\n", i+1, desc.idVendor, desc.idVendor, desc.idProduct, desc.idProduct, desc.iManufacturer, desc.iProduct, desc.iSerialNumber);
+    if((USB_VENDOR_ID == desc.idVendor) && (USB_PRODUCT_ID == desc.idProduct)) {
+      LOGI(__FUNCTION__, "INFO", "%2ld Vendor ID: %i (0x%04x), Product ID: %i (0x%04x), Manufacturer: %i, Product: %i, Serial: %i *** DEVICE %i ***\n", i+1, desc.idVendor, desc.idVendor, desc.idProduct, desc.idProduct, desc.iManufacturer, desc.iProduct, desc.iSerialNumber, devCnt);
+      validdevices[devCnt] = dev;
+      devCnt++;
+    } else {
+      LOGI(__FUNCTION__, "INFO", "%2ld Vendor ID: %i (0x%04x), Product ID: %i (0x%04x), Manufacturer: %i, Product: %i, Serial: %i\n", i+1, desc.idVendor, desc.idVendor, desc.idProduct, desc.idProduct, desc.iManufacturer, desc.iProduct, desc.iSerialNumber);
+    }
   }
 
-  libusb_free_device_list(list, 1);
+  LOGI(__FUNCTION__, "INFO", "Compatible USB to CAN Devices found: %i\n", devCnt);
+
 
   struct libusb_device_handle *devh = NULL;
-  LOGI(__FUNCTION__, "INFO", "Attempting to open the USB2CAN device with %04x:%04x now...\n", USB_VENDOR_ID, USB_PRODUCT_ID);
-  devh = libusb_open_device_with_vid_pid(NULL, USB_VENDOR_ID, USB_PRODUCT_ID);
-  if(devh == NULL) {
+  if(deviceNumber >= devCnt) {
+    LOGE(__FUNCTION__, "INFO", "Unable to open device %i as there are only %i devices. Note: Device numbering starts at 0.\n", deviceNumber, devCnt);
+    exit(1);
+  }
+  LOGI(__FUNCTION__, "INFO", "Attempting to device %i now...\n", deviceNumber);
+  ret = libusb_open(validdevices[deviceNumber], &devh);
+  if(ret != 0) {
     LOGE(__FUNCTION__, "INFO", "failed to open the device.\n");
     exit(1);
   }
   LOGI(__FUNCTION__, "INFO", "Device opened.\n");
+
+  libusb_free_device_list(list, 1);
 
   int interface = 0;
   LOGI(__FUNCTION__, "INFO", "Checking if kernel driver is active...\n");
