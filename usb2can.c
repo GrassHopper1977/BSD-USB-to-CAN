@@ -27,12 +27,8 @@
 #include <stdarg.h>
 #include <inttypes.h>
 
-// #define DEBUG_INFO_CAN_IN
-#define DEBUG_INFO_CAN_OUT
-#define DEBUG_INFO_SOCK_IN
-// #define DEBUG_INFO_SOCK_OUT
-#define DEBUG_INFO_SETUP
-
+#define DEBUG_LOG_INFO
+#define DEBUG_LOG_ERRORS
 
 #define USB_VENDOR_ID_GS_USB_1            0x1D50
 #define USB_PRODUCT_ID_GS_USB_1           0x606F
@@ -47,12 +43,6 @@
 #define ENDPOINT_IN     (0x01 | ENDPOINT_FLAG_IN)
 #define ENDPOINT_OUT    0x02
 
-#ifdef __CHERI_PURE_CAPABILITY__
-#define PRINTF_PTR "#p"
-#else
-#define PRINTF_PTR "p"
-#endif
-
 #define MAX_EVENTS      (32)
 
 #define TIMER_FD (1234)
@@ -60,12 +50,6 @@
 // Declarations
 struct usb2can_can;
 struct usb2can_tx_context;
-
-// struct usb2can_device_state {
-//   __le32 state;
-//   __le32 rxerr;
-//   __le32 txerr;
-// } __packed;
 
 // Device Specific Constants
 enum usb2can_breq {
@@ -95,6 +79,7 @@ enum usb2can_mode {
 // We keep track of how many are in play at a time by setting the echo_id and
 // looking for it when it comes back.
 #define USB2CAN_MAX_TX_REQ  (10)
+// We have to read more than we write or we won't get our Tx messages echoed back to us. We tend to read 30 times for each 1 write.
 #define USB2CAN_MAX_RX_REQ  (30)
 
 // There may be some 3 channel devices out there but not more.
@@ -364,29 +349,29 @@ void print_time_now() {
 #define LOG_MIN_TYPE_LEN  5
 #define LOG_MAX_TYPE_LEN  LOG_MIN_TYPE_LEN
 void LOGI(const char* source, const char* type, const char *format, ...) {
+  #ifdef DEBUG_LOG_INFO
   struct timeval now;
   va_list args;
   va_start(args, format);
 
   gettimeofday(&now, NULL);
-  // fprintf(stdout, "%-10ld.%06ld,   INFO: %*.*s, %*.*s, %*.*s, ", now.tv_sec, now.tv_usec, LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
   fprintf(stdout, "%16.16" PRIu64 ",  INFO: %*.*s, %*.*s, %*.*s, ", nanos(), LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
   vfprintf(stdout, format, args);
-  // printf("\n");
   va_end(args);
+  #endif
 }
 
 void LOGE(const char* source, const char* type, const char *format, ...) {
+  #ifdef DEBUG_LOG_ERRORS
   struct timeval now;
   va_list args;
   va_start(args, format);
 
   gettimeofday(&now, NULL);
-  // fprintf(stderr, "%-10ld.%06ld,  ERROR: %*.*s, %*.*s, %*.*s, ", now.tv_sec, now.tv_usec, LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
   fprintf(stderr, "%16.16" PRIu64 ", ERROR: %*.*s, %*.*s, %*.*s, ", nanos(), LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
   vfprintf(stderr, format, args);
-  // printf("\n");
   va_end(args);
+  #endif
 }
 
 #ifdef __CHERI_PURE_CAPABILITY__
@@ -552,34 +537,212 @@ void print_host_frame(const char* source, const char* type, struct host_frame *d
   } else {
     fprintf(fd, "     %03x", data->can_id & CAN_SFF_MASK);
   }
-  
-  fprintf(fd, ", DLC: %2u,", data->can_dlc);
 
-  fprintf(fd, " Data: ");
-  for(int i = 0; i < CAN_MAX_DLC; i++) {
-    fprintf(fd, "%02x, ", data->data[i]);
-  }
+  if(data->can_id & CAN_ERR_FLAG) {
+    if(data->can_id & CAN_ERR_RESTARTED) {
+      fprintf(fd, ", ERROR State: CAN Restarted ");
+    }
+    if(data->can_id & CAN_ERR_BUSERROR) {
+      fprintf(fd, ", ERROR State: CAN Bus Error ");
+    }
+    if(data->can_id & CAN_ERR_BUSOFF) {
+      fprintf(fd, ", ERROR State: CAN Bus Off ");
+    }
+    if(data->can_id & CAN_ERR_ACK) {
+      fprintf(fd, ", ERROR State: No ACK on Tx ");
+    }
+    if(data->can_id & CAN_ERR_TRX) {
+      fprintf(fd, ", ERROR State: Transceiver Status ");
+      if(data->data[4] == CAN_ERR_TRX_UNSPEC) {
+        fprintf(fd, "unspecified ");
+      } else {
+        switch(data->data[4] & 0x0f) {
+          case CAN_ERR_TRX_CANH_NO_WIRE:
+            fprintf(fd, "CAN High no wire ");
+            break;
+          case CAN_ERR_TRX_CANH_SHORT_TO_BAT:
+            fprintf(fd, "CAN High short to BAT ");
+            break;
+          case CAN_ERR_TRX_CANH_SHORT_TO_VCC:
+            fprintf(fd, "CAN High short to Vcc ");
+            break;
+          case CAN_ERR_TRX_CANH_SHORT_TO_GND:
+            fprintf(fd, "CAN High short to GND ");
+            break;
+        }
+        switch(data->data[4] & 0xf0) {
+          case CAN_ERR_TRX_CANL_NO_WIRE:
+            fprintf(fd, "CAN Low no wire ");
+            break;
+          case CAN_ERR_TRX_CANL_SHORT_TO_BAT:
+            fprintf(fd, "CAN Low short to BAT ");
+            break;
+          case CAN_ERR_TRX_CANL_SHORT_TO_VCC:
+            fprintf(fd, "CAN Low short to Vcc ");
+            break;
+          case CAN_ERR_TRX_CANL_SHORT_TO_GND:
+            fprintf(fd, "CAN Low short to GND ");
+            break;
+        }
+        if(data->data[4] & CAN_ERR_TRX_CANL_SHORT_TO_CANH) {
+          fprintf(fd, "CAN Low short to CAN High ");
+        }
+      }
+    }
+    if(data->can_id & CAN_ERR_PROT) {
+      fprintf(fd, ", ERROR State: CAN Protocol Violations: ");
+      if(data->data[2] == CAN_ERR_PROT_UNSPEC) {
+        fprintf(fd, "unspecified ");
+      }
+      if(data->data[2] & CAN_ERR_PROT_BIT) {
+        fprintf(fd, "single bit error, ");
+      }
+      if(data->data[2] & CAN_ERR_PROT_FORM) {
+        fprintf(fd, "frame format error, ");
+      }
+      if(data->data[2] & CAN_ERR_PROT_STUFF) {
+        fprintf(fd, "bit stuffing error, ");
+      }
+      if(data->data[2] & CAN_ERR_PROT_BIT0) {
+        fprintf(fd, "unable to send dominant bit, ");
+      }
+      if(data->data[2] & CAN_ERR_PROT_BIT1) {
+        fprintf(fd, "unable to send recessive bit, ");
+      }
+      if(data->data[2] & CAN_ERR_PROT_OVERLOAD) {
+        fprintf(fd, "bus overload, ");
+      }
+      if(data->data[2] & CAN_ERR_PROT_ACTIVE) {
+        fprintf(fd, "active error announcement, ");
+      }
+      if(data->data[2] & CAN_ERR_PROT_TX) {
+        fprintf(fd, "error occurred on transmission, ");
+      }
+      fprintf(fd, "at ");
+      switch(data->data[3]){
+        default:
+        case CAN_ERR_PROT_LOC_UNSPEC:
+          fprintf(fd, "unspecified ");
+          break;
+        case CAN_ERR_PROT_LOC_SOF:
+          fprintf(fd, "start of frame ");
+          break;
+        case CAN_ERR_PROT_LOC_ID28_21:
+          fprintf(fd, "ID bits 28 - 21 (SFF: 10 - 3) ");
+          break;
+        case CAN_ERR_PROT_LOC_ID20_18:
+          fprintf(fd, "ID bits 20 - 18 (SFF: 2 - 0 ) ");
+          break;
+        case CAN_ERR_PROT_LOC_SRTR:
+          fprintf(fd, "substitute RTR (SFF: RTR) ");
+          break;
+        case CAN_ERR_PROT_LOC_IDE:
+          fprintf(fd, "identifier extension ");
+          break;
+        case CAN_ERR_PROT_LOC_ID17_13:
+          fprintf(fd, "ID bits 17-13 ");
+          break;
+        case CAN_ERR_PROT_LOC_ID12_05:
+          fprintf(fd, "ID bits 12-5 ");
+          break;
+        case CAN_ERR_PROT_LOC_ID04_00:
+          fprintf(fd, "ID bits 4-0 ");
+          break;
+        case CAN_ERR_PROT_LOC_RTR:
+          fprintf(fd, "RTR ");
+          break;
+        case CAN_ERR_PROT_LOC_RES1:
+          fprintf(fd, "reserved bit 1 ");
+          break;
+        case CAN_ERR_PROT_LOC_RES0:
+          fprintf(fd, "reserved bit 0 ");
+          break;
+        case CAN_ERR_PROT_LOC_DLC:
+          fprintf(fd, "data length code ");
+          break;
+        case CAN_ERR_PROT_LOC_DATA:
+          fprintf(fd, "data section ");
+          break;
+        case CAN_ERR_PROT_LOC_CRC_SEQ:
+          fprintf(fd, "CRC sequence ");
+          break;
+        case CAN_ERR_PROT_LOC_CRC_DEL:
+          fprintf(fd, "CRC delimiter ");
+          break;
+        case CAN_ERR_PROT_LOC_ACK:
+          fprintf(fd, "ACK slot ");
+          break;
+        case CAN_ERR_PROT_LOC_ACK_DEL:
+          fprintf(fd, "ACK delimiter ");
+          break;
+        case CAN_ERR_PROT_LOC_EOF:
+          fprintf(fd, "end of frame ");
+          break;
+        case CAN_ERR_PROT_LOC_INTERM:
+          fprintf(fd, "intermission ");
+          break;
+      }
+    }
+    if(data->can_id & CAN_ERR_CRTL) {
+      fprintf(fd, ", ERROR State: Controller Problems: ");
+      if(data->data[1] & CAN_ERR_CRTL_RX_OVERFLOW) {
+        fprintf(fd, "Rx Overflow, ");
+      }
+      if(data->data[1] & CAN_ERR_CRTL_TX_OVERFLOW) {
+        fprintf(fd, "Tx Overflow, ");
+      }
+      if(data->data[1] & CAN_ERR_CRTL_RX_WARNING) {
+        fprintf(fd, "Rx Warning, ");
+      }
+      if(data->data[1] & CAN_ERR_CRTL_TX_WARNING) {
+        fprintf(fd, "Tx Warning, ");
+      }
+      if(data->data[1] & CAN_ERR_CRTL_RX_PASSIVE) {
+        fprintf(fd, "Rx Passive, ");
+      }
+      if(data->data[1] & CAN_ERR_CRTL_TX_PASSIVE) {
+        fprintf(fd, "Tx Passive, ");
+      }
+      if(data->data[1] & CAN_ERR_CRTL_ACTIVE) {
+        fprintf(fd, "Active ");
+      }
+    }
+    if(data->can_id & CAN_ERR_LOSTARB) {
+      fprintf(fd, ", ERROR State: Lost Arbitration ");
+    }
+    if(data->can_id & CAN_ERR_TX_TIMEOUT) {
+      fprintf(fd, ", ERROR State: Tx Timeout ");
+    } 
+    fprintf(fd, ", Tx Error Count: %u, Rx Error Count: %u ", data->data[6], data->data[7]);
+  } else {
+    fprintf(fd, ", DLC: %2u,", data->can_dlc);
 
-  fprintf(fd, "echo_id: %08x, ", data->echo_id);
-  fprintf(fd, "channel: %2u, ", data->channel);
-  fprintf(fd, "flags: %02x", data->flags);
-  if(data->flags > 0) {
-    fprintf(fd, " (");
-    if(data->flags & HOST_FRAME_FLAG_OVERFLOW) {
-      fprintf(fd, "HOST_FRAME_FLAG_OVERFLOW ");
+    fprintf(fd, " Data: ");
+    for(int i = 0; i < CAN_MAX_DLC; i++) {
+      fprintf(fd, "%02x, ", data->data[i]);
     }
-    if(data->flags & HOST_FRAME_FLAG_FD) {
-      fprintf(fd, "HOST_FRAME_FLAG_FD ");
+
+    fprintf(fd, "echo_id: %08x, ", data->echo_id);
+    fprintf(fd, "channel: %2u, ", data->channel);
+    fprintf(fd, "flags: %02x", data->flags);
+    if(data->flags > 0) {
+      fprintf(fd, " (");
+      if(data->flags & HOST_FRAME_FLAG_OVERFLOW) {
+        fprintf(fd, "HOST_FRAME_FLAG_OVERFLOW ");
+      }
+      if(data->flags & HOST_FRAME_FLAG_FD) {
+        fprintf(fd, "HOST_FRAME_FLAG_FD ");
+      }
+      if(data->flags & HOST_FRAME_FLAG_BRS) {
+        fprintf(fd, "HOST_FRAME_FLAG_BRS ");
+      }
+      if(data->flags & HOST_FRAME_FLAG_ESI) {
+        fprintf(fd, "HOST_FRAME_FLAG_ESI ");
+      }
+      fprintf(fd, ")");
     }
-    if(data->flags & HOST_FRAME_FLAG_BRS) {
-      fprintf(fd, "HOST_FRAME_FLAG_BRS ");
-    }
-    if(data->flags & HOST_FRAME_FLAG_ESI) {
-      fprintf(fd, "HOST_FRAME_FLAG_ESI ");
-    }
-    fprintf(fd, ")");
+    fprintf(fd, ", reserved: %02x, ", data->reserved);
   }
-  fprintf(fd, ", reserved: %02x, ", data->reserved);
 
   va_list args;
   va_start(args, format);
@@ -755,9 +918,7 @@ int set_bitrate(struct usb2can_can* can) {
 
 // Set User ID: candleLight allows optional support for reading/writing of a user defined value into the device's flash. It's isn't widely supported and probably isn't required most of the time.
 int port_set_user_id(struct usb2can_can* can) {
-#ifdef DEBUG_INFO_SETUP
   LOGI(__FUNCTION__, "INFO", "Set the User ID (USB2CAN_BREQ_SET_USER_ID)\n");
-#endif
   uint8_t bmReqType = 0x00;       // the request type (direction of transfer)
   uint8_t bReq = USB2CAN_BREQ_SET_USER_ID;            // the request field for this packet
   uint16_t wVal = 0x0001;         // the value field for this packet
@@ -774,9 +935,7 @@ int port_set_user_id(struct usb2can_can* can) {
 
 // Host format sets the endian. We write 0x0000beef to the device and it determines the endianess from that. However, candleLight may only support Little Endian so that why we always send it it Little Endian.
 int port_set_host_format(struct usb2can_can* can) {
-#ifdef DEBUG_INFO_SETUP
   LOGI(__FUNCTION__, "INFO", "Set the host format to Little Endian (as candleLight devices are always Little Endian) (USB2CAN_BREQ_HOST_FORMAT)\n");
-#endif
   uint8_t bmReqType = 0x41;       // the request type (direction of transfer)
   uint8_t bReq = USB2CAN_BREQ_HOST_FORMAT;            // the request field for this packet
   uint16_t wVal = 0x0001;         // the value field for this packet
@@ -796,9 +955,7 @@ int port_set_host_format(struct usb2can_can* can) {
 
 // Get device information from the USB 2 CAN device. Includes SW and HW versions.
 int port_get_device_config(struct usb2can_can* can) {
-#ifdef DEBUG_INFO_SETUP
   LOGI(__FUNCTION__, "INFO", "Getting device config info (USB2CAN_BREQ_DEVICE_CONFIG)\n");
-#endif
   uint8_t bmReqType = 0xC1;       // the request type (direction of transfer)
   uint8_t bReq = USB2CAN_BREQ_DEVICE_CONFIG;            // the request field for this packet
   uint16_t wVal = 0x0001;         // the value field for this packet
@@ -853,7 +1010,6 @@ int port_get_bit_timing(struct usb2can_can* can) {
     can->bt_const.brp_min = le32toh(data.brp_min);
     can->bt_const.brp_max = le32toh(data.brp_max);
     can->bt_const.brp_inc = le32toh(data.brp_inc);
-#ifdef DEBUG_INFO_SETUP
     LOGI(__FUNCTION__, "INFO", "BT Const Information:\n");
     int16_t feature = can->bt_const.feature;
     LOGI(__FUNCTION__, "INFO", "    feature: %08x (", feature);
@@ -909,7 +1065,6 @@ int port_get_bit_timing(struct usb2can_can* can) {
     LOGI(__FUNCTION__, "INFO", "    brp_min: %u\n", can->bt_const.brp_min);
     LOGI(__FUNCTION__, "INFO", "    brp_max: %u\n", can->bt_const.brp_max);
     LOGI(__FUNCTION__, "INFO", "    brp_inc: %u\n", can->bt_const.brp_inc);
-#endif
   }
 
   return ret;
