@@ -1,16 +1,17 @@
+#define DEBUG_LOG_INFO
+#define DEBUG_LOG_ERRORS
+#include "utils/logs.h"
+#include "utils/timestamp.h"
+
 #include <stdio.h>
 #include <string.h>
-#include <cheriintrin.h>
-#ifdef __CHERI_PURE_CAPABILITY__
-#include <cheri/cheri.h>
-#endif
 #include "libusb.h"
 #include <unistd.h>  /* UNIX standard function definitions */
 #include <fcntl.h>   /* File control definitions */
 #include <errno.h>   /* Error number definitions */
 #include <termios.h> /* POSIX terminal control definitions */
 #include <sys/socket.h> // Sockets
-#include <netinet/in.h>
+#include <netinet/in.h> // More sockets
 #include <sys/un.h>     // ?
 #include <sys/event.h>  // Events
 #include <assert.h>     // The assert function
@@ -22,14 +23,11 @@
 #include <sys/endian.h>
 #include <netdb.h>
 #include <signal.h>
-#include <sys/time.h>
 #include "usb2can.h"
 #include <stdarg.h>
 #include <inttypes.h>
 
-#define DEBUG_LOG_INFO
-#define DEBUG_LOG_ERRORS
-
+// Supported USB products
 #define USB_VENDOR_ID_GS_USB_1            0x1D50
 #define USB_PRODUCT_ID_GS_USB_1           0x606F
 #define USB_VENDOR_ID_CANDLELIGHT         0x1209
@@ -39,6 +37,7 @@
 #define USB_VENDOR_ID_ABE_CANDEBUGGER_FD  0x16d0
 #define USB_PRODUCT_ID_ABE_CANDEBUGGER_FD 0x10b8
 
+// The endpoint for these devices
 #define ENDPOINT_FLAG_IN        0x80
 #define ENDPOINT_IN     (0x01 | ENDPOINT_FLAG_IN)
 #define ENDPOINT_OUT    0x02
@@ -101,6 +100,7 @@ enum usb2can_mode {
 #define USB2CAN_FEATURE_BERR_REPORTING (1 << 12)
 #define USB2CAN_FEATURE_GET_STATE (1 << 13)
 
+/// @brief Bit Timing struct
 struct usb2can_device_bt_const {
   uint32_t feature;
   uint32_t fclk_can;
@@ -114,7 +114,7 @@ struct usb2can_device_bt_const {
   uint32_t brp_inc;
 } __packed;
 
-// USB device information
+/// @brief USB device information
 struct usb2can_device_config {
   uint8_t reserved1;
   uint8_t reserved2;
@@ -124,7 +124,7 @@ struct usb2can_device_config {
   uint32_t hw_version;
 } __packed;
 
-
+/// @brief The transmit context. We keep track of transmissions as we can only have USB2CAN_MAX_TX_REQ transmissions at a time
 struct usb2can_tx_context {
   struct usb2can_can* can;
   uint32_t echo_id;
@@ -132,6 +132,7 @@ struct usb2can_tx_context {
   struct can_frame* frame;
 };
 
+/// @brief Struct to keep track of the connection
 struct usb2can_can {
   struct libusb_device_handle* devh;
   struct usb2can_device_bt_const bt_const;
@@ -139,6 +140,7 @@ struct usb2can_can {
   struct usb2can_tx_context tx_context[USB2CAN_MAX_TX_REQ];
 };
 
+/// @brief This is the CAN frame that is sent over the USB
 struct host_frame {
   uint32_t echo_id; // So that we can recognise messages that we have sent.
   uint32_t can_id;
@@ -150,15 +152,14 @@ struct host_frame {
   // uint32_t timestamp;
 } __packed;
 
-
 #define HOST_FRAME_FLAG_OVERFLOW  (0x01)
 #define HOST_FRAME_FLAG_FD        (0x02)
 #define HOST_FRAME_FLAG_BRS       (0x04)
 #define HOST_FRAME_FLAG_ESI       (0x08)
 
-
 #define BITRATE_DATA_LEN  (20)
 int8_t bitrate = 12;
+// It is possible that these definitions may be different to different devices. One the few I've tried they've all been fine though.
 unsigned char bitrates[16][BITRATE_DATA_LEN] = {
   { // 20k
     0x06, 0x00, 0x00, 0x00, // Prop seg
@@ -274,50 +275,6 @@ unsigned char bitrates[16][BITRATE_DATA_LEN] = {
   }
 };
 
-
-#define _POSIX_C_SOURCE 199309L
-        
-#include <time.h>
-
-/// Convert seconds to milliseconds
-#define SEC_TO_MS(sec) ((sec)*1000)
-/// Convert seconds to microseconds
-#define SEC_TO_US(sec) ((sec)*1000000)
-/// Convert seconds to nanoseconds
-#define SEC_TO_NS(sec) ((sec)*1000000000)
-
-/// Convert nanoseconds to seconds
-#define NS_TO_SEC(ns)   ((ns)/1000000000)
-/// Convert nanoseconds to milliseconds
-#define NS_TO_MS(ns)    ((ns)/1000000)
-/// Convert nanoseconds to microseconds
-#define NS_TO_US(ns)    ((ns)/1000)
-
-/// Get a time stamp in milliseconds.
-uint64_t millis() {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_FAST, &ts);
-    uint64_t ms = SEC_TO_MS((uint64_t)ts.tv_sec) + NS_TO_MS((uint64_t)ts.tv_nsec);
-    return ms;
-}
-
-/// Get a time stamp in microseconds.
-uint64_t micros() {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_FAST, &ts);
-    uint64_t us = SEC_TO_US((uint64_t)ts.tv_sec) + NS_TO_US((uint64_t)ts.tv_nsec);
-    return us;
-}
-
-/// Get a time stamp in nanoseconds.
-uint64_t nanos() {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_FAST, &ts);
-    uint64_t ns = SEC_TO_NS((uint64_t)ts.tv_sec) + (uint64_t)ts.tv_nsec;
-    return ns;
-}
-
-
 // Function Declarations
 int sendCANToAll(struct can_frame * frame);
 int send_packet(struct usb2can_can* can, struct can_frame* frame);
@@ -335,71 +292,20 @@ void sigint_handler(int sig) {
   }
 }
 
-void print_time_now() {
-  struct timeval now;
-  gettimeofday(&now, NULL);
-  printf("%ld.%06ld secs", now.tv_sec, now.tv_usec);
-}
-
-
-#define LOG_MIN_FILE_LEN  9
-#define LOG_MAX_FILE_LEN  LOG_MIN_FILE_LEN
-#define LOG_MIN_SOURCE_LEN  8
-#define LOG_MAX_SOURCE_LEN  LOG_MIN_SOURCE_LEN
-#define LOG_MIN_TYPE_LEN  5
-#define LOG_MAX_TYPE_LEN  LOG_MIN_TYPE_LEN
-void LOGI(const char* source, const char* type, const char *format, ...) {
-  #ifdef DEBUG_LOG_INFO
-  struct timeval now;
-  va_list args;
-  va_start(args, format);
-
-  gettimeofday(&now, NULL);
-  fprintf(stdout, "%16.16" PRIu64 ",  INFO: %*.*s, %*.*s, %*.*s, ", nanos(), LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
-  vfprintf(stdout, format, args);
-  va_end(args);
-  #endif
-}
-
-void LOGE(const char* source, const char* type, const char *format, ...) {
-  #ifdef DEBUG_LOG_ERRORS
-  struct timeval now;
-  va_list args;
-  va_start(args, format);
-
-  gettimeofday(&now, NULL);
-  fprintf(stderr, "%16.16" PRIu64 ", ERROR: %*.*s, %*.*s, %*.*s, ", nanos(), LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
-  vfprintf(stderr, format, args);
-  va_end(args);
-  #endif
-}
-
-#ifdef __CHERI_PURE_CAPABILITY__
-void printf_caps_info(char * d, void *c) {
-  printf("%s = %#p\n", d, c);
-  printf("%s address = %lu (0x%lx)\n", d, cheri_address_get(c), cheri_address_get(c));
-  printf("%s base address = %lu (0x%lx)\n", d, cheri_base_get(c), cheri_base_get(c));
-  printf("%s bounds length = %lu (0x%lx)\n", d, cheri_length_get(c), cheri_length_get(c));
-  printf("%s offset = %lu (0x%lx)\n", d, cheri_offset_get(c), cheri_offset_get(c));
-  size_t perms = cheri_perms_get(c);
-  printf("%s perms: ", d);
-  if(perms & CHERI_PERM_EXECUTE) printf("CHERI_PERM_EXECUTE ");
-  if(perms & CHERI_PERM_LOAD) printf("CHERI_PERM_LOAD ");
-  if(perms & CHERI_PERM_LOAD_CAP) printf("CHERI_PERM_LOAD_CAP ");
-  if(perms & CHERI_PERM_STORE) printf("CHERI_PERM_STORE ");
-  if(perms & CHERI_PERM_STORE_CAP) printf("CHERI_PERM_STORE_CAP ");
-  if(perms & CHERI_PERM_SW_VMEM) printf("CHERI_PERM_SW_VMEM ");
-  printf("\n");
-}
-#endif
-
 void print_can_frame(const char* source, const char* type, struct can_frame *frame, uint8_t err, const char *format, ...) {
+  #if defined(DEBUG_LOG_INFO) || defined(CAN_ERR_FLAG)
   FILE * fd = stdout;
 
   if(err || (frame->can_id & CAN_ERR_FLAG)) {
+    #ifndef DEBUG_LOG_ERRORS
+      return;
+    #endif // DEBUG_LOG_ERRORS
     LOGE(source, type, "ID: ");
     fd = stderr;
   } else {
+    #ifndef DEBUG_LOG_INFO
+      return;
+    #endif // DEBUG_LOG_INFO
     LOGI(source, type, "ID: ");
   }
 
@@ -425,6 +331,7 @@ void print_can_frame(const char* source, const char* type, struct can_frame *fra
   }
 
   fprintf(fd, "\n");
+  #endif
 }
 
 #define TX_TIMEOUT_LENGTH_MS  (100) // When we Tx we should see the message come back to us within this time threshold.
@@ -466,42 +373,18 @@ int release_tx_context(struct usb2can_can* can, uint32_t tx_echo_id) {
   if(tx_echo_id == 0xFFFFFFFF) {
     return 0;
   } else if(tx_echo_id >= USB2CAN_MAX_TX_REQ){
-    // print_host_frame("CAN", "IN", &data, 1, "echo_id: %08x (%u) is invalid! TOO LARGE - ERROR!.\n", tx_echo_id, tx_echo_id);
-    // printf("ERROR CONTEXT      ");
-    // print_time_now();
-    // printf("         ");
-    // printf(" echo_id: %08x (%u) is invalid! TOO LARGE - ERROR!.\n", tx_echo_id, tx_echo_id);
     return -2;
   } else if(tx_echo_id != can->tx_context[tx_echo_id].echo_id){
-    // print_host_frame("CAN", "IN", &data, 1, "echo_id %08x (%u) is invalid! MISMATCH with %08x (%u). - ERROR!.\n", tx_echo_id, tx_echo_id, can->tx_context[tx_echo_id].echo_id, can->tx_context[tx_echo_id].echo_id);
-    // printf("ERROR CONTEXT      ");
-    // print_time_now();
-    // printf("         ");
-    // printf(" echo_id %08x (%u) is invalid! MISMATCH with %08x (%u). - ERROR!.\n", tx_echo_id, tx_echo_id, can->tx_context[tx_echo_id].echo_id, can->tx_context[tx_echo_id].echo_id);
     return -1;
   } else if(tx_echo_id < USB2CAN_MAX_TX_REQ) {
-    // printf("1");
-    // printf("      CONTEXT      ");
-    // print_time_now();
-    // printf("         ");
-    // printf(" echo_id: %08x (%u) %08x (%u) released.\n", tx_echo_id, tx_echo_id, can->tx_context[tx_echo_id].echo_id, can->tx_context[tx_echo_id].echo_id);
     can->tx_context[tx_echo_id].can = NULL;
     can->tx_context[tx_echo_id].echo_id = USB2CAN_MAX_TX_REQ;
     free(can->tx_context[tx_echo_id].frame);
     can->tx_context[tx_echo_id].frame = NULL;  // House keeping
     can->tx_context[tx_echo_id].timestamp = 0; // House keeping
-    // printf("2");
-    // printf("      CONTEXT      ");
-    // print_time_now();
-    // printf("         ");
-    // printf(" echo_id: %08x (%u) %08x (%u) released.\n", tx_echo_id, tx_echo_id, can->tx_context[tx_echo_id].echo_id, can->tx_context[tx_echo_id].echo_id);
     return 1;
   }
-  // print_host_frame("CAN", "IN", &data, 1, "ERROR! Unreachable code reached! - ERROR!\n");
   LOGE("CAN", "IN", "Unreachable code reached!, Line: %i\n", __LINE__);
-  // printf("ERROR CONTEXT      ");
-  // print_time_now();
-  // printf(" ERROR! Unreachable code reached! - ERROR!\n");
 
   return 0;
 }
