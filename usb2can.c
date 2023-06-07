@@ -282,7 +282,7 @@ int release_tx_context(struct usb2can_can* can, uint32_t tx_echo_id);
 struct usb2can_tx_context* get_tx_context(struct usb2can_can* can, struct can_frame* frame);
 
 void sigint_handler(int sig) {
-  printf("\nSignal received (%i).\n", sig);
+  fprintf(stderr, "\nSignal received (%i).\n", sig);
   fflush(stdout);
   fflush(stderr);
   if(sig == SIGINT) {
@@ -338,23 +338,20 @@ void print_can_frame(const char* source, const char* type, struct can_frame *fra
 // Checks to see if there is space to Tx.
 // If we have space then we return a pointer to to the struct usb2can_tx_context, else we return NULL.
 struct usb2can_tx_context* get_tx_context(struct usb2can_can* can, struct can_frame* frame) {
-  // printf("GET CONTEXT... ");
   for(uint32_t i = 0; i < USB2CAN_MAX_TX_REQ; i++) {
-    // printf("%u (%u of %u), ", i, can->tx_context[i].echo_id, USB2CAN_MAX_TX_REQ);
     if(can->tx_context[i].echo_id == USB2CAN_MAX_TX_REQ) {
       can->tx_context[i].can = can;
       can->tx_context[i].echo_id = i;
       can->tx_context[i].timestamp = millis() + TX_TIMEOUT_LENGTH_MS;  // Set a timestamp.
       can->tx_context[i].frame = malloc(sizeof(struct can_frame));
       memcpy(can->tx_context[i].frame, frame, sizeof(struct can_frame));
-      // printf("echo_id %u allocated.\n", i);
       return &can->tx_context[i];
     }
   }
   return NULL;
 }
 
-// Go through the tx_contexts and check if the messages were sent within the specified time period. If not then we need to cancel the context and resend them.
+// Go through the tx_contexts and check if the messages were sent within the specified time period. If not then we need to cancel the context.
 void handleRetries(struct usb2can_can* can) {
   uint64_t now = millis();
   struct can_frame frame;
@@ -362,7 +359,6 @@ void handleRetries(struct usb2can_can* can) {
     if((can->tx_context[i].echo_id < USB2CAN_MAX_TX_REQ) && (now > can->tx_context[i].timestamp)) {
       memcpy(&frame, can->tx_context[i].frame, sizeof(struct can_frame));
       release_tx_context(can, can->tx_context[i].echo_id);
-      //send_packet(can, &frame);
     }
   }
 }
@@ -406,12 +402,19 @@ struct usb2can_can* init_usb2can_can(struct libusb_device_handle* devh) {
 }
 
 void print_host_frame(const char* source, const char* type, struct host_frame *data, uint8_t err, const char *format, ...) {
+  #if defined(DEBUG_LOG_INFO) || defined(CAN_ERR_FLAG)
   FILE * fd = stdout;
 
   if(err) {
+    #ifndef DEBUG_LOG_ERRORS
+      return;
+    #endif // DEBUG_LOG_ERRORS
     LOGE(source, type, "ID: ");
     fd = stderr;
   } else {
+    #ifndef DEBUG_LOG_INFO
+      return;
+    #endif // DEBUG_LOG_INFO
     LOGI(source, type, "ID: ");
   }
 
@@ -634,6 +637,7 @@ void print_host_frame(const char* source, const char* type, struct host_frame *d
   va_end(args);
 
   fprintf(fd, "\n");
+  #endif
 }
 
 void print_host_frame_raw(struct host_frame *data) {
@@ -1044,58 +1048,56 @@ int conn_close(int fd) {
 int sockSend(int fd, const void *msg, size_t len) {
   int res = send(fd, msg, len, 0);
   if(res == -1) {
-    fprintf(stderr, "Send error:  ");
     switch(errno) {
       case EBADF:
-              fprintf(stderr, "EBADF");
-              break;
+        LOGE("PIPE", "OUT", "Send error: EBADF\n");
+        break;
       case EACCES:
-              fprintf(stderr, "EACCES");
-              break;
+        LOGE("PIPE", "OUT", "Send error: EACCES\n");
+        break;
       case ENOTCONN:
-              fprintf(stderr, "ENOTCONN");
-              break;
+        LOGE("PIPE", "OUT", "Send error: ENOTCONN\n");
+        break;
       case ENOTSOCK:
-              fprintf(stderr, "ENOTSOCK");
-              break;
+        LOGE("PIPE", "OUT", "Send error: ENOTSOCK\n");
+        break;
       case EFAULT:
-              fprintf(stderr, "EFAULT");
-              break;
+        LOGE("PIPE", "OUT", "Send error: EFAULT\n");
+        break;
       case EMSGSIZE:
-              fprintf(stderr, "EMSGSIZE");
-              break;
+        LOGE("PIPE", "OUT", "Send error: EMSGSIZE\n");
+        break;
       case EAGAIN:
-              fprintf(stderr, "EAGAIN");
-              break;
+        LOGE("PIPE", "OUT", "Send error: EAGAIN\n");
+        break;
       case ENOBUFS:
-              fprintf(stderr, "ENOBUFS");
-              break;
+        LOGE("PIPE", "OUT", "Send error: ENOBUFS\n");
+        break;
       case EHOSTUNREACH:
-              fprintf(stderr, "EHOSTUNREACH");
-              break;
+        LOGE("PIPE", "OUT", "Send error: EHOSTUNREACH\n");
+        break;
       case EISCONN:
-              fprintf(stderr, "EISCONN");
-              break;
+        LOGE("PIPE", "OUT", "Send error: EISCONN\n");
+        break;
       case ECONNREFUSED:
-              fprintf(stderr, "ECONNREFUSED");
-              break;
+        LOGE("PIPE", "OUT", "Send error: ECONNREFUSED\n");
+        break;
       case EHOSTDOWN:
-              fprintf(stderr, "EHOSTDOWN");
-              break;
-       case ENETDOWN:
-              fprintf(stderr, "ENETDOWN");
-              break;
+        LOGE("PIPE", "OUT", "Send error: EHOSTDOWN\n");
+        break;
+      case ENETDOWN:
+        LOGE("PIPE", "OUT", "Send error: ENETDOWN\n");
+        break;
       case EADDRNOTAVAIL:
-              fprintf(stderr, "EADDRNOTAVAIL");
-              break;
+        LOGE("PIPE", "OUT", "Send error: EADDRNOTAVAIL\n");
+        break;
       case EPIPE:
-              fprintf(stderr, "EPIPE");
-              break;
+        LOGE("PIPE", "OUT", "Send error: EPIPE\n");
+        break;
       default :
-              fprintf(stderr, "unknown");
-              break;
+        LOGE("PIPE", "OUT", "Send error: unknown\n");
+        break;
     }
-    fprintf(stderr, "\n");
   }
   return res;
 }
@@ -1132,9 +1134,6 @@ int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context 
   LOGI(__FUNCTION__, "INFO", "sockFd = %i\n", sockFd);
 
   while(1) {
-    // if(LIBUSB_ERROR_NO_DEVICE == read_packet(can)) {
-    //   break;
-    // }
     int max = 0;
     int ret = 0;
     while((0 == ret) && (max < USB2CAN_MAX_RX_REQ)) {
@@ -1409,7 +1408,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  printf("\n");
+  LOGI(__FUNCTION__, "INFO", "\n");
   libusb_free_config_descriptor(descriptor);
 
   LOGI(__FUNCTION__, "INFO", "Creating our CAN context...\n");
