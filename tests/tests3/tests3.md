@@ -40,10 +40,10 @@ Note: When we're analysing the distributions of times taken, we're skipping thos
 
 | # | Kernel Type | Code Type | Stage 1 to 2 (ns) | (ns) Stage 2 to 3 (ns) | (ns) Stage 3 to 4 (ns) | Stage 4 to 5 (ns) | Stage 5 to 6 (ns) | Stage 6 to 7 (ns) | Stage 7 to 8 (ns) | Messages Sent | Messages Received | USB Errors |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Pure Caps | Pure Caps | 522734.48 | 0.00 | 707.17 | 0.00 | 541420.69 | 41173.03 | 140934.41 | 2853 | 1427 | 147 |
+| 1 | Pure Caps | Pure Caps | 329024.50 | 0.00 | 314.76 | 0.00 | 256150.70 | 49739.66 | 218767.25 | 3177 | 1588 | 142 |
 | 2 | Hybrid    | Pure Caps | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0 | 0 | 0 |
 | 3 | Pure Caps | Hybrid    | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0 | 0 | 0 |
-| 4 | Hybrid    | Hybrid    | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0 | 0 | 0 |
+| 4 | Hybrid    | Hybrid    | 522734.48 | 0.00 | 707.17 | 0.00 | 541420.69 | 41173.03 | 140934.41 | 2853 | 1427 | 147 |
 
 ### Comparison of Minimum Times Between Stages for Each Test
 
@@ -58,21 +58,22 @@ Note: When we're analysing the distributions of times taken, we're skipping thos
 
 | # | Kernel Type | Code Type | Stage 1 to 2 (ns) | (ns) Stage 2 to 3 (ns) | (ns) Stage 3 to 4 (ns) | Stage 4 to 5 (ns) | Stage 5 to 6 (ns) | Stage 6 to 7 (ns) | Stage 7 to 8 (ns) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Pure Caps | Pure Caps | 2000199.00 | 0.00 | 1000449.00 | 0.00 | 1001929.00 | 1000990.00 | 1000870.00 |
+| 1 | Pure Caps | Pure Caps | 1124770.00 | 0.00 | 999989.00 | 0.00 | 1003508.00 | 1001729.00 | 1002429.00 |
 | 2 | Hybrid    | Pure Caps | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
 | 3 | Pure Caps | Hybrid    | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
-| 4 | Hybrid    | Hybrid    | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| 4 | Hybrid    | Hybrid    | 2000199.00 | 0.00 | 1000449.00 | 0.00 | 1001929.00 | 1000990.00 | 1000870.00 |
 
 ### Interpretation of Results
 
 ## Analysis on Times Taken from Stage 1 to Stage 2
 
 ### Test 1: Pure Caps code (`test` and `usb2can`) on Pure Caps kernel
-![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/aab671a1-8a6e-4837-888b-03b1ec279f55)
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/8f1ba6e7-a786-49b5-8524-af5643d3551e)
 
 ### Test 2: Pure Caps code (`test` and `usb2can`) on Hybrid kernel
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/aab671a1-8a6e-4837-888b-03b1ec279f55)
 
 ## Analysis on Times Taken from Stage 2 to Stage 3
 Results are all 0.
@@ -80,11 +81,12 @@ Results are all 0.
 ## Analysis on Times Taken from Stage 3 to Stage 4
 
 ### Test 1: Pure Caps code (`test` and `usb2can`) on Pure Caps kernel
-![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/d3773e99-9b95-4252-86fe-4e2a0606e7fd)
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/0f7071b6-cb46-401e-a1d2-2213fe5ad3d6)
 
 ### Test 2: Pure Caps code (`test` and `usb2can`) on Hybrid kernel
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/d3773e99-9b95-4252-86fe-4e2a0606e7fd)
 
 ## Analysis on Times Taken from Stage 4 to Stage 5
 Results are all 0.
@@ -92,28 +94,32 @@ Results are all 0.
 ## Analysis on Times Taken from Stage 5 to Stage 6
 
 ### Test 1: Pure Caps code (`test` and `usb2can`) on Pure Caps kernel
-![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/b1911854-af30-4a7a-ade1-52bd34230e16)
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/d5a762a1-f3ca-4250-ac0f-dd37ef1b25e9)
 
 ### Test 2: Pure Caps code (`test` and `usb2can`) on Hybrid kernel
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/b1911854-af30-4a7a-ade1-52bd34230e16)
 
 ## Analysis on Times Taken from Stage 6 to Stage 7
 
 ### Test 1: Pure Caps code (`test` and `usb2can`) on Pure Caps kernel
-![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/c0c5c06e-c280-47e8-a2ef-83e1887154f3)
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/39cba67b-98b4-4bd6-8d79-f0b85804880f)
 
 ### Test 2: Pure Caps code (`test` and `usb2can`) on Hybrid kernel
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/b1911854-af30-4a7a-ade1-52bd34230e16)
 
 ## Analysis on Times Taken from Stage 7 to Stage 8
 
 ### Test 1: Pure Caps code (`test` and `usb2can`) on Pure Caps kernel
-![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/a3049554-31d9-41d0-90dd-187aefbd7ad3)
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/d4d88271-aca2-4e2a-9493-ad6b3e26b902)
 
 ### Test 2: Pure Caps code (`test` and `usb2can`) on Hybrid kernel
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/a3049554-31d9-41d0-90dd-187aefbd7ad3)
+
 
 
