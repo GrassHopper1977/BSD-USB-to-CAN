@@ -38,12 +38,12 @@ Note: When we're analysing the distributions of times taken, we're skipping thos
 ## Analysis of times taken between each stage using Pure Caps and Hybrid code on Pure Caps and Hybrid Kernels
 ### Comparison of Average Times Between Stages for Each Test
 
-| # | Kernel Type | Code Type | Stage 1 to 2 (ns) | (ns) Stage 2 to 3 (ns) | (ns) Stage 3 to 4 (ns) | Stage 4 to 5 (ns) | Stage 5 to 6 (ns) | Stage 6 to 7 (ns) | Stage 7 to 8 (ns) |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Pure Caps | Pure Caps | 522734.48 | 0.00 | 707.17 | 0.00 | 541420.69 | 41173.03 | 140934.41 |
-| 2 | Hybrid    | Pure Caps | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
-| 3 | Pure Caps | Hybrid    | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
-| 4 | Hybrid    | Hybrid    | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| # | Kernel Type | Code Type | Stage 1 to 2 (ns) | (ns) Stage 2 to 3 (ns) | (ns) Stage 3 to 4 (ns) | Stage 4 to 5 (ns) | Stage 5 to 6 (ns) | Stage 6 to 7 (ns) | Stage 7 to 8 (ns) | Messages Sent | Messages Received | USB Errors |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Pure Caps | Pure Caps | 522734.48 | 0.00 | 707.17 | 0.00 | 541420.69 | 41173.03 | 140934.41 | 2853 | 1427 | 147 |
+| 2 | Hybrid    | Pure Caps | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0 | 0 | 0 |
+| 3 | Pure Caps | Hybrid    | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0 | 0 | 0 |
+| 4 | Hybrid    | Hybrid    | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0 | 0 | 0 |
 
 ### Comparison of Minimum Times Between Stages for Each Test
 
@@ -68,6 +68,8 @@ Note: When we're analysing the distributions of times taken, we're skipping thos
 ## Analysis on Times Taken from Stage 1 to Stage 2
 
 ### Test 1: Pure Caps code (`test` and `usb2can`) on Pure Caps kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/aab671a1-8a6e-4837-888b-03b1ec279f55)
+
 ### Test 2: Pure Caps code (`test` and `usb2can`) on Hybrid kernel
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
@@ -78,6 +80,8 @@ Results are all 0.
 ## Analysis on Times Taken from Stage 3 to Stage 4
 
 ### Test 1: Pure Caps code (`test` and `usb2can`) on Pure Caps kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/d3773e99-9b95-4252-86fe-4e2a0606e7fd)
+
 ### Test 2: Pure Caps code (`test` and `usb2can`) on Hybrid kernel
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
@@ -88,6 +92,8 @@ Results are all 0.
 ## Analysis on Times Taken from Stage 5 to Stage 6
 
 ### Test 1: Pure Caps code (`test` and `usb2can`) on Pure Caps kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/b1911854-af30-4a7a-ade1-52bd34230e16)
+
 ### Test 2: Pure Caps code (`test` and `usb2can`) on Hybrid kernel
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
@@ -95,13 +101,17 @@ Results are all 0.
 ## Analysis on Times Taken from Stage 6 to Stage 7
 
 ### Test 1: Pure Caps code (`test` and `usb2can`) on Pure Caps kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/c0c5c06e-c280-47e8-a2ef-83e1887154f3)
+
 ### Test 2: Pure Caps code (`test` and `usb2can`) on Hybrid kernel
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
 
-## Analysis on Times Taken from Stage 1 to Stage 2
+## Analysis on Times Taken from Stage 7 to Stage 8
 
 ### Test 1: Pure Caps code (`test` and `usb2can`) on Pure Caps kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/a3049554-31d9-41d0-90dd-187aefbd7ad3)
+
 ### Test 2: Pure Caps code (`test` and `usb2can`) on Hybrid kernel
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
