@@ -12,7 +12,7 @@ The test revealed that, some aspects of the code, ran faster in Full Caps mode t
 2. We started the USB to CAN code using: `./usb2can d0' or `./usb2can_hy d0'.
 3. We then started the test code on another console using: `./test 127.0.0.1 2303` or `./test_hy 127.0.0.1 2303`.
 4. We had enabled all the logging information on both sets of code so we were able to trace how long it took each aspect of the code to execute in nanoseconds.
-5. The `test` code would generate an 8-byte message (which includes which message number it is as a part of the data). That is sent over the sockets interface to `usb2can` which writes it to the CAN. We then read the message back from the CAN and return the message read back to `test` via teh sockets interface where it was displayed on the screen. Note: We still have a bug where, approximately, half on the messages that we send on teh CAN don't get read back and we're still working on this issue but it may be an issue with the USB device.
+5. The `test` code would generate an 8-byte message (which includes which message number it is as a part of the data). That is sent over the sockets interface to `usb2can` which writes it to the CAN. We then read the message back from the CAN and return the message read back to `test` via the sockets interface where it was displayed on the screen. Note: We still have a bug where, approximately, half on the messages that we send on the CAN don't get read back and we're still working on this issue but it may be an issue with the USB device.
 6. We've broken the test into 8 stages:
    1. Stage 1 - from `test`: Indicates that we have sent the message to `usb2can` over the socket interfaces.
    2. Stage 2 - from `usb2can`: Indicates that a packet has been received from the socket.
@@ -33,7 +33,7 @@ The test revealed that, some aspects of the code, ran faster in Full Caps mode t
 11. The version of CheriBSD that we used was: V22.12 releng V22.12 2023-03-03
 
 # Results
-Note: When we're analysing the distributions of times taken, we're skipping those where the time is 0ns as teh charts would be meaningless.
+Note: When we're analysing the distributions of times taken, we're skipping those where the time is 0ns as the charts would be meaningless.
 
 ## Analysis of times taken between each stage using Pure Caps and Hybrid code on Pure Caps and Hybrid Kernels
 ### Comparison of Average Times Between Stages for Each Test
@@ -141,5 +141,7 @@ Results are all 0.
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
 ![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/a3049554-31d9-41d0-90dd-187aefbd7ad3)
 
-
-
+## Observations and Interpretation
+1. Looking at the Comparison of Times Between Stages for Each Test we can see that the Pure Caps code is consistantly faster than the Hybrid code but that the Hybrid Kernel is marginly faster than the Pure Caps. I'm not sure why this is. Maybe the OS has to make accomodations in order to use pointers on a capability processor? It's possible but I'm pretty sure that the Morello board gives you the option to use either pointers or capabilities.
+2. Looking at the Analysis of the Times Taken for each stage. It can be seen that none of the results follow a standard distribution. In all cases the results the maximum times appears to be, approximately, one second longer than the average time. This suggests that we may have encountered some form of polling time limit inherited from the OS since this appears consistant whether we're interfacing to sockets or to the USB.
+3. The Hybrid code appears to be twice as slow.
