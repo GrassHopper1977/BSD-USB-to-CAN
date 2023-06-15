@@ -42,7 +42,7 @@ Note: When we're analysing the distributions of times taken, we're skipping thos
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Pure Caps  | Pure Caps | 329024.50 | 0.00 | 314.76 | 0.00 | 256150.70 | 49739.66 | 218767.25 | 3177 | 1588 | 142 |
 | 2 | Pure Caps  | Hybrid    | 259044.13 | 0.00 | 0.00 | 0.00 | 209490.16 | 21263.34 | 94995.31 | 3008 | 1504 | 141 |
-| 3 | Hybrid     | Pure Caps | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0 | 0 | 0 |
+| 3 | Hybrid     | Pure Caps | 597419.60 | 0.00 | 357.32 | 0.00 | 470440.73 | 40629.21 | 188387.51 | 2800 | 1400 | 101 |
 | 4 | Hybrid     | Hybrid    | 522734.48 | 0.00 | 707.17 | 0.00 | 541420.69 | 41173.03 | 140934.41 | 2853 | 1427 | 147 |
 
 ### Comparison of Minimum Times Between Stages for Each Test
@@ -60,7 +60,7 @@ Note: When we're analysing the distributions of times taken, we're skipping thos
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Pure Caps  | Pure Caps | 1124770.00 | 0.00 | 999989.00 | 0.00 | 1003508.00 | 1001729.00 | 1002429.00 |
 | 2 | Pure Caps  | Hybrid    | 1004189.00 | 0.00 | 0.00 | 0.00 | 1002029.00 | 1000729.00 | 1000869.00 |
-| 3 | Hybrid     | Pure Caps | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| 3 | Hybrid     | Pure Caps | 1124710.00 | 0.00 | 1000489.00 | 0.00 | 1003249.00 | 1003789.00 | 1001829.00 |
 | 4 | Hybrid     | Hybrid    | 2000199.00 | 0.00 | 1000449.00 | 0.00 | 1001929.00 | 1000990.00 | 1000870.00 |
 
 ### Interpretation of Results
@@ -74,6 +74,8 @@ Note: When we're analysing the distributions of times taken, we're skipping thos
 ![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/9ff4eec8-9887-4a17-92f7-b0034eed7a64)
 
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/c4c4b9aa-0f1a-4367-a797-4baa944ef38a)
+
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
 ![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/aab671a1-8a6e-4837-888b-03b1ec279f55)
 
@@ -89,6 +91,8 @@ Results are all 0.
 Results are all 0.
 
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/0eb0140e-d4f7-4e35-b909-0b61a502e934)
+
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
 ![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/d3773e99-9b95-4252-86fe-4e2a0606e7fd)
 
@@ -104,6 +108,8 @@ Results are all 0.
 ![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/087b0732-b74e-4c6b-aa0f-c3d437d4c696)
 
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/0cb65701-290e-4250-bda3-76264de01aa7)
+
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
 ![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/b1911854-af30-4a7a-ade1-52bd34230e16)
 
@@ -116,6 +122,8 @@ Results are all 0.
 ![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/859fb3e8-37fb-4780-b10d-41ddb057210f)
 
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/4e66b5ca-409c-4a6d-a839-4f9a4ba4be48)
+
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
 ![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/b1911854-af30-4a7a-ade1-52bd34230e16)
 
@@ -128,6 +136,8 @@ Results are all 0.
 ![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/04f0020b-926d-45f3-919a-be593de675c8)
 
 ### Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
+![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/92bb1105-91ec-4e55-91a0-2d62ac36de68)
+
 ### Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
 ![image](https://github.com/GrassHopper1977/BSD-USB-to-CAN/assets/52569451/a3049554-31d9-41d0-90dd-187aefbd7ad3)
 
