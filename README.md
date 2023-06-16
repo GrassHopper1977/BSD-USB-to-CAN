@@ -8,7 +8,7 @@ Important Note: CheriBSD 22.12 and earlier have a bug in the USB driver that pre
 # Usage
 From shell:
 ```
-usb2can <s[rate] p[nnnn] d[nnnn]>
+usb2can <s[rate]/?/p[nnnn]/d[nnnn]>
 
 Where:
   s[rate] = Chosen bitrate. Defaults to 500k.
