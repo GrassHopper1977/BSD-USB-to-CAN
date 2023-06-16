@@ -1194,18 +1194,9 @@ int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context 
 
 void printusage() {
   printf("usb2can opens a the frist USB2CAN device that it finds and binds to a socket (default address is 2303).\n");
-  printf("All messages received will be presented as Hex in the format:\n");
-  printf("  IIIIIIII LL DDDDDDDDDDDDDDDD[CR][LF]\n");
+  printf("You must #include usb2can.h. Then all messages transmitted & received will be in the format specified in struct can_frame.\n");
   printf("\n");
-  printf("Where: \n");
-  printf("  I = Message ID: 8 chars representing a 32-bit unsigned with leading zeros.\n");
-  printf("  L = Data Length code: 2 chars representing an 8-bit unsigned with leading zeros. Valid range 0 to 8.\n");
-  printf("  D = Data: 0 to 16 chars (depending on Data Length Code) representing a octets with leading zeros.\n");
-  printf("  [CR][LF] = Carridge Return Line Feed. \n");
-  printf("\n");
-  printf("Use the same format for transmission.\n");
-  printf("\n");
-  printf("Usage: usb2can <?/s[rate]/p[nnnn]>\n");
+  printf("Usage: usb2can <s[rate]/?/p[nnnn]>/d[nnnn]\n");
   printf("\n");
   printf("Where: \n");
   printf("  s[rate] = Chosen bitrate. Defaults to 500k.\n");
@@ -1215,7 +1206,7 @@ void printusage() {
   printf("                         1m\n");
   printf("  ? = print this message. \n");
   printf("  p[nnnn] = a \"p\" followed by a number - use this as the port number. \n");
-  printf("  d[nnnn] = a \"d\" followed by a number - if there are multiple device connected then speficy which to use. \n");
+  printf("  d[nnnn] = a \"d\" followed by a number - if there are multiple device connected then speficy which to use. If this is omiited it will connect to the first compatible device that it finds.\n");
   printf("\n");
 }
 
