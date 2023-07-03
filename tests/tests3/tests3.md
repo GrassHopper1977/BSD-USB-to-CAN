@@ -1,10 +1,10 @@
 # Tests 3
 
-The aim of this test was to compare the performance of the USB to CAN module when using the Morello CHERI board in CheriBSD's Hybrid and Full Caps modes.
+The aim of this test was to compare the performance of the USB to CAN module when using the Morello CHERI board in CheriBSD's Hybrid and Pure Caps modes.
 
 # Synopsis
 
-The test revealed that, some aspects of the code, ran faster in Full Caps mode than in Hybrid Mode. We analysed the times taken and found that they did not fit a standard distribution. Instead the results seems quite quantised.
+The test revealed that, some aspects of the code, ran faster in Pure Caps mode than in Hybrid Mode. We analysed the times taken and found that they did not fit a standard distribution. Instead the results seems quite quantised.
 
 # Method
 
@@ -23,14 +23,13 @@ The test revealed that, some aspects of the code, ran faster in Full Caps mode t
    7. Stage 7 - from `usb2can`: Indicates that the received message has been transmitted back to `test` via the sockets
    8. Stage 8 - from `test`: Indicates that `test` has received the message from `usb2can` via the sockets interface.
 7. We let `test` send over 2500 messages each time to get a good spread of results.
-8. 
-9. We then created a spread sheet to analyse the time taken between each of these stages.
-10. The test was repeated four times using different combinations of kernel and code:
+8. We then created a spread sheet to analyse the time taken between each of these stages.
+9. The test was repeated four times using different combinations of kernel and code:
     1. Test 1: Pure Caps code (`test` and `usb2can`) on Pure Caps kernel
     2. Test 2: Pure Caps code (`test` and `usb2can`) on Hybrid kernel
     3. Test 3: Hybrid code (`test_hy` and `usb2can`) on Pure Caps kernel
     4. Test 4: Hybrid code (`test_hy` and `usb2can_hy`) on Hybrid kernel
-11. The version of CheriBSD that we used was: V22.12 releng V22.12 2023-03-03
+10. The version of CheriBSD that we used was: V22.12 releng V22.12 2023-03-03
 
 # Results
 Note: When we're analysing the distributions of times taken, we're skipping those where the time is 0ns as the charts would be meaningless.
