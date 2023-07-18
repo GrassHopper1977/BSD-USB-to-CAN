@@ -1,4 +1,4 @@
-cc -g -O2 -Wall -mabi=aapcs -cheri-bounds=subobject-safe -lusb -lssl -o usb2can_hy usb2can.c utils/timestamp.c utils/logs.c
-cc -g -O2 -Wall -mabi=purecap -cheri-bounds=subobject-safe -lusb -lssl -o usb2can usb2can.c utils/timestamp.c utils/logs.c
-cc -g -O2 -Wall -mabi=aapcs -cheri-bounds=subobject-safe -lusb -lssl -o test_hy test.c
-cc -g -O2 -Wall -mabi=purecap -cheri-bounds=subobject-safe -lusb -lssl -o test test.c
+cc -g -O2 -Wall -mabi=aapcs -cheri-bounds=subobject-safe -lusb -lssl -o usb2can_hy usb2can.c utils/timestamp.c
+cc -g -O2 -Wall -mabi=purecap -cheri-bounds=subobject-safe -lusb -lssl -o usb2can usb2can.c utils/timestamp.c
+cc -g -O2 -Wall -mabi=aapcs -cheri-bounds=subobject-safe -lusb -lssl -o test_hy test.c utils/timestamp.c
+cc -g -O2 -Wall -mabi=purecap -cheri-bounds=subobject-safe -lusb -lssl -o test test.c utils/timestamp.c

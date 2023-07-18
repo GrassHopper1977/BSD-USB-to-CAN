@@ -5,6 +5,10 @@
 #define _POSIX_C_SOURCE 199309L
 #include <time.h>
 
+// #define CLOCK_SOURCE    CLOCK_MONOTONIC_FAST
+// #define CLOCK_SOURCE    CLOCK_MONOTONIC
+#define CLOCK_SOURCE    CLOCK_MONOTONIC_PRECISE
+
 /// Convert seconds to milliseconds
 #define SEC_TO_MS(sec) ((sec)*1000)
 /// Convert seconds to microseconds
@@ -22,7 +26,7 @@
 /// Get a time stamp in milliseconds.
 uint64_t millis() {
     struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_FAST, &ts);
+    clock_gettime(CLOCK_SOURCE, &ts);
     uint64_t ms = SEC_TO_MS((uint64_t)ts.tv_sec) + NS_TO_MS((uint64_t)ts.tv_nsec);
     return ms;
 }
@@ -30,7 +34,7 @@ uint64_t millis() {
 /// Get a time stamp in microseconds.
 uint64_t micros() {
     struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_FAST, &ts);
+    clock_gettime(CLOCK_SOURCE, &ts);
     uint64_t us = SEC_TO_US((uint64_t)ts.tv_sec) + NS_TO_US((uint64_t)ts.tv_nsec);
     return us;
 }
@@ -38,15 +42,7 @@ uint64_t micros() {
 /// Get a time stamp in nanoseconds.
 uint64_t nanos() {
     struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_FAST, &ts);
+    clock_gettime(CLOCK_SOURCE, &ts);
     uint64_t ns = SEC_TO_NS((uint64_t)ts.tv_sec) + (uint64_t)ts.tv_nsec;
     return ns;
 }
-
-// void print_time_now() {
-//   struct timeval now;
-//   gettimeofday(&now, NULL);
-//   printf("%ld.%06ld secs", now.tv_sec, now.tv_usec);
-// }
-
-

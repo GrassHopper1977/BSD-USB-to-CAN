@@ -23,12 +23,9 @@
 
 
 #include "usb2can.h"
-
-#ifdef __CHERI_PURE_CAPABILITY__
-#define PRINTF_PTR "#p"
-#else
-#define PRINTF_PTR "p"
-#endif
+#include "utils/timestamp.h"
+#define LOG_LEVEL 3
+#include "utils/logs.h"
 
 #define BUFSIZE 1024
 
@@ -41,48 +38,6 @@ int sendcantosck(int sckfd, struct can_frame* frame);
 #define KQUEUE_EV_SIZE	3
 #define TIMER_FD  1234
 
-#define _POSIX_C_SOURCE 199309L
-        
-#include <time.h>
-
-/// Convert seconds to milliseconds
-#define SEC_TO_MS(sec) ((sec)*1000)
-/// Convert seconds to microseconds
-#define SEC_TO_US(sec) ((sec)*1000000)
-/// Convert seconds to nanoseconds
-#define SEC_TO_NS(sec) ((sec)*1000000000)
-
-/// Convert nanoseconds to seconds
-#define NS_TO_SEC(ns)   ((ns)/1000000000)
-/// Convert nanoseconds to milliseconds
-#define NS_TO_MS(ns)    ((ns)/1000000)
-/// Convert nanoseconds to microseconds
-#define NS_TO_US(ns)    ((ns)/1000)
-
-/// Get a time stamp in milliseconds.
-uint64_t millis() {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_FAST, &ts);
-    uint64_t ms = SEC_TO_MS((uint64_t)ts.tv_sec) + NS_TO_MS((uint64_t)ts.tv_nsec);
-    return ms;
-}
-
-/// Get a time stamp in microseconds.
-uint64_t micros() {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_FAST, &ts);
-    uint64_t us = SEC_TO_US((uint64_t)ts.tv_sec) + NS_TO_US((uint64_t)ts.tv_nsec);
-    return us;
-}
-
-/// Get a time stamp in nanoseconds.
-uint64_t nanos() {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_FAST, &ts);
-    uint64_t ns = SEC_TO_NS((uint64_t)ts.tv_sec) + (uint64_t)ts.tv_nsec;
-    return ns;
-}
-
 void sigint_handler(int sig) {
   printf("\nSignal received (%i).\n", sig);
   fflush(stdout);
@@ -92,44 +47,6 @@ void sigint_handler(int sig) {
     signal(SIGINT, SIG_DFL);
     kill(getpid(), SIGINT);
   }
-}
-
-void print_time_now() {
-  struct timeval now;
-  gettimeofday(&now, NULL);
-  printf("%ld.%06ld secs", now.tv_sec, now.tv_usec);
-}
-
-#define LOG_MIN_FILE_LEN  9
-#define LOG_MAX_FILE_LEN  LOG_MIN_FILE_LEN
-#define LOG_MIN_SOURCE_LEN  8
-#define LOG_MAX_SOURCE_LEN  LOG_MIN_SOURCE_LEN
-#define LOG_MIN_TYPE_LEN  5
-#define LOG_MAX_TYPE_LEN  LOG_MIN_TYPE_LEN
-void LOGI(const char* source, const char* type, const char *format, ...) {
-  struct timeval now;
-  va_list args;
-  va_start(args, format);
-
-  gettimeofday(&now, NULL);
-  // fprintf(stdout, "%-10ld.%06ld,   INFO: %*.*s, %*.*s, %*.*s, ", now.tv_sec, now.tv_usec, LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
-  fprintf(stdout, "%16.16" PRIu64 ",  INFO: %*.*s, %*.*s, %*.*s, ", nanos(), LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
-  vfprintf(stdout, format, args);
-  // printf("\n");
-  va_end(args);
-}
-
-void LOGE(const char* source, const char* type, const char *format, ...) {
-  struct timeval now;
-  va_list args;
-  va_start(args, format);
-
-  gettimeofday(&now, NULL);
-  // fprintf(stderr, "%-10ld.%06ld,  ERROR: %*.*s, %*.*s, %*.*s, ", now.tv_sec, now.tv_usec, LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
-  fprintf(stderr, "%16.16" PRIu64 ", ERROR: %*.*s, %*.*s, %*.*s, ", nanos(), LOG_MIN_FILE_LEN, LOG_MAX_FILE_LEN, __FILE__, LOG_MIN_SOURCE_LEN, LOG_MAX_SOURCE_LEN, source, LOG_MIN_TYPE_LEN, LOG_MAX_TYPE_LEN, type);
-  vfprintf(stderr, format, args);
-  // printf("\n");
-  va_end(args);
 }
 
 void print_can_frame(const char* source, const char* type, struct can_frame *frame, uint8_t err, const char *format, ...) {
@@ -177,7 +94,7 @@ int main(int argc, char *argv[])
   char buf[BUFSIZE]; 
   int sckfd, kq, nev, i;
   struct can_frame frame;	// The incoming frame
-  int period_ms = 100;
+  int period_ms = 10;
 
   LOGI(__FUNCTION__, "INFO", "starting...\n");
 

@@ -1,5 +1,4 @@
-#define DEBUG_LOG_INFO
-#define DEBUG_LOG_ERRORS
+#define LOG_LEVEL 3
 #include "utils/logs.h"
 #include "utils/timestamp.h"
 
@@ -293,19 +292,12 @@ void sigint_handler(int sig) {
 }
 
 void print_can_frame(const char* source, const char* type, struct can_frame *frame, uint8_t err, const char *format, ...) {
-  #if defined(DEBUG_LOG_INFO) || defined(CAN_ERR_FLAG)
   FILE * fd = stdout;
 
   if(err || (frame->can_id & CAN_ERR_FLAG)) {
-    #ifndef DEBUG_LOG_ERRORS
-      return;
-    #endif // DEBUG_LOG_ERRORS
     LOGE(source, type, "ID: ");
     fd = stderr;
   } else {
-    #ifndef DEBUG_LOG_INFO
-      return;
-    #endif // DEBUG_LOG_INFO
     LOGI(source, type, "ID: ");
   }
 
@@ -331,10 +323,10 @@ void print_can_frame(const char* source, const char* type, struct can_frame *fra
   }
 
   fprintf(fd, "\n");
-  #endif
 }
 
-#define TX_TIMEOUT_LENGTH_MS  (100) // When we Tx we should see the message come back to us within this time threshold.
+#define TX_TIMEOUT_LENGTH_MS  (8) //(50) // When we Tx we should see the message come back to us within this time threshold in ms.
+
 // Checks to see if there is space to Tx.
 // If we have space then we return a pointer to to the struct usb2can_tx_context, else we return NULL.
 struct usb2can_tx_context* get_tx_context(struct usb2can_can* can, struct can_frame* frame) {
@@ -402,19 +394,12 @@ struct usb2can_can* init_usb2can_can(struct libusb_device_handle* devh) {
 }
 
 void print_host_frame(const char* source, const char* type, struct host_frame *data, uint8_t err, const char *format, ...) {
-  #if defined(DEBUG_LOG_INFO) || defined(CAN_ERR_FLAG)
   FILE * fd = stdout;
 
   if(err) {
-    #ifndef DEBUG_LOG_ERRORS
-      return;
-    #endif // DEBUG_LOG_ERRORS
     LOGE(source, type, "ID: ");
     fd = stderr;
   } else {
-    #ifndef DEBUG_LOG_INFO
-      return;
-    #endif // DEBUG_LOG_INFO
     LOGI(source, type, "ID: ");
   }
 
@@ -637,7 +622,6 @@ void print_host_frame(const char* source, const char* type, struct host_frame *d
   va_end(args);
 
   fprintf(fd, "\n");
-  #endif
 }
 
 void print_host_frame_raw(struct host_frame *data) {
@@ -1118,6 +1102,16 @@ int sendCANToAll(struct can_frame * frame) {
   return cnt; // How many we succesfully sent to.
 }
 
+int readCAN(struct usb2can_can* can) {
+    int max = 0;
+    int ret = 0;
+    while((0 == ret) && (max < USB2CAN_MAX_RX_REQ)) {
+      ret = read_packet(can);
+      max++;
+    }
+    return ret;
+}
+
 int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context *ctx) {
   struct kevent evSet;
   struct kevent evList[MAX_EVENTS];
@@ -1134,12 +1128,8 @@ int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context 
   LOGI(__FUNCTION__, "INFO", "sockFd = %i\n", sockFd);
 
   while(1) {
-    int max = 0;
     int ret = 0;
-    while((0 == ret) && (max < USB2CAN_MAX_RX_REQ)) {
-      ret = read_packet(can);
-      max++;
-    }
+    ret = readCAN(can);
     if(LIBUSB_ERROR_NO_DEVICE == ret) {
       break;
     }
@@ -1153,7 +1143,6 @@ int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context 
 
     for(int i = 0; i < nev; i++) {
       if(sockFd == (int)(evList[i].ident)) {
-        LOGI(__FUNCTION__, "INFO", "Socket event!\n");
         fd = accept(evList[i].ident, (struct sockaddr *)&addr, & socklen);
         if(fd == -1) {
           LOGE(__FUNCTION__, "INFO", "kevent error\n");
@@ -1169,19 +1158,24 @@ int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context 
         fd = (int)(evList[i].ident);
         switch(clients[conn_index(fd)].typ) {
         case CLIENT_TYPE_SOCK:
-          LOGI(__FUNCTION__, "INFO", "Client socket event! fd = %i, index = %i\n", fd, conn_index(fd));
           if(evList[i].flags & EV_EOF) {
             LOGI(__FUNCTION__, "INFO", "Socket closed: %i\n", fd);
             conn_close(fd);
           } else {
-            int ret = recv(fd, &frame, sizeof(struct can_frame), 0);
-            if(ret != sizeof(struct can_frame)) {
-              LOGE(__FUNCTION__, "INFO", "Read %u bytes, expected %lu bytes!\n", ret, sizeof(struct can_frame));
-            } else {
-              print_can_frame("PIPE", "IN", &frame, 0, "");
-              send_packet(can, &frame);
-            }
-
+            int ret;
+            int i = 0;
+            int toread = (int)(evList[i].data);
+            do {
+              i++;
+              ret = recv(fd, &frame, sizeof(struct can_frame), 0);
+              toread -= ret;
+              if(ret != sizeof(struct can_frame)) {
+                LOGE(__FUNCTION__, "INFO", "Read %u bytes, expected %lu bytes!\n", ret, sizeof(struct can_frame));
+              } else {
+                print_can_frame("PIPE", "IN", &frame, 0, "");
+                send_packet(can, &frame);
+              }
+            } while (toread >= sizeof(struct can_frame));
           }
           break;
         }
@@ -1390,16 +1384,16 @@ int main(int argc, char *argv[]) {
     LOGE(__FUNCTION__, "INFO", "Failed to get config descriptor\n");
   }
   //check for correct endpoints
-  LOGI(__FUNCTION__, "INFO", "Endpoints found:");
+  LOGI(__FUNCTION__, "INFO", "Endpoints found:\n");
   if(descriptor->bNumInterfaces > 0)
   {
     struct libusb_interface_descriptor iface = descriptor->interface[0].altsetting[0];
     for(int i=0; i<iface.bNumEndpoints; ++i) {
-      LOGI(__FUNCTION__, "INFO", " %d (0x%02x),", iface.endpoint[i].bEndpointAddress, iface.endpoint[i].bEndpointAddress);
+      LOGI(__FUNCTION__, "INFO", " %d (0x%02x),\n", iface.endpoint[i].bEndpointAddress, iface.endpoint[i].bEndpointAddress);
     }
   }
 
-  LOGI(__FUNCTION__, "INFO", "\n");
+  LOGI(__FUNCTION__, "INFO", "libusb_free_config_descriptor()\n");
   libusb_free_config_descriptor(descriptor);
 
   LOGI(__FUNCTION__, "INFO", "Creating our CAN context...\n");

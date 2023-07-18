@@ -1226,12 +1226,25 @@ void processArgs(int argc, char *argv[]) {
   }
 }
 
+/// @brief Increase the priority of this process.
+void changePriority() {
+    int priority;
+    int res = setpriority(PRIO_PROCESS, 0, -20);
+    if(res != 0) {
+        LOGE(__FUNCTION__, "WARNING", "WARNING: Unable to increase process priority. Code will run but timing will not be as good. To avoid this run as a SU.");
+    }
+    priority = getpriority(PRIO_PROCESS, 0);
+    LOGI(__FUNCTION__, "INFO", "Application priority is %i", priority);
+}
+
 // Main program entry point. 1st argument will be path to config.json, if it's not present then we'll use the default filename.
 int main(int argc, char *argv[]) {
   int ret = 0;
 
   // Create the signal handler here - ensures that Ctrl-C gets passed back up to 
   signal(SIGINT, sigint_handler);
+
+  changePriority();
 
   processArgs(argc, argv);
 
