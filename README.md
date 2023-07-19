@@ -31,6 +31,6 @@ The code in `test.c` connects to `usb2can` and transmits and recieves data and o
 
 # Improvements To Be Made
 1. Add support for CAN-FD frames.
-2. If attempting to transmit multiple frame, it is possible that the current code will miss the extra messages if any of the frames get concatenated.
+2. If attempting to transmit multiple frame, it is possible that the current code will miss the extra messages if any of the frames get concatenated. - FIXED 2023-07-18
 3. Currently, using synchronus libusb calls as the libusb file handlers weren't triggering. We need to look into this further.
 4. Range checking the various inputs.
