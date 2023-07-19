@@ -1187,7 +1187,9 @@ int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context 
 }
 
 void printusage() {
-  printf("usb2can opens a the frist USB2CAN device that it finds and binds to a socket (default address is 2303).\n");
+  printf("usb2can V3\n");
+  printf("\n");
+  printf("usb2can opens either the first or the specified GS USB or candleLight style USB2CAN device and binds to a socket (default address is 2303).\n");
   printf("You must #include usb2can.h. Then all messages transmitted & received will be in the format specified in struct can_frame.\n");
   printf("\n");
   printf("Usage: usb2can <s[rate]/?/p[nnnn]>/d[nnnn]\n");
