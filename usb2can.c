@@ -1123,9 +1123,19 @@ int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context 
     .tv_nsec = 0
   };
   struct can_frame frame;
+  uint16_t syncCounter = 0;
 
   LOGI(__FUNCTION__, "INFO", "Entering Main Loop...\n");
   LOGI(__FUNCTION__, "INFO", "sockFd = %i\n", sockFd);
+
+  int period_ms = 8;
+  EV_SET(&evSet, TIMER_FD, EVFILT_TIMER, EV_ADD | EV_ENABLE, 0, period_ms, 0);
+  int nev = kevent(kq, &evSet, 1, NULL, 0, NULL);
+  if (nev < 0) {
+    LOGE(__FUNCTION__, "INFO", "Unable to listen to kqueue\n");
+    exit(EXIT_FAILURE);
+  }
+
 
   while(1) {
     int ret = 0;
@@ -1135,19 +1145,28 @@ int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context 
     }
     handleRetries(can);
 
-    int nev = kevent(kq, NULL, 0, evList, MAX_EVENTS, &zero_ts);
+    nev = kevent(kq, NULL, 0, evList, MAX_EVENTS, &zero_ts);
     if(nev < 0) {
       LOGE(__FUNCTION__, "INFO", "kevent error\n");
       exit(1);
     }
 
     for(int i = 0; i < nev; i++) {
-      if(sockFd == (int)(evList[i].ident)) {
+      if(evList[i].ident == TIMER_FD) {
+          // struct milcan_frame syncframe = MILCAN_MAKE_SYNC(localAddress, syncCounter);
+          // sendcantosck(sckfd, &syncframe.frame);
+          frame.can_id = 0x0200802A | CAN_EFF_FLAG;
+          frame.len = 2;
+          frame.data[0] = syncCounter & 0x00FF;
+          frame.data[1] = (syncCounter >> 8) & 0x00FF;
+          send_packet(can, &frame);
+          syncCounter++;
+      } else if(sockFd == (int)(evList[i].ident)) {
         fd = accept(evList[i].ident, (struct sockaddr *)&addr, & socklen);
         if(fd == -1) {
           LOGE(__FUNCTION__, "INFO", "kevent error\n");
         } else if(conn_add(fd, CLIENT_TYPE_SOCK) == 0) {
-        LOGI(__FUNCTION__, "INFO", "Accepted socket %i.\n", fd);
+          LOGI(__FUNCTION__, "INFO", "Accepted socket %i.\n", fd);
           EV_SET(&evSet, fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
           assert(-1 != kevent(kq, &evSet, 1, NULL, 0, NULL));
         } else {
