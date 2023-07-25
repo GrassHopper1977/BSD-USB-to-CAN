@@ -25,6 +25,7 @@
 #include "usb2can.h"
 #include <stdarg.h>
 #include <inttypes.h>
+#include <limits.h>
 
 // Supported USB products
 #define USB_VENDOR_ID_GS_USB_1            0x1D50
@@ -280,8 +281,34 @@ int send_packet(struct usb2can_can* can, struct can_frame* frame);
 int release_tx_context(struct usb2can_can* can, uint32_t tx_echo_id);
 struct usb2can_tx_context* get_tx_context(struct usb2can_can* can, struct can_frame* frame);
 
+int port = 2303;  // The port that we're going to open.
+int deviceNumber = 0; // If there's multiple device connected then use this one.
+int deviceChannel = 0;  // Some device have multiple channels. We haven't implemented code for that yet as we don't have any of these devices to test.
+char rfifopath[PATH_MAX + 1] = {0x00};  // We will create a read FIFO here, which must be removed when we finish.
+char wfifopath[PATH_MAX + 1] = {0x00};  // We will create a write FIFO here, which must be removed when we finish.
+int rfdfifo = -1;
+int wfdfifo = -1;
+uint8_t fifoInUse = 0;
+
 void sigint_handler(int sig) {
   fprintf(stderr, "\nSignal received (%i).\n", sig);
+
+  // Be clean and tidy and make sure our FIFOs are removed when they're finished with.
+  if(rfifopath[0] != 0x00) {
+    LOGI(__FUNCTION__, "INFO", "Removing FIFO (%s)...\n", rfifopath);
+    int ret = remove(rfifopath);
+    if(ret < 0) {
+      LOGE(__FUNCTION__, "INFO", "ERROR: Unable to delete FIFO (%s). Error: %s (%i)\n", rfifopath, strerror(errno), errno);
+    }
+  }
+  if(wfifopath[0] != 0x00) {
+    LOGI(__FUNCTION__, "INFO", "Removing FIFO (%s)...\n", wfifopath);
+    int ret = remove(wfifopath);
+    if(ret < 0) {
+      LOGE(__FUNCTION__, "INFO", "ERROR: Unable to delete FIFO (%s). Error: %s (%i)\n", wfifopath, strerror(errno), errno);
+    }
+  }
+
   fflush(stdout);
   fflush(stderr);
   if(sig == SIGINT) {
@@ -1086,6 +1113,27 @@ int sockSend(int fd, const void *msg, size_t len) {
   return res;
 }
 
+int checkFifoOpen() {
+  if((fifoInUse != 0) && (rfdfifo < 0)) {
+    LOGI(__FUNCTION__, "INFO", "Opening FIFO (%s) for Write...\n", rfifopath);
+    rfdfifo = open(rfifopath, O_WRONLY | O_NONBLOCK);
+    if(rfdfifo < 0) {
+      LOGE(__FUNCTION__, "INFO", "ERROR: unable to open FIFO (%s) for Write. Error \n", rfifopath);
+      LOGI(__FUNCTION__, "INFO", "Deleting FIFOs (%s & %s)...\n", rfifopath, wfifopath);
+      int ret = remove(rfifopath);
+      if(ret < 0) {
+        LOGE(__FUNCTION__, "INFO", "ERROR: Unable to delete FIFO (%s). Error: %s (%i)\n", rfifopath, strerror(errno), errno);
+      }
+      ret = remove(wfifopath);
+      if(ret < 0) {
+        LOGE(__FUNCTION__, "INFO", "ERROR: Unable to delete FIFO (%s). Error: %s (%i)\n", wfifopath, strerror(errno), errno);
+      }
+      exit(1);
+    }
+  }
+  return rfdfifo;
+}
+
 int sendCANToAll(struct can_frame * frame) {
   print_can_frame("PIPE", "OUT", frame, 0, "");
 
@@ -1098,6 +1146,11 @@ int sendCANToAll(struct can_frame * frame) {
         cnt++;
       }
     }
+  }
+  
+  checkFifoOpen();  // If it's not open then open it.
+  if((fifoInUse != 0) && (rfdfifo != 0)) {
+    write(rfdfifo, frame, sizeof(frame));
   }
   return cnt; // How many we succesfully sent to.
 }
@@ -1112,7 +1165,7 @@ int readCAN(struct usb2can_can* can) {
     return ret;
 }
 
-int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context *ctx) {
+int processing_loop(int kq, int sockFd, int fifoFd, struct usb2can_can* can, libusb_context *ctx) {
   struct kevent evSet;
   struct kevent evList[MAX_EVENTS];
   struct sockaddr_storage addr;
@@ -1142,7 +1195,24 @@ int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context 
     }
 
     for(int i = 0; i < nev; i++) {
-      if(sockFd == (int)(evList[i].ident)) {
+      if(fifoFd == (int)(evList[i].ident)) {
+        // Read the data to be transmitted over CAN
+        fifoInUse = 1;
+        int ret;
+        int i = 0;
+        int toread = (int)(evList[i].data);
+        while (toread >= sizeof(struct can_frame)) {
+          i++;
+          ret = read(fifoFd, &frame, sizeof(struct can_frame));
+          toread -= ret;
+          if(ret != sizeof(struct can_frame)) {
+            LOGE(__FUNCTION__, "INFO", "Read %u bytes, expected %lu bytes!\n", ret, sizeof(struct can_frame));
+          } else {
+            print_can_frame("PIPE", "IN", &frame, 0, "");
+            send_packet(can, &frame);
+          }
+        }
+      } else       if(sockFd == (int)(evList[i].ident)) {
         fd = accept(evList[i].ident, (struct sockaddr *)&addr, & socklen);
         if(fd == -1) {
           LOGE(__FUNCTION__, "INFO", "kevent error\n");
@@ -1205,9 +1275,6 @@ void printusage() {
   printf("  d[nnnn] = a \"d\" followed by a number - if there are multiple device connected then speficy which to use. If this is omiited it will connect to the first compatible device that it finds.\n");
   printf("\n");
 }
-
-int port = 2303;  // The port that we're going to open.
-int deviceNumber = 0; // If there's multiple device connected then use this one.
 
 void processArgs(int argc, char *argv[]) {
   if(argc > 1) {
@@ -1278,6 +1345,38 @@ int main(int argc, char *argv[]) {
   signal(SIGINT, sigint_handler);
 
   processArgs(argc, argv);
+
+  // Create the FIFOs names.
+  sprintf(rfifopath, "/tmp/can%u.%ur", deviceNumber, deviceChannel);
+  sprintf(wfifopath, "/tmp/can%u.%uw", deviceNumber, deviceChannel);
+  LOGI(__FUNCTION__, "INFO", "Creating FIFO (%s & %s)...\n", rfifopath, wfifopath);
+  // Create the FIFO
+  ret = mkfifo(rfifopath, 0666);
+  if(ret < 0) {
+    LOGE(__FUNCTION__, "INFO", "ERROR: Unable to create FIFO (%s) for Read. Error: %s (%i)\n", rfifopath, strerror(errno), errno);
+    exit(1);
+  }
+  ret = mkfifo(wfifopath, 0666);
+  if(ret < 0) {
+    LOGE(__FUNCTION__, "INFO", "ERROR: Unable to create FIFO (%s) for Write. Error: %s (%i)\n", wfifopath, strerror(errno), errno);
+    exit(1);
+  }
+  // Open the FIFOs
+  LOGI(__FUNCTION__, "INFO", "Opening FIFO (%s) for Read...\n", wfifopath);
+  wfdfifo = open(wfifopath, O_RDONLY | O_NONBLOCK);
+  if(wfdfifo < 0) {
+    LOGE(__FUNCTION__, "INFO", "ERROR: unable to open FIFO (%s) for Read. Error \n", wfifopath);
+    LOGI(__FUNCTION__, "INFO", "Deleting FIFOs (%s & %s)...\n", rfifopath, wfifopath);
+    ret = remove(rfifopath);
+    if(ret < 0) {
+      LOGE(__FUNCTION__, "INFO", "ERROR: Unable to delete FIFO (%s). Error: %s (%i)\n", rfifopath, strerror(errno), errno);
+    }
+     ret = remove(wfifopath);
+    if(ret < 0) {
+      LOGE(__FUNCTION__, "INFO", "ERROR: Unable to delete FIFO (%s). Error: %s (%i)\n", wfifopath, strerror(errno), errno);
+    }
+    exit(1);
+  }
 
   // Create and bind our socket here.
   LOGI(__FUNCTION__, "INFO", "Creating our server here...\n");
@@ -1445,8 +1544,12 @@ int main(int argc, char *argv[]) {
   EV_SET(&evSet, sock, EVFILT_READ, EV_ADD, 0, 0, NULL);
   assert(-1 != kevent(kq, &evSet, 1, NULL, 0, NULL));
 
+  LOGI(__FUNCTION__, "INFO", "Adding listener for FIFO (%s) to Event Queue...\n", wfifopath);
+  EV_SET(&evSet, wfdfifo, EVFILT_READ, EV_ADD, 0, 0, NULL);
+  assert(-1 != kevent(kq, &evSet, 1, NULL, 0, NULL));
+
   LOGI(__FUNCTION__, "INFO", "Starting main program loop...\n");
-  processing_loop(kq, sock, can, ctx);
+  processing_loop(kq, sock, wfdfifo, can, ctx);
 
   ret = port_close(devh);
   if(ret < 0) {
@@ -1465,6 +1568,27 @@ int main(int argc, char *argv[]) {
 
   LOGI(__FUNCTION__, "INFO", "Trying libusb_exit...\n");
   libusb_exit(ctx);
+
+  LOGI(__FUNCTION__, "INFO", "Closing FIFOs (%s & %s)...\n", rfifopath, wfifopath);
+  close(rfdfifo);
+  close(wfdfifo);
+
+  // Be clean and tidy and make sure our FIFOs are removed when they're finished with.
+  if(rfifopath[0] != 0x00) {
+    LOGI(__FUNCTION__, "INFO", "Removing FIFO (%s)...\n", rfifopath);
+    int ret = remove(rfifopath);
+    if(ret < 0) {
+      LOGE(__FUNCTION__, "INFO", "ERROR: Unable to delete FIFO (%s). Error: %s (%i)\n", rfifopath, strerror(errno), errno);
+    }
+  }
+  if(wfifopath[0] != 0x00) {
+    LOGI(__FUNCTION__, "INFO", "Removing FIFO (%s)...\n", wfifopath);
+    int ret = remove(wfifopath);
+    if(ret < 0) {
+      LOGE(__FUNCTION__, "INFO", "ERROR: Unable to delete FIFO (%s). Error: %s (%i)\n", wfifopath, strerror(errno), errno);
+    }
+  }
+
   return ret;
 }
 
