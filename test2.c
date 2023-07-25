@@ -84,6 +84,45 @@ void print_can_frame(const char* source, const char* type, struct can_frame *fra
   fprintf(fd, "\n");
 }
 
+#define SYNC_PERIOD_NS  8000000L
+void checkTimer(uint64_t* timer, int wfdfifo) {
+  struct can_frame frame;	// The incoming frame
+  uint64_t now = nanos();
+  static uint16_t count = 0;
+  
+  if(now >= *timer) {
+    // *timer = now + SYNC_PERIOD_NS;  // Next period from now.
+    *timer += SYNC_PERIOD_NS; // Next period from when we should've been.
+
+    // MilCAN Sync Frame
+    frame.can_id = 0x0200802A | CAN_EFF_FLAG;
+    frame.len = 2;
+    frame.data[0] = (uint8_t)(count & 0x000000FF);
+    frame.data[1] = (uint8_t)((count >> 8) & 0x00000003);
+    frame.data[2] = 0x00;
+    frame.data[3] = 0x00;
+    frame.data[4] = 0x00;
+    frame.data[5] = 0x00;
+    frame.data[6] = 0x00;
+    frame.data[7] = 0x00;
+
+    // Normal Test
+    // frame.can_id = 0x01U;
+    // frame.len = 8;
+    // frame.data[0] = (uint8_t)((count >> 24) & 0x000000FF);
+    // frame.data[1] = (uint8_t)((count >> 16) & 0x000000FF);
+    // frame.data[2] = (uint8_t)((count >> 8) & 0x000000FF);
+    // frame.data[3] = (uint8_t)(count & 0x000000FF);
+    // frame.data[4] = 0x01;
+    // frame.data[5] = 0x23;
+    // frame.data[6] = 0x45;
+    // frame.data[7] = 0x67;
+    count++;
+    sendcantosck(wfdfifo, &frame);
+
+  }
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -99,6 +138,7 @@ int main(int argc, char *argv[])
   char wfifopath[PATH_MAX + 1] = {0x00};  // We will open the write FIFO here.
   int rfdfifo = -1;
   int wfdfifo = -1;
+  uint64_t timer;
 
   sprintf(rfifopath,"%sr", argv[1]);
   sprintf(wfifopath,"%sw", argv[1]);
@@ -145,11 +185,19 @@ int main(int argc, char *argv[])
   }
 
   printf("Starting loop...\n");
-  uint32_t count = 0;
+  // uint32_t count = 0;
+  timer = nanos() + SYNC_PERIOD_NS;  // 8ms
+  struct timespec zero_ts = {
+    .tv_sec = 0,
+    .tv_nsec = 0
+  };
+
   // loop forever
   for (;;)
   {
-    nev = kevent(kq, NULL, 0, evlist, KQUEUE_EV_SIZE, NULL);
+    // nev = kevent(kq, NULL, 0, evlist, KQUEUE_EV_SIZE, NULL);  // Blocking
+    checkTimer(&timer, wfdfifo);
+    nev = kevent(kq, NULL, 0, evlist, KQUEUE_EV_SIZE, &zero_ts);  // Non-blocking
 
     if (nev < 0) {
       LOGE(__FUNCTION__, "INFO", "Unable to listen to kqueue 2\n");
@@ -167,20 +215,20 @@ int main(int argc, char *argv[])
           LOGE(__FUNCTION__, "INFO", "EV_ERROR: %s\n", strerror(evlist[i].data));
           exit(EXIT_FAILURE);
         }
-  
+                                                                                      
         if(evlist[i].ident == TIMER_FD) {
-          frame.can_id = 0x01U;
-          frame.len = 8;
-          frame.data[0] = (uint8_t)((count >> 24) & 0x000000FF);
-          frame.data[1] = (uint8_t)((count >> 16) & 0x000000FF);
-          frame.data[2] = (uint8_t)((count >> 8) & 0x000000FF);
-          frame.data[3] = (uint8_t)(count & 0x000000FF);
-          frame.data[4] = 0x01;
-          frame.data[5] = 0x23;
-          frame.data[6] = 0x45;
-          frame.data[7] = 0x67;
-          count++;
-          sendcantosck(wfdfifo, &frame);
+          // frame.can_id = 0x01U;
+          // frame.len = 8;
+          // frame.data[0] = (uint8_t)((count >> 24) & 0x000000FF);
+          // frame.data[1] = (uint8_t)((count >> 16) & 0x000000FF);
+          // frame.data[2] = (uint8_t)((count >> 8) & 0x000000FF);
+          // frame.data[3] = (uint8_t)(count & 0x000000FF);
+          // frame.data[4] = 0x01;
+          // frame.data[5] = 0x23;
+          // frame.data[6] = 0x45;
+          // frame.data[7] = 0x67;
+          // count++;
+          // sendcantosck(wfdfifo, &frame);
         } else if (evlist[i].ident == rfdfifo) {                  /* we have data from the host */
           int ret;
           int i = 0;
