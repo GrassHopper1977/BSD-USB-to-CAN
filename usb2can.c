@@ -712,8 +712,12 @@ int read_packet(struct usb2can_can* can) {
         frame.len = CAN_MAX_DLC;
       }
 
-      for(int i = 0; i < frame.len; i++) {
-        frame.data[i] = data.data[i];
+      for(int i = 0; i < CAN_MAX_DLC; i++) {
+        if(i < frame.len) {
+          frame.data[i] = data.data[i];
+        } else {
+          frame.data[i] = 0x00;
+        }
       }
 
       sendCANToAll(&frame);
