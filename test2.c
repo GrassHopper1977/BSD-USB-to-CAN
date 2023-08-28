@@ -27,6 +27,7 @@
 #include "utils/timestamp.h"
 #define LOG_LEVEL 3
 #include "utils/logs.h"
+#include <sys/rtprio.h>
 
 #define BUFSIZE 1024
 
@@ -85,14 +86,16 @@ void print_can_frame(const char* source, const char* type, struct can_frame *fra
 }
 
 #define SYNC_PERIOD_NS  8000000L
+#define SYNC_PERIOD_NS_1PC (uint64_t)(SYNC_PERIOD_NS * 0.01)
+
 void checkTimer(uint64_t* timer, int wfdfifo) {
   struct can_frame frame;	// The incoming frame
   uint64_t now = nanos();
   static uint16_t count = 0;
   
-  if(now >= *timer) {
-    // *timer = now + SYNC_PERIOD_NS;  // Next period from now.
-    *timer += SYNC_PERIOD_NS; // Next period from when we should've been.
+  if(now >= (*timer - SYNC_PERIOD_NS_1PC)) {
+    *timer = now + SYNC_PERIOD_NS;  // Next period from now.
+    // *timer += SYNC_PERIOD_NS; // Next period from when we should've been.
 
     // MilCAN Sync Frame
     frame.can_id = 0x0200802A | CAN_EFF_FLAG;
@@ -106,21 +109,101 @@ void checkTimer(uint64_t* timer, int wfdfifo) {
     frame.data[6] = 0x00;
     frame.data[7] = 0x00;
 
-    // Normal Test
-    // frame.can_id = 0x01U;
-    // frame.len = 8;
-    // frame.data[0] = (uint8_t)((count >> 24) & 0x000000FF);
-    // frame.data[1] = (uint8_t)((count >> 16) & 0x000000FF);
-    // frame.data[2] = (uint8_t)((count >> 8) & 0x000000FF);
-    // frame.data[3] = (uint8_t)(count & 0x000000FF);
-    // frame.data[4] = 0x01;
-    // frame.data[5] = 0x23;
-    // frame.data[6] = 0x45;
-    // frame.data[7] = 0x67;
     count++;
+    count &= 0x000003FF;
     sendcantosck(wfdfifo, &frame);
-
   }
+}
+
+void displayRTpriority() {
+  // Get the current real time priority
+  struct rtprio rtdata;
+  LOGI(__FUNCTION__, "INFO", "Getting Real Time Priority settings.\n");
+  int ret = rtprio(RTP_LOOKUP, 0, &rtdata);
+  if(ret < 0) {
+    switch(errno) {
+      default:
+        LOGE(__FUNCTION__, "ERROR", "rtprio returned unknown error (%i)\n", errno);
+        break;
+      case EFAULT:
+        LOGE(__FUNCTION__, "EFAULT", "Pointer to struct rtprio is invalid.\n");
+        break;
+      case EINVAL:
+        LOGE(__FUNCTION__, "EINVAL", "The specified priocess was out of range.\n");
+        break;
+      case EPERM:
+        LOGE(__FUNCTION__, "EPERM", "The calling thread is not allowed to set the priority. Try running as SU or root.\n");
+        break;
+      case ESRCH:
+        LOGE(__FUNCTION__, "ESRCH", "The specified process or thread could not be found.\n");
+        break;
+    }
+  } else {
+    switch(rtdata.type) {
+      case RTP_PRIO_REALTIME:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: RTP_PRIO_REALTIME\n");
+        break;
+      case RTP_PRIO_NORMAL:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: RTP_PRIO_NORMAL\n");
+        break;
+      case RTP_PRIO_IDLE:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: RTP_PRIO_IDLE\n");
+        break;
+      default:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: %u\n", rtdata.type);
+        break;
+    }
+    LOGI(__FUNCTION__, "INFO", "Real Time Priority priority is: %u\n", rtdata.prio);
+  }
+}
+
+int setRTpriority(u_short prio) {
+  struct rtprio rtdata;
+
+  // Set the real time priority here
+  LOGI(__FUNCTION__, "INFO", "Setting the Real Time Priority type to RTP_PRIO_REALTIME and priority to %u\n", prio);
+  rtdata.type = RTP_PRIO_REALTIME;  // Real Time priority
+  // rtdata.type = RTP_PRIO_NORMAL;  // Normal
+  // rtdata.type = RTP_PRIO_IDLE;  // Low priority
+  rtdata.prio = prio;  // 0 = highest priority, 31 = lowest.
+  int ret = rtprio(RTP_SET, 0, &rtdata);
+  if(ret < 0) {
+    switch(errno) {
+      default:
+        LOGE(__FUNCTION__, "ERROR", "rtprio returned unknown error (%i)\n", errno);
+        break;
+      case EFAULT:
+        LOGE(__FUNCTION__, "EFAULT", "Pointer to struct rtprio is invalid.\n");
+        break;
+      case EINVAL:
+        LOGE(__FUNCTION__, "EINVAL", "The specified priocess was out of range.\n");
+        break;
+      case EPERM:
+        LOGE(__FUNCTION__, "EPERM", "The calling thread is not allowed to set the priority. Try running as SU or root.\n");
+        break;
+      case ESRCH:
+        LOGE(__FUNCTION__, "ESRCH", "The specified process or thread could not be found.\n");
+        break;
+    }
+  } else {
+    switch(rtdata.type) {
+      case RTP_PRIO_REALTIME:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: RTP_PRIO_REALTIME\n");
+        break;
+      case RTP_PRIO_NORMAL:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: RTP_PRIO_NORMAL\n");
+        break;
+      case RTP_PRIO_IDLE:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: RTP_PRIO_IDLE\n");
+        break;
+      default:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: %u\n", rtdata.type);
+        break;
+    }
+    LOGI(__FUNCTION__, "INFO", "Real Time Priority priority is: %u\n", rtdata.prio);
+  }
+  displayRTpriority();
+  return ret;
 }
 
 int main(int argc, char *argv[])
@@ -143,8 +226,10 @@ int main(int argc, char *argv[])
   sprintf(rfifopath,"%sr", argv[1]);
   sprintf(wfifopath,"%sw", argv[1]);
 
+  displayRTpriority();
+  setRTpriority(0);
 
-  LOGI(__FUNCTION__, "INFO", "starting...\n");
+  LOGI(__FUNCTION__, "INFO", "Starting...\n");
 
   // check argument count
   LOGI(__FUNCTION__, "INFO", "argc: %i\n", argc);
