@@ -1,4 +1,4 @@
-#define LOG_LEVEL 3
+#define LOG_LEVEL 0
 #include "utils/logs.h"
 #include "utils/timestamp.h"
 
@@ -25,6 +25,7 @@
 #include "usb2can.h"
 #include <stdarg.h>
 #include <inttypes.h>
+#include <sys/rtprio.h>
 
 // Supported USB products
 #define USB_VENDOR_ID_GS_USB_1            0x1D50
@@ -279,9 +280,11 @@ int sendCANToAll(struct can_frame * frame);
 int send_packet(struct usb2can_can* can, struct can_frame* frame);
 int release_tx_context(struct usb2can_can* can, uint32_t tx_echo_id);
 struct usb2can_tx_context* get_tx_context(struct usb2can_can* can, struct can_frame* frame);
+void displayRTpriority();
 
 void sigint_handler(int sig) {
   fprintf(stderr, "\nSignal received (%i).\n", sig);
+  displayRTpriority();
   fflush(stdout);
   fflush(stderr);
   if(sig == SIGINT) {
@@ -293,13 +296,18 @@ void sigint_handler(int sig) {
 
 void print_can_frame(const char* source, const char* type, struct can_frame *frame, uint8_t err, const char *format, ...) {
   FILE * fd = stdout;
+  int loglevel = LOG_LEVEL_INFO;
 
   if(err || (frame->can_id & CAN_ERR_FLAG)) {
     LOGE(source, type, "ID: ");
     fd = stderr;
+    loglevel = LOG_LEVEL_ERROR;
   } else {
     LOGI(source, type, "ID: ");
   }
+
+  if(LOG_LEVEL < loglevel)
+    return;
 
   if((frame->can_id & CAN_EFF_FLAG) || (frame->can_id & CAN_ERR_FLAG)) {
     fprintf(fd, "%08x", frame->can_id & CAN_EFF_MASK);
@@ -395,13 +403,18 @@ struct usb2can_can* init_usb2can_can(struct libusb_device_handle* devh) {
 
 void print_host_frame(const char* source, const char* type, struct host_frame *data, uint8_t err, const char *format, ...) {
   FILE * fd = stdout;
+  int loglevel = LOG_LEVEL_INFO;
 
   if(err) {
     LOGE(source, type, "ID: ");
     fd = stderr;
+    loglevel = LOG_LEVEL_ERROR;
   } else {
     LOGI(source, type, "ID: ");
   }
+
+  if(LOG_LEVEL < loglevel)
+    return;
 
   if((data->can_id & CAN_EFF_FLAG) || (data->can_id & CAN_ERR_FLAG)) {
     fprintf(fd, "%08x", data->can_id & CAN_EFF_MASK);
@@ -884,49 +897,51 @@ int port_get_bit_timing(struct usb2can_can* can) {
     LOGI(__FUNCTION__, "INFO", "BT Const Information:\n");
     int16_t feature = can->bt_const.feature;
     LOGI(__FUNCTION__, "INFO", "    feature: %08x (", feature);
-    if(feature & USB2CAN_FEATURE_LISTEN_ONLY) {
-      printf("USB2CAN_FEATURE_LISTEN_ONLY, ");
+    if(LOG_LEVEL > LOG_LEVEL_INFO) {
+      if(feature & USB2CAN_FEATURE_LISTEN_ONLY) {
+        printf("USB2CAN_FEATURE_LISTEN_ONLY, ");
+      }
+      if(feature & USB2CAN_FEATURE_LOOP_BACK) {
+        printf("USB2CAN_FEATURE_LOOP_BACK, ");
+      }
+      if(feature & USB2CAN_FEATURE_TRIPLE_SAMPLE) {
+        printf("USB2CAN_FEATURE_TRIPLE_SAMPLE, ");
+      }
+      if(feature & USB2CAN_FEATURE_ONE_SHOT) {
+        printf("USB2CAN_FEATURE_ONE_SHOT, ");
+      }
+      if(feature & USB2CAN_FEATURE_HW_TIMESTAMP) {
+        printf("USB2CAN_FEATURE_HW_TIMESTAMP, ");
+      }
+      if(feature & USB2CAN_FEATURE_IDENTIFY) {
+        printf("USB2CAN_FEATURE_IDENTIFY, ");
+      }
+      if(feature & USB2CAN_FEATURE_USER_ID) {
+        printf("USB2CAN_FEATURE_USER_ID, ");
+      }
+      if(feature & USB2CAN_FEATURE_PAD_PKTS_TO_MAX_PKT_SIZE) {
+        printf("USB2CAN_FEATURE_PAD_PKTS_TO_MAX_PKT_SIZE, ");
+      }
+      if(feature & USB2CAN_FEATURE_FD) {
+        printf("USB2CAN_FEATURE_FD, ");
+      }
+      if(feature & USB2CAN_FEATURE_REQ_USB_QUIRK_LPC546XX) {
+        printf("USB2CAN_FEATURE_REQ_USB_QUIRK_LPC546XX, ");
+      }
+      if(feature & USB2CAN_FEATURE_BT_CONST_EXT) {
+        printf("USB2CAN_FEATURE_BT_CONST_EXT, ");
+      }
+      if(feature & USB2CAN_FEATURE_TERMINATION) {
+        printf("USB2CAN_FEATURE_TERMINATION, ");
+      }
+      if(feature & USB2CAN_FEATURE_BERR_REPORTING) {
+        printf("USB2CAN_FEATURE_BERR_REPORTING, ");
+      }
+      if(feature & USB2CAN_FEATURE_GET_STATE) {
+        printf("USB2CAN_FEATURE_GET_STATE, ");
+      }
+      printf(")\n");
     }
-    if(feature & USB2CAN_FEATURE_LOOP_BACK) {
-      printf("USB2CAN_FEATURE_LOOP_BACK, ");
-    }
-    if(feature & USB2CAN_FEATURE_TRIPLE_SAMPLE) {
-      printf("USB2CAN_FEATURE_TRIPLE_SAMPLE, ");
-    }
-    if(feature & USB2CAN_FEATURE_ONE_SHOT) {
-      printf("USB2CAN_FEATURE_ONE_SHOT, ");
-    }
-    if(feature & USB2CAN_FEATURE_HW_TIMESTAMP) {
-      printf("USB2CAN_FEATURE_HW_TIMESTAMP, ");
-    }
-    if(feature & USB2CAN_FEATURE_IDENTIFY) {
-      printf("USB2CAN_FEATURE_IDENTIFY, ");
-    }
-    if(feature & USB2CAN_FEATURE_USER_ID) {
-      printf("USB2CAN_FEATURE_USER_ID, ");
-    }
-    if(feature & USB2CAN_FEATURE_PAD_PKTS_TO_MAX_PKT_SIZE) {
-      printf("USB2CAN_FEATURE_PAD_PKTS_TO_MAX_PKT_SIZE, ");
-    }
-    if(feature & USB2CAN_FEATURE_FD) {
-      printf("USB2CAN_FEATURE_FD, ");
-    }
-    if(feature & USB2CAN_FEATURE_REQ_USB_QUIRK_LPC546XX) {
-      printf("USB2CAN_FEATURE_REQ_USB_QUIRK_LPC546XX, ");
-    }
-    if(feature & USB2CAN_FEATURE_BT_CONST_EXT) {
-      printf("USB2CAN_FEATURE_BT_CONST_EXT, ");
-    }
-    if(feature & USB2CAN_FEATURE_TERMINATION) {
-      printf("USB2CAN_FEATURE_TERMINATION, ");
-    }
-    if(feature & USB2CAN_FEATURE_BERR_REPORTING) {
-      printf("USB2CAN_FEATURE_BERR_REPORTING, ");
-    }
-    if(feature & USB2CAN_FEATURE_GET_STATE) {
-      printf("USB2CAN_FEATURE_GET_STATE, ");
-    }
-    printf(")\n");
     LOGI(__FUNCTION__, "INFO", "   fclk_can: %u\n", can->bt_const.fclk_can);
     LOGI(__FUNCTION__, "INFO", "  tseg1_min: %u\n", can->bt_const.tseg1_min);
     LOGI(__FUNCTION__, "INFO", "  tseg1_max: %u\n", can->bt_const.tseg1_max);
@@ -1206,7 +1221,6 @@ int processing_loop(int kq, int sockFd, struct usb2can_can* can, libusb_context 
 }
 
 void printusage() {
-  printf("usb2can V3\n");
   printf("\n");
   printf("usb2can opens either the first or the specified GS USB or candleLight style USB2CAN device and binds to a socket (default address is 2303).\n");
   printf("You must #include usb2can.h. Then all messages transmitted & received will be in the format specified in struct can_frame.\n");
@@ -1289,14 +1303,111 @@ void processArgs(int argc, char *argv[]) {
   }
 }
 
-// Main program entry point. 1st argument will be path to config.json, if it's not present then we'll use the default filename.
+void displayRTpriority() {
+  // Get the current real time priority
+  struct rtprio rtdata;
+  LOGI(__FUNCTION__, "INFO", "Getting Real Time Priority settings.\n");
+  int ret = rtprio(RTP_LOOKUP, 0, &rtdata);
+  if(ret < 0) {
+    switch(errno) {
+      default:
+        LOGE(__FUNCTION__, "ERROR", "rtprio returned unknown error (%i)\n", errno);
+        break;
+      case EFAULT:
+        LOGE(__FUNCTION__, "EFAULT", "Pointer to struct rtprio is invalid.\n");
+        break;
+      case EINVAL:
+        LOGE(__FUNCTION__, "EINVAL", "The specified priocess was out of range.\n");
+        break;
+      case EPERM:
+        LOGE(__FUNCTION__, "EPERM", "The calling thread is not allowed to set the priority. Try running as SU or root.\n");
+        break;
+      case ESRCH:
+        LOGE(__FUNCTION__, "ESRCH", "The specified process or thread could not be found.\n");
+        break;
+    }
+  } else {
+    switch(rtdata.type) {
+      case RTP_PRIO_REALTIME:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: RTP_PRIO_REALTIME\n");
+        break;
+      case RTP_PRIO_NORMAL:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: RTP_PRIO_NORMAL\n");
+        break;
+      case RTP_PRIO_IDLE:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: RTP_PRIO_IDLE\n");
+        break;
+      default:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: %u\n", rtdata.type);
+        break;
+    }
+    LOGI(__FUNCTION__, "INFO", "Real Time Priority priority is: %u\n", rtdata.prio);
+  }
+}
+
+int setRTpriority(u_short prio) {
+  struct rtprio rtdata;
+
+  // Set the real time priority here
+  LOGI(__FUNCTION__, "INFO", "Setting the Real Time Priority type to RTP_PRIO_REALTIME and priority to %u\n", prio);
+  rtdata.type = RTP_PRIO_REALTIME;  // Real Time priority
+  // rtdata.type = RTP_PRIO_NORMAL;  // Normal
+  // rtdata.type = RTP_PRIO_IDLE;  // Low priority
+  rtdata.prio = prio;  // 0 = highest priority, 31 = lowest.
+  int ret = rtprio(RTP_SET, 0, &rtdata);
+  if(ret < 0) {
+    switch(errno) {
+      default:
+        LOGE(__FUNCTION__, "ERROR", "rtprio returned unknown error (%i)\n", errno);
+        break;
+      case EFAULT:
+        LOGE(__FUNCTION__, "EFAULT", "Pointer to struct rtprio is invalid.\n");
+        break;
+      case EINVAL:
+        LOGE(__FUNCTION__, "EINVAL", "The specified priocess was out of range.\n");
+        break;
+      case EPERM:
+        LOGE(__FUNCTION__, "EPERM", "The calling thread is not allowed to set the priority. Try running as SU or root.\n");
+        break;
+      case ESRCH:
+        LOGE(__FUNCTION__, "ESRCH", "The specified process or thread could not be found.\n");
+        break;
+    }
+  } else {
+    switch(rtdata.type) {
+      case RTP_PRIO_REALTIME:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: RTP_PRIO_REALTIME\n");
+        break;
+      case RTP_PRIO_NORMAL:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: RTP_PRIO_NORMAL\n");
+        break;
+      case RTP_PRIO_IDLE:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: RTP_PRIO_IDLE\n");
+        break;
+      default:
+        LOGI(__FUNCTION__, "INFO", "Real Time Priority type is: %u\n", rtdata.type);
+        break;
+    }
+    LOGI(__FUNCTION__, "INFO", "Real Time Priority priority is: %u\n", rtdata.prio);
+  }
+  displayRTpriority();
+  return ret;
+}
+
+// Main program entry point.
 int main(int argc, char *argv[]) {
   int ret = 0;
+
+  printf("usb2can V3\n");
 
   // Create the signal handler here - ensures that Ctrl-C gets passed back up to 
   signal(SIGINT, sigint_handler);
 
   processArgs(argc, argv);
+
+  displayRTpriority();
+  setRTpriority(0);
+
 
   // Create and bind our socket here.
   LOGI(__FUNCTION__, "INFO", "Creating our server here...\n");
