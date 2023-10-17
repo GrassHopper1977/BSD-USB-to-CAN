@@ -85,7 +85,7 @@ void print_can_frame(const char* source, const char* type, struct can_frame *fra
   fprintf(fd, "\n");
 }
 
-#define SYNC_PERIOD_NS  8000000L
+#define SYNC_PERIOD_NS  7812500L
 #define SYNC_PERIOD_NS_1PC (uint64_t)(SYNC_PERIOD_NS * 0.01)
 
 void checkTimer(uint64_t* timer, int wfdfifo) {
