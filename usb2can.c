@@ -1,4 +1,4 @@
-#define LOG_LEVEL 0
+#define LOG_LEVEL 6
 #include "utils/logs.h"
 #include "utils/timestamp.h"
 
